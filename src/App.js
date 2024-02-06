@@ -1,10 +1,10 @@
 import './App.scss';
-
+import MainLayour from './layout/mainLayout/mainLayout';
 function App() {
   return (
-    <div className="App">
-     <h1>Welcome to teamChat</h1>
-    </div>
+    <>
+      <MainLayour/>
+    </>
   );
 }
 

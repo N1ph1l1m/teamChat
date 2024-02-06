@@ -1,0 +1,29 @@
+.tittleCompany{
+    color:white;
+    font-size: 16px;
+}
+.elementsWrap{
+    display: flex;
+    flex-direction: row;
+    
+
+}
+.elementTittle{
+    color:#ffffff;
+    font-size: 20px;
+    display: inline;
+    margin-left: 10px;;
+}
+.elementsMenuWrap{
+    width: 239px ;
+    height: 36px;
+    border: 1px red solid;
+    display: inline-block;
+    display: flex;
+    justify-content: start;
+    align-items:center;
+    padding: 10px;
+}
+.icon{
+    display: inline-block;
+}
