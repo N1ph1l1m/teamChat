@@ -1,29 +1,37 @@
-.tittleCompany{
-    color:white;
-    font-size: 16px;
-}
+
 .elementsWrap{
     display: flex;
     flex-direction: row;
-    
-
+    align-items:center;
+    height: 40px;
+    border-radius: 5px;
+    cursor: pointer;
+    &:hover{
+        background-color:rgba(116, 116, 116, 0.461);
+    }
 }
 .elementTittle{
     color:#ffffff;
-    font-size: 20px;
+    font-size: 16px;
     display: inline;
-    margin-left: 10px;;
+    margin-left: 10px;
+    font-weight:400 ;
+}
+.elementsIconText{
+    display: flex;
+    align-items:center;
+    height: 35px;
+    width: 200px;
 }
 .elementsMenuWrap{
     width: 239px ;
     height: 36px;
-    border: 1px red solid;
     display: inline-block;
     display: flex;
-    justify-content: start;
+    justify-content: space-between;
     align-items:center;
-    padding: 10px;
+    padding: 5px;
 }
-.icon{
-    display: inline-block;
+.elementBadge{
+    width: 40px;
 }
