@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { MdOutlineTaskAlt } from "react-icons/md";
+import UserItem from "./userItem/userItem";
 import NaviItem from "./navItem/naviItem";
 
 const NavWrap = styled.div`
@@ -8,10 +9,18 @@ const NavWrap = styled.div`
   height: 100vh;
   background-color: #000000;
   display: flex;
-  align-items: start;
+  align-items: space-around;
   flex-direction: column;
   padding: 10px;
 `;
+const HeaderWrap = styled.div`
+width: 260px;
+height:98vh;
+` 
+const FooterWrap = styled.div`
+width: 260px;
+
+`
 const TitleCompany = styled.h1`
   color: white;
   font-size: 16px;
@@ -20,7 +29,8 @@ const TitleCompany = styled.h1`
 function Nav(props) {
   return (
     <NavWrap>
-      <TitleCompany>Company N</TitleCompany>
+    <HeaderWrap>
+    <TitleCompany>Company N</TitleCompany>
       <NaviItem
         icon={<MdOutlineTaskAlt color="white" size="20" />}
         tittle="Задачи"
@@ -31,6 +41,13 @@ function Nav(props) {
         tittle="Автоматизации"
         badgeCount="20"
       />
+    </HeaderWrap>
+    <FooterWrap>
+        <UserItem
+            tittle="User1"
+        />
+    </FooterWrap>
+    
     </NavWrap>
   );
 }

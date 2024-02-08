@@ -15,14 +15,14 @@ function NaviItem(props) {
   const badge = numBadge();
   return (
     <>
-      <div className="elementsWrap">
-        <div className="elementsMenuWrap">
-          <div className="elementsIconText">
+      <div className="wrap">
+        <div className="menuWrap">
+          <div className="iconText">
             <Icon> {props.icon}</Icon>
-            <p className="elementTittle">{props.tittle}</p>
+            <p className="tittle">{props.tittle}</p>
           </div>
 
-          <div className="elementBadge">{badge}</div>
+          <div className="badge">{badge}</div>
         </div>
       </div>
     </>
@@ -31,4 +31,4 @@ function NaviItem(props) {
 
 export default NaviItem;
 
-//
+
