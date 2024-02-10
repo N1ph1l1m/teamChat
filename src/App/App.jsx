@@ -1,5 +1,5 @@
-import './App.scss';
-import MainLayour from './layout/mainLayout/mainLayout';
+import MainLayour from '../Pages/mainLayout/mainLayout';
+import '../App.scss';
 function App() {
   return (
     <>

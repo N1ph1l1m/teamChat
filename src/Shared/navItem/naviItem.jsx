@@ -1,8 +1,8 @@
 import React from "react";
-import "./navItem.scss";
+import "../../App/Styles/navItem.scss";
 
-import Badge from "../../../components/badge/badge";
-import Icon from "../../../components/icon/icon";
+import Badge from "../badge/badge";
+import Icon from "../icon/icon";
 
 function NaviItem(props) {
   function numBadge() {
@@ -30,5 +30,3 @@ function NaviItem(props) {
 }
 
 export default NaviItem;
-
-
