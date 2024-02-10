@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import UserItem from "../../Shared/userItem/userItem";
 import NaviItem from "../../Shared/navItem/naviItem";
+import DropDown from "../../Shared/dropDown/dropDown";
+import { FaUsers } from "react-icons/fa";
 
 const NavWrap = styled.div`
   width: 260px;
@@ -39,6 +41,66 @@ function Nav(props) {
           icon={<MdOutlineTaskAlt color="white" size="20" />}
           tittle="Автоматизации"
           badgeCount="20"
+        />
+        <DropDown 
+          title="Беседы"
+          content={<>
+                <NaviItem
+              icon={<FaUsers color="white" size="20" />}
+              tittle="Бухгалтерия"
+              badgeCount="0"
+              />
+                  <NaviItem
+              icon={<FaUsers color="white" size="20" />}
+              tittle="Отдел Маркетинга"
+              badgeCount="100"
+              />
+                  <NaviItem
+              icon={<FaUsers color="white" size="20" />}
+              tittle="Команда N"
+              badgeCount="0"
+              />
+          </>}
+        />
+         <DropDown 
+          title="Личные сообщения"
+          content={<>
+                <NaviItem
+              icon={<FaUsers color="white" size="20" />}
+              tittle="Бухгалтерия"
+              badgeCount="0"
+              />
+                  <NaviItem
+              icon={<FaUsers color="white" size="20" />}
+              tittle="Отдел Маркетинга"
+              badgeCount="100"
+              />
+                  <NaviItem
+              icon={<FaUsers color="white" size="20" />}
+              tittle="Команда N"
+              badgeCount="0"
+              />
+          </>}
+        />
+         <DropDown 
+          title="Контакты"
+          content={<>
+                <NaviItem
+              icon={<FaUsers color="white" size="20" />}
+              tittle="Бухгалтерия"
+              badgeCount="0"
+              />
+                  <NaviItem
+              icon={<FaUsers color="white" size="20" />}
+              tittle="Отдел Маркетинга"
+              badgeCount="100"
+              />
+                  <NaviItem
+              icon={<FaUsers color="white" size="20" />}
+              tittle="Команда N"
+              badgeCount="0"
+              />
+          </>}
         />
       </HeaderWrap>
       <FooterWrap>
