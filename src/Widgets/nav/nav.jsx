@@ -4,6 +4,7 @@ import { MdOutlineTaskAlt } from "react-icons/md";
 import UserItem from "../../Shared/userItem/userItem";
 import NaviItem from "../../Shared/navItem/naviItem";
 import DropDown from "../../Shared/dropDown/dropDown";
+import { GoPlus } from "react-icons/go";
 import { FaUsers } from "react-icons/fa";
 
 const NavWrap = styled.div`
@@ -59,6 +60,11 @@ function Nav(props) {
               icon={<FaUsers color="white" size="20" />}
               tittle="Команда N"
               badgeCount="0"
+              />
+              <NaviItem
+              icon={<GoPlus color="white" size="20" />}
+              tittle="Создать"
+        
               />
           </>}
         />

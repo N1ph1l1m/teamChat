@@ -66,7 +66,8 @@ function DropDown(props) {
               <IoIosArrowForward color="white" size="20" />
             )}
           </Icon>
-          <span className="textDrop"> {truncateText(props.title, 13)}</span>
+          <span className="textDrop"> {truncateText(props.title, 16)}</span>
+               {/* <span className="textDrop"> {props.title}</span> */}
         </div>
         {hoverIcon}
       </div>
