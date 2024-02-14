@@ -4,7 +4,8 @@ import styled from "styled-components";
 const Wrap = styled.div`
 width:100vw;
 heigth:100vh;
-overflow: scroll;
+overflow: auto;
+padding:5px;
 `
 
 function ContentWrap(props) {
