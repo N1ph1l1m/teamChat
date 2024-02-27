@@ -7,6 +7,7 @@ import { GoPlus } from "react-icons/go";
 import { FaUsers } from "react-icons/fa";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { Link, Outlet } from "react-router-dom";
+import '../../App/Styles/link.scss';
 const Main = styled.div`
   width: 100vw;
   height: 100vh;
@@ -37,7 +38,7 @@ function MainLayout() {
         <Nav
           navItem={
             <>
-              <Link to="/task">
+              <Link to="/task" className="newLink">
                 <NaviItem
                   icon={<MdOutlineTaskAlt color="white" size="20" />}
                   tittle="Задачи"
@@ -45,14 +46,14 @@ function MainLayout() {
                 />
               </Link>
 
-              <Link to="/auto">
+              <Link to="/auto" className="newLink">
                 <NaviItem
                   icon={<MdOutlineTaskAlt color="white" size="20" />}
                   tittle="Автоматизации"
                   badgeCount="20"
                 />
               </Link>
-
+              <Link to = "/chats" className="newLink">
               <DropDown
                 title="Беседы"
                 content={
@@ -79,6 +80,8 @@ function MainLayout() {
                   </>
                 }
               />
+              </Link>
+          
               <DropDown
                 title="Личные сообщения"
                 content={
