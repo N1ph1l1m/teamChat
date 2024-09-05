@@ -12,10 +12,12 @@ const NavWrap = styled.div`
   align-items: space-around;
   flex-direction: column;
   padding: 10px;
+
 `;
 const HeaderWrap = styled.div`
   width: 260px;
   height: 98vh;
+
 `;
 const FooterWrap = styled.div`
   width: 260px;

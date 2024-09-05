@@ -7,6 +7,8 @@ import { GoPlus } from "react-icons/go";
 import { FaUsers } from "react-icons/fa";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { Link, Outlet } from "react-router-dom";
+
+
 const Main = styled.div`
   width: 100vw;
   height: 100vh;
@@ -31,6 +33,11 @@ const OutletItem = styled.div`
   align-items: start;
 `;
 function MainLayout() {
+
+
+
+
+
   return (
     <>
       <Main>

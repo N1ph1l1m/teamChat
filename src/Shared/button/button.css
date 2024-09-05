@@ -1,0 +1,66 @@
+.btn {
+  /* padding: 10px 15px; */
+  background-color: #726aba;
+  border: 1px solid rgb(215, 213, 213);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  /* text-transform: uppercase; */
+  display: inline-block;
+  text-decoration: none;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  
+}
+
+
+.btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn.active {
+  background-color: #23c9ff;
+  border: 1px solid #5eb2f2;
+  box-shadow: 0px 0 2px 0px #c0c0c0;
+}
+
+.newWidth {
+  width: 320px;
+  background-color: cadetblue;
+}
+
+.newColor{
+  background-color: transparent;
+  margin-bottom: 10px;
+  border:0px solid transparent; 
+  
+}
+.newColor:hover{
+  background-color: #23c9ff;
+}
+.taskNav{
+  border-radius:0px;
+  font-size: 16px;
+  background-color:transparent;
+  border:1px solid transparent;
+  margin-left: 3px;
+  color:black;
+  font-weight: 300;
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 40px;
+  width: 192px;
+  border-radius:10px;
+  padding: 0px;
+  
+}
+.taskNav:hover{
+  background-color: #f8f8f8;
+ 
+}
+.taskNav> span{
+  color:gray;
+}
