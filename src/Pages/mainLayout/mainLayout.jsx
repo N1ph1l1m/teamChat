@@ -7,12 +7,8 @@ import { GoPlus } from "react-icons/go";
 import { FaUsers } from "react-icons/fa";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { Link, Outlet } from "react-router-dom";
-<<<<<<< HEAD
 
-
-=======
 import '../../App/Styles/link.scss';
->>>>>>> 4df30b9360457bd43dec09b1f3ab389afb726fa4
 const Main = styled.div`
   width: 100vw;
   height: 100vh;
@@ -38,10 +34,6 @@ const OutletItem = styled.div`
 `;
 function MainLayout() {
 
-
-
-
-
   return (
     <>
       <Main>
@@ -56,6 +48,7 @@ function MainLayout() {
                 />
               </Link>
 
+
               <Link to="/auto" className="newLink">
                 <NaviItem
                   icon={<MdOutlineTaskAlt color="white" size="20" />}
@@ -63,6 +56,8 @@ function MainLayout() {
                   badgeCount="20"
                 />
               </Link>
+
+{/*
               <Link to = "/chats" className="newLink">
               <DropDown
                 title="Беседы"
@@ -90,9 +85,27 @@ function MainLayout() {
                   </>
                 }
               />
-              </Link>
-          
+              </Link> */}
+
+
               <DropDown
+                title="Чаты"
+                content={
+                  <>
+                    <Link to="/chats">
+                      <NaviItem
+                        icon={<FaUsers color="white" size="20" />}
+                        tittle="Чат"
+                        badgeCount="0"
+                      />
+                    </Link>
+
+                  </>
+                }
+              />
+
+
+              {/* <DropDown
                 title="Личные сообщения"
                 content={
                   <>
@@ -113,26 +126,78 @@ function MainLayout() {
                     />
                   </>
                 }
-              />
+              /> */}
               <DropDown
                 title="Контакты"
                 content={
                   <>
-                    <NaviItem
-                      icon={<FaUsers color="white" size="20" />}
-                      tittle="Бухгалтерия"
-                      badgeCount="0"
-                    />
-                    <NaviItem
-                      icon={<FaUsers color="white" size="20" />}
-                      tittle="Отдел Маркетинга"
-                      badgeCount="100"
-                    />
-                    <NaviItem
-                      icon={<FaUsers color="white" size="20" />}
-                      tittle="Команда N"
-                      badgeCount="0"
-                    />
+                        {/* <NaviItem
+                          icon={<FaUsers color="white" size="20" />}
+                          tittle="Бухгалтерия"
+                          badgeCount="0"
+                        /> */}
+                        <DropDown
+                          title="Бухгалтерия"
+                          content={
+                              <>
+                                <NaviItem
+                                  icon={<FaUsers color="white" size="20" />}
+                                  tittle="User1"
+                                  badgeCount=""/>
+
+                                <NaviItem
+                                  icon={<FaUsers color="white" size="20" />}
+                                  tittle="User2"
+                                  badgeCount="2"/>
+
+                                <NaviItem
+                                  icon={<FaUsers color="white" size="20" />}
+                                  tittle="User3"
+                                  badgeCount="10"/>
+                              </>}/>
+
+
+
+                              <DropDown
+                          title="Отдел Маркетинга"
+                          content={
+                              <>
+                                <NaviItem
+                                  icon={<FaUsers color="white" size="20" />}
+                                  tittle="User1"
+                                  badgeCount=""/>
+
+                                <NaviItem
+                                  icon={<FaUsers color="white" size="20" />}
+                                  tittle="User2"
+                                  badgeCount="2"/>
+
+                                <NaviItem
+                                  icon={<FaUsers color="white" size="20" />}
+                                  tittle="User3"
+                                  badgeCount="10"/>
+                              </>}/>
+
+
+                              <DropDown
+                          title="Команда N"
+                          content={
+                              <>
+                                <NaviItem
+                                  icon={<FaUsers color="white" size="20" />}
+                                  tittle="User1"
+                                  badgeCount=""/>
+
+                                <NaviItem
+                                  icon={<FaUsers color="white" size="20" />}
+                                  tittle="User2"
+                                  badgeCount="2"/>
+
+                                <NaviItem
+                                  icon={<FaUsers color="white" size="20" />}
+                                  tittle="User3"
+                                  badgeCount="10"/>
+                              </>}/>
                   </>
                 }
               />

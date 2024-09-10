@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
-const PrivateRouter = () => {
+const PrivateRouter = (props) => {
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
 
@@ -11,7 +11,7 @@ const PrivateRouter = () => {
         }
     }, [token, navigate]);
 
-    return token ? <Outlet /> : null;
+    return token ? <Outlet/> : null;
 };
 
 export default PrivateRouter;
