@@ -24,17 +24,6 @@ function App() {
           <Route path="auto" element= {<Automatization/>}/>
         </Route>
       </Route>
-
-
-
-      {/* <Route path="/" element={<PrivateRouter/>}>
-
-          <Route path="/main" element={<MainLayour/>}>
-            <Route path="task/" element= {<Tasks/>}/>
-            <Route path="chats/" element = {<Chats/>}/>
-          <Route path="auto" element= {<Automatization/>}/>
-        </Route>
-      </Route> */}
     </Routes>
     </>
   );
