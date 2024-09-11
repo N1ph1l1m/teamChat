@@ -27,23 +27,26 @@ function UserItem(props) {
         }
     })
     .then((response) => {
-        if (response.status === 204) {  // 204 No Content indicates successful logout
-            // Очистка локального хранилища
-            localStorage.removeItem("login");
-            localStorage.removeItem("username");
-            localStorage.removeItem("token");
+        if (response.status === 204) {
 
             console.log("Logout successful!");
             // Перенаправление на страницу входа
-            history("/login");
-        } else {
+
+        }else {
             console.log("Logout failed.");
         }
     })
     .catch((err) => {
         console.log("An error occurred: " + err.message);
         console.log(err);
-    });
+    })
+    .finally(()=>{
+      localStorage.removeItem("login");
+      localStorage.removeItem("username");
+      localStorage.removeItem("token");
+
+      history("/login");
+    })
   }
 
   return (

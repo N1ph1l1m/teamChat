@@ -18,6 +18,7 @@ function DropDown(props) {
       return <div className="dropContent">{props.content}</div>;
     }
   }
+
   const handleMouseEnter = () => {
     setIsHovered(true);
   };
@@ -49,6 +50,7 @@ function DropDown(props) {
     return text;
   };
 
+
   const contentShow = showDrop();
   const hoverIcon = showRightIcon();
   return (
@@ -56,6 +58,7 @@ function DropDown(props) {
       className="wrapDrop"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onClick= {showIcons === false ? props.onClick : null}
     >
       <div className="dropItem">
         <div className="leftSide">
