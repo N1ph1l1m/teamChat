@@ -33,6 +33,10 @@ const OutletItem = styled.div`
   flex-direction: column;
   align-items: start;
 `;
+const indexElen = styled.p`
+  color: red;
+  font-size: 20px;
+`;
 
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
@@ -44,12 +48,14 @@ function MainLayout() {
     return (
       <>
         {users.map((user, index) => (
-          <NaviItem
-            key={index}
-            icon={<MdOutlineTaskAlt color="white" size="20" />}
-            tittle={user.username}
-            badgeCount="3"
-          />
+          <>
+            <NaviItem
+              key={index}
+              icon={<MdOutlineTaskAlt color="white" size="20" />}
+              tittle={user.username}
+              badgeCount={user.id}
+            />
+          </>
         ))}
       </>
     );
@@ -80,9 +86,18 @@ function MainLayout() {
                 onClick={() => getData(url, setUserList)}
                 content={
                   <>
-                    <Link to="/chats">
+                    {/* <Link to="/chats">
                       <UserList users={userlist} />
-                    </Link>
+                    </Link> */}
+                    {userlist.map((user) => (
+                      <Link key={user.id} to={`chats/${user.id}`}>
+                        <NaviItem
+                          icon={<MdOutlineTaskAlt color="white" size="20" />}
+                          tittle={user.username}
+                          badgeCount={user.id}
+                        />
+                      </Link>
+                    ))}
                   </>
                 }
               />

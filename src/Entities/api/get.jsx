@@ -1,5 +1,4 @@
-
- import axios from 'axios';
+import axios from 'axios';
 
     function getData(url, setData) {
         let urls = "http://127.0.0.1:8000/" + url
