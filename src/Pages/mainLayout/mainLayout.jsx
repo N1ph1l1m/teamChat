@@ -8,7 +8,7 @@ import { FaUsers } from "react-icons/fa";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { Link, Outlet } from "react-router-dom";
 import "../../App/Styles/link.scss";
-import getData from "../../Entities/api/get";
+import getData from "../../Entities/api/getList";
 import { useState } from "react";
 const Main = styled.div`
   width: 100vw;
@@ -86,9 +86,6 @@ function MainLayout() {
                 onClick={() => getData(url, setUserList)}
                 content={
                   <>
-                    {/* <Link to="/chats">
-                      <UserList users={userlist} />
-                    </Link> */}
                     {userlist.map((user) => (
                       <Link key={user.id} to={`chats/${user.id}`}>
                         <NaviItem

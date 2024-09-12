@@ -1,7 +1,7 @@
 import "../App.scss";
 import Automatization from "../Widgets/Automatization/automatization";
 import Tasks from "../Widgets/Tasks/tasks";
-import Chats from "../Widgets/Chats/chats";
+import Chats from "../Pages/Chats/chats";
 import { Route, Routes } from "react-router-dom";
 import MainLayour from "../Pages/mainLayout/mainLayout";
 import Login from "../Pages/login/login";

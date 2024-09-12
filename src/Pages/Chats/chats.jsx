@@ -4,8 +4,16 @@ import "../../App/Styles/inputMessage.scss";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import styled from "styled-components";
+import ChatArea from "../../Widgets/chatArea/chatArea";
+import MessageInput from "../../Shared/inputMessage/messageInput";
+
 
 function Chats() {
+
+
+
+
   const { id } = useParams();
   const [userlist, setUserList] = useState([]);
 
@@ -26,15 +34,21 @@ function Chats() {
   }, [id]);
 
   return (
-    <div>
-      <p>Hello</p>
-      {userlist && (
-        <>
-          <p>{userlist.id}</p>
-          <p>{userlist.username}</p>
-        </>
-      )}
-    </div>
+    // <div>
+    //   <p>Hello</p>
+    //   {userlist && (
+    //     <>
+    //       <p>{userlist.id}</p>
+    //       <p>{userlist.username}</p>
+    //     </>
+    //   )}
+    // </div>
+    <>
+
+    <ChatArea/>
+
+    </>
+
   );
 }
 

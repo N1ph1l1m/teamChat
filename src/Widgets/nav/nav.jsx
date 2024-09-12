@@ -28,6 +28,7 @@ const TitleCompany = styled.h1`
   margin-bottom: 15px;
 `;
 function Nav(props) {
+  let user = localStorage.getItem('username')
   return (
     <NavWrap>
       <HeaderWrap>
@@ -35,7 +36,7 @@ function Nav(props) {
        {props.navItem}
       </HeaderWrap>
       <FooterWrap>
-        <UserItem tittle="User1" />
+        <UserItem tittle={user} />
       </FooterWrap>
     </NavWrap>
   );
