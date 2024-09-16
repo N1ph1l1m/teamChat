@@ -10,6 +10,7 @@ import { Link, Outlet } from "react-router-dom";
 import "../../App/Styles/link.scss";
 import getData from "../../Entities/api/getList";
 import { useState } from "react";
+import withAuthentication from "../../App/Utils/withAuthentication";
 const Main = styled.div`
   width: 100vw;
   height: 100vh;
@@ -86,6 +87,13 @@ function MainLayout() {
                 onClick={() => getData(url, setUserList)}
                 content={
                   <>
+                  <Link to="/chats">
+                        <NaviItem
+                          icon={<MdOutlineTaskAlt color="white" size="20" />}
+                          tittle={"Общий чат"}
+                          badgeCount={0}
+                        />
+                      </Link>
                     {userlist.map((user) => (
                       <Link key={user.id} to={`chats/${user.id}`}>
                         <NaviItem
@@ -192,4 +200,4 @@ function MainLayout() {
   );
 }
 
-export default MainLayout;
+export default  MainLayout;

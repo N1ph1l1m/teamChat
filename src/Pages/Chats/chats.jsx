@@ -7,7 +7,7 @@ import axios from "axios";
 import styled from "styled-components";
 import ChatArea from "../../Widgets/chatArea/chatArea";
 import MessageInput from "../../Shared/inputMessage/messageInput";
-
+import withAuthentication from "../../App/Utils/withAuthentication";
 
 function Chats() {
 
@@ -52,4 +52,4 @@ function Chats() {
   );
 }
 
-export default Chats;
+export default  Chats;

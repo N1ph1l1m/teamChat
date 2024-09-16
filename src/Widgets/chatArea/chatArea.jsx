@@ -2,11 +2,14 @@ import React from "react"
 import Message from "../../Shared/Message/message";
 import MessageInput from "../../Shared/inputMessage/messageInput";
 import "../chatArea/chatArea.scss"
-function ChatArea(){
+    function ChatArea(){
+
     return(
         <div className='chat-area'>
             <div className="chat-header">
-                <div className="chat-header-item"></div>
+                <div className="chat-header-item">
+                    <p></p>
+                </div>
                 <div className="messages">
                 <Message text="Hey, how are you doing?" sent />
                 <Message text="I'm good, thanks! How about you?" received />
@@ -23,9 +26,7 @@ function ChatArea(){
                 <Message text="Thanks, appreciate the support!" sent />
                 <Message text="No problem! Anytime." received />
                 <Message text="I'll keep you posted on how it goes." sent />
-
                 </div>
-
             </div>
             <MessageInput/>
         </div>

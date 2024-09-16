@@ -5,7 +5,8 @@ import axios from 'axios';
         axios.get(urls)
             .then((response) => {
                 if (response.status === 200) {
-                    setData(response.data.results);
+                    setData(response.data);
+                    console.log(response.data);
                 } else {
                     console.log("Error: " + response.data.detail);
                 }
