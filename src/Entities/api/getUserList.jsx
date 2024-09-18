@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { act } from 'react';
+
 
     function getData(url, setData) {
         let urls = "http://127.0.0.1:8000/" + url

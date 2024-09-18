@@ -12,6 +12,9 @@ import getData  from "../../Entities/api/getUserList";
 import  webList from   "../../Entities/api/getUserList"
 import { useState } from "react";
 import withAuthentication from "../../App/Utils/withAuthentication";
+
+import joinroom  from "../../Entities/api/joinroom";
+
 const Main = styled.div`
   width: 100vw;
   height: 100vh;
@@ -40,6 +43,10 @@ const OutletItem = styled.div`
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
 
+
+  function click(id){
+    console.log(`user id = ${id}`)
+  }
   function UserList(){
     // Переименуем в users
 
@@ -48,11 +55,13 @@ function MainLayout() {
         {userlist
           .filter((user) => user.username !== localStorage.getItem("username"))
           .map((user) => (
-            <Link key={user.id} to={`chats/${user.id}`}>
+            <Link key={user.id} to={`chats/${user.id}`} onClick={()=>joinroom}>
               <NaviItem
                 icon={<MdOutlineTaskAlt color="white" size="20" />}
                 tittle={user.username}
                 badgeCount={user.id}
+
+
               />
             </Link>
           ))}
@@ -88,7 +97,7 @@ function MainLayout() {
                 onClick={() => webList(setUserList)}
                 content={
                   <>
-                    <Link to="/chats">
+                    <Link to="/chats/1" >
                       <NaviItem
                         icon={<MdOutlineTaskAlt color="white" size="20" />}
                         tittle={"Общий чат"}

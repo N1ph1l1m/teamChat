@@ -12,6 +12,7 @@ function NaviItem(props) {
       <Badge value={props.badgeCount} inline />;
     }
   }
+
   const badge = numBadge();
   return (
     <>

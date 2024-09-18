@@ -8,26 +8,15 @@ import styled from "styled-components";
 import ChatArea from "../../Widgets/chatArea/chatArea";
 import MessageInput from "../../Shared/inputMessage/messageInput";
 import withAuthentication from "../../App/Utils/withAuthentication";
-
+import joinroom from "../../Entities/api/joinroom";
 function Chats() {
   const { id } = useParams();
   const [userlist, setUserList] = useState([]);
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://127.0.0.1:8000/users/${id}/`)
-  //     .then((response) => {
-  //       if (response.status === 200) {
-  //         setUserList(response.data);
-  //         console.log(response.data);
-  //       } else {
-  //         console.log("Error: " + response.data.detail);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching data:", error);
-  //     });
-  // }, [id]);
+  useEffect(() => {
+     joinroom(id)
+  }, [id]);
+
 
   return (
     <>
