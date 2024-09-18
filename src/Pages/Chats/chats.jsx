@@ -10,43 +10,28 @@ import MessageInput from "../../Shared/inputMessage/messageInput";
 import withAuthentication from "../../App/Utils/withAuthentication";
 
 function Chats() {
-
-
-
-
   const { id } = useParams();
   const [userlist, setUserList] = useState([]);
 
-  useEffect(() => {
-    axios
-      .get(`http://127.0.0.1:8000/users/${id}/`)
-      .then((response) => {
-        if (response.status === 200) {
-          setUserList(response.data);
-          console.log(response.data);
-        } else {
-          console.log("Error: " + response.data.detail);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, [id]);
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://127.0.0.1:8000/users/${id}/`)
+  //     .then((response) => {
+  //       if (response.status === 200) {
+  //         setUserList(response.data);
+  //         console.log(response.data);
+  //       } else {
+  //         console.log("Error: " + response.data.detail);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching data:", error);
+  //     });
+  // }, [id]);
 
   return (
-    // <div>
-    //   <p>Hello</p>
-    //   {userlist && (
-    //     <>
-    //       <p>{userlist.id}</p>
-    //       <p>{userlist.username}</p>
-    //     </>
-    //   )}
-    // </div>
     <>
-
     <ChatArea/>
-
     </>
 
   );

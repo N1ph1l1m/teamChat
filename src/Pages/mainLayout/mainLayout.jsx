@@ -8,7 +8,8 @@ import { FaUsers } from "react-icons/fa";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { Link, Outlet } from "react-router-dom";
 import "../../App/Styles/link.scss";
-import getData from "../../Entities/api/getList";
+import getData  from "../../Entities/api/getUserList";
+import  webList from   "../../Entities/api/getUserList"
 import { useState } from "react";
 import withAuthentication from "../../App/Utils/withAuthentication";
 const Main = styled.div`
@@ -34,35 +35,35 @@ const OutletItem = styled.div`
   flex-direction: column;
   align-items: start;
 `;
-const indexElen = styled.p`
-  color: red;
-  font-size: 20px;
-`;
+
 
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
 
-  var url = "users/";
-
-  function UserList({ users }) {
+  function UserList(){
     // Переименуем в users
+
     return (
       <>
-        {users.map((user, index) => (
-          <>
-            <NaviItem
-              key={index}
-              icon={<MdOutlineTaskAlt color="white" size="20" />}
-              tittle={user.username}
-              badgeCount={user.id}
-            />
-          </>
-        ))}
+        {userlist
+          .filter((user) => user.username !== localStorage.getItem("username"))
+          .map((user) => (
+            <Link key={user.id} to={`chats/${user.id}`}>
+              <NaviItem
+                icon={<MdOutlineTaskAlt color="white" size="20" />}
+                tittle={user.username}
+                badgeCount={user.id}
+              />
+            </Link>
+          ))}
       </>
     );
   }
+
+
   return (
     <>
+
       <Main>
         <Nav
           navItem={
@@ -82,27 +83,19 @@ function MainLayout() {
                   badgeCount="20"
                 />
               </Link>
-              <DropDown
+             <DropDown
                 title="Чаты"
-                onClick={() => getData(url, setUserList)}
+                onClick={() => webList(setUserList)}
                 content={
                   <>
-                  <Link to="/chats">
-                        <NaviItem
-                          icon={<MdOutlineTaskAlt color="white" size="20" />}
-                          tittle={"Общий чат"}
-                          badgeCount={0}
-                        />
-                      </Link>
-                    {userlist.map((user) => (
-                      <Link key={user.id} to={`chats/${user.id}`}>
-                        <NaviItem
-                          icon={<MdOutlineTaskAlt color="white" size="20" />}
-                          tittle={user.username}
-                          badgeCount={user.id}
-                        />
-                      </Link>
-                    ))}
+                    <Link to="/chats">
+                      <NaviItem
+                        icon={<MdOutlineTaskAlt color="white" size="20" />}
+                        tittle={"Общий чат"}
+                        badgeCount={0}
+                      />
+                    </Link>
+                     {UserList()}
                   </>
                 }
               />
@@ -200,4 +193,4 @@ function MainLayout() {
   );
 }
 
-export default  MainLayout;
+export default MainLayout;

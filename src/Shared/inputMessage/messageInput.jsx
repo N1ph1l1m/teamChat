@@ -1,31 +1,30 @@
 import React, { useState } from "react";
 import "../inputMessage/inputMessage.scss"
+import Message from "../Message/message";
 
 
-export default function MessageInput(){
-    const {inputValue,setInputValue} = useState('')
+export default function MessageInput({onSend}){
+    const [inputValue, setInputValue] = useState("");
 
-    const handleInputChange = ()=>{
+    const handleInputChange = (e) =>{
+        setInputValue(e.target.value);
+    };
 
-        setInputValue()
-
-
-    }
-    const handleSendMessage = () =>{
-        console.log("MESSAGE SEND")
-        setInputValue()
-
+    function sendMessage(){
+        onSend(inputValue)
+        setInputValue("")
     }
         return(
         <>
             <div className="message-input">
+
             <textarea
                 placeholder="Type your message"
                 value={inputValue}
-                onChange={handleInputChange}
+                onChange={(e)=> handleInputChange(e)}
 
             />
-            <button  onClick={handleSendMessage}>Send</button>
+            <button  onClick={sendMessage}>Send</button>
             </div>
         </>
     )
