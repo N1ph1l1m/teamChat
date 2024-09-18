@@ -8,12 +8,12 @@ import { FaUsers } from "react-icons/fa";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { Link, Outlet } from "react-router-dom";
 import "../../App/Styles/link.scss";
-import getData  from "../../Entities/api/getUserList";
-import  webList from   "../../Entities/api/getUserList"
+import getData from "../../Entities/api/getUserList";
+import webList from "../../Entities/api/getUserList";
 import { useState } from "react";
 import withAuthentication from "../../App/Utils/withAuthentication";
 
-import joinroom  from "../../Entities/api/joinroom";
+import joinroom from "../../Entities/api/joinroom";
 
 const Main = styled.div`
   width: 100vw;
@@ -39,15 +39,13 @@ const OutletItem = styled.div`
   align-items: start;
 `;
 
-
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
 
-
-  function click(id){
-    console.log(`user id = ${id}`)
+  function click(id) {
+    console.log(`user id = ${id}`);
   }
-  function UserList(){
+  function UserList() {
     // Переименуем в users
 
     return (
@@ -55,13 +53,15 @@ function MainLayout() {
         {userlist
           .filter((user) => user.username !== localStorage.getItem("username"))
           .map((user) => (
-            <Link key={user.id} to={`chats/${user.id}`} onClick={()=>joinroom}>
+            <Link
+              key={user.id}
+              to={`chats/${user.id}`}
+              onClick={() => joinroom(user.id)}
+            >
               <NaviItem
                 icon={<MdOutlineTaskAlt color="white" size="20" />}
                 tittle={user.username}
                 badgeCount={user.id}
-
-
               />
             </Link>
           ))}
@@ -69,15 +69,13 @@ function MainLayout() {
     );
   }
 
-
   return (
     <>
-
       <Main>
         <Nav
           navItem={
             <>
-              <Link to="/task" className="newLink">
+              <Link to="/task" className="newLink" onClick={() => joinroom()}>
                 <NaviItem
                   icon={<MdOutlineTaskAlt color="white" size="20" />}
                   tittle="Задачи"
@@ -92,19 +90,19 @@ function MainLayout() {
                   badgeCount="20"
                 />
               </Link>
-             <DropDown
+              <DropDown
                 title="Чаты"
                 onClick={() => webList(setUserList)}
                 content={
                   <>
-                    <Link to="/chats/1" >
+                    <Link to="/chats/1">
                       <NaviItem
                         icon={<MdOutlineTaskAlt color="white" size="20" />}
                         tittle={"Общий чат"}
                         badgeCount={0}
                       />
                     </Link>
-                     {UserList()}
+                    {UserList()}
                   </>
                 }
               />
