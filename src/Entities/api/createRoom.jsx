@@ -16,15 +16,18 @@ export function createRoom(username) {
         .then((response) => {
             if (response.status === 200) {
                 console.log("Room is created");
+                console.log("Error: " + response.data);
+
             } else {
                 console.log("Error: " + response.data.detail);
-
             }
         })
         .catch((error) => {
             console.error("Error fetching data:", error);
             console.log("username " + username);
+
         });
+
 }
 
 

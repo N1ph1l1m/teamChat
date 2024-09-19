@@ -13,14 +13,28 @@ function Chats() {
   const { id } = useParams();
   const [userlist, setUserList] = useState([]);
 
+
   useEffect(() => {
-    //  joinroom(id)
+    axios
+      .get(`http://127.0.0.1:8000/users/${id}/`)
+      .then((response) => {
+        if (response.status === 200) {
+          setUserList(response.data);
+          console.log( "userList " + userlist.username);
+        } else {
+          console.log("Error: " + response.data.detail);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
   }, [id]);
 
 
   return (
     <>
-    <ChatArea/>
+
+    <ChatArea title = {userlist.username}/>
     </>
 
   );

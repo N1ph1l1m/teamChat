@@ -2,7 +2,7 @@ import React , { useState } from "react"
 import Message from "../../Shared/Message/message";
 import MessageInput from "../../Shared/inputMessage/messageInput";
 import "../chatArea/chatArea.scss"
-    function ChatArea(){
+    function ChatArea(props){
         const [message,setMessage] = useState([]);
 
 
@@ -26,7 +26,7 @@ import "../chatArea/chatArea.scss"
         <div className='chat-area'>
             <div className="chat-header">
                 <div className="chat-header-item">
-                    <p>Ttte</p>
+                    <p>{props.title}</p>
                 </div>
                 <div className="messages">
                 <Message text={'Testtt'}  />

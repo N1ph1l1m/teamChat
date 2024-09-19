@@ -51,8 +51,8 @@ function MainLayout() {
           .filter((user) => user.username !== localStorage.getItem("username"))
           .map((user) => (
             <Link
-              key={user.username}
-              to={`chats/${user.username}`}
+              key={user.id}
+              to={`chats/${user.id}`}
               onClick={() => createRoom(user.username)}
             >
               <NaviItem
