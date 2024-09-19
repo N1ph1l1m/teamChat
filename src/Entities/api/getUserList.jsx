@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 
-    function getData(url, setData) {
+    export function getData(url, setData) {
         let urls = "http://127.0.0.1:8000/" + url
         axios.get(urls)
             .then((response) => {
@@ -17,7 +17,7 @@ import axios from 'axios';
             });
     }
 
-    function webList(sentdata) {
+   export function webList(sentdata) {
         let token = localStorage.getItem('token')
         const ws = new WebSocket(
              `ws://localhost:8000/ws/?token=${token}`
@@ -50,6 +50,3 @@ import axios from 'axios';
             console.log('WebSocket connection closed');
         };
     };
-
-
-export default webList

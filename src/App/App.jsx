@@ -16,7 +16,7 @@ function App() {
           <Route path="/" element={<MainLayour />}>
             <Route path="task/" element={<Tasks />} />
             <Route path="chats/" element={<Chats />} />
-            <Route path="chats/:id/" element={<Chats />} />
+            <Route path="chats/:username/" element={<Chats />} />
             <Route path="auto" element={<Automatization />} />
           </Route>
         </Route>

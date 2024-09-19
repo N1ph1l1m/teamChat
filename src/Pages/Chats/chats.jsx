@@ -14,7 +14,7 @@ function Chats() {
   const [userlist, setUserList] = useState([]);
 
   useEffect(() => {
-     joinroom(id)
+    //  joinroom(id)
   }, [id]);
 
 

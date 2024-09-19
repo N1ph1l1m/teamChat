@@ -8,10 +8,10 @@ import { FaUsers } from "react-icons/fa";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { Link, Outlet } from "react-router-dom";
 import "../../App/Styles/link.scss";
-import getData from "../../Entities/api/getUserList";
-import webList from "../../Entities/api/getUserList";
+import {getData} from "../../Entities/api/getUserList";
 import { useState } from "react";
 import withAuthentication from "../../App/Utils/withAuthentication";
+import {createRoom} from  "../../Entities/api/createRoom";
 
 import joinroom from "../../Entities/api/joinroom";
 
@@ -42,9 +42,6 @@ const OutletItem = styled.div`
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
 
-  function click(id) {
-    console.log(`user id = ${id}`);
-  }
   function UserList() {
     // Переименуем в users
 
@@ -54,9 +51,9 @@ function MainLayout() {
           .filter((user) => user.username !== localStorage.getItem("username"))
           .map((user) => (
             <Link
-              key={user.id}
-              to={`chats/${user.id}`}
-              onClick={() => joinroom(user.id)}
+              key={user.username}
+              to={`chats/${user.username}`}
+              onClick={() => createRoom(user.username)}
             >
               <NaviItem
                 icon={<MdOutlineTaskAlt color="white" size="20" />}
@@ -75,7 +72,7 @@ function MainLayout() {
         <Nav
           navItem={
             <>
-              <Link to="/task" className="newLink" onClick={() => joinroom()}>
+              <Link to="/task" className="newLink" >
                 <NaviItem
                   icon={<MdOutlineTaskAlt color="white" size="20" />}
                   tittle="Задачи"
@@ -92,7 +89,7 @@ function MainLayout() {
               </Link>
               <DropDown
                 title="Чаты"
-                onClick={() => webList(setUserList)}
+                onClick={() => getData("users/",setUserList)}
                 content={
                   <>
                     <Link to="/chats/1">
