@@ -11,7 +11,7 @@ import "../../App/Styles/link.scss";
 import {getData} from "../../Entities/api/getUserList";
 import { useState } from "react";
 import withAuthentication from "../../App/Utils/withAuthentication";
-import {createRoom} from  "../../Entities/api/createRoom";
+import CreateRoom from "../../Entities/api/createRoom";
 
 import joinroom from "../../Entities/api/joinroom";
 
@@ -40,6 +40,7 @@ const OutletItem = styled.div`
 `;
 
 function MainLayout() {
+
   const [userlist, setUserList] = useState([]);
 
   function UserList() {
@@ -53,7 +54,7 @@ function MainLayout() {
             <Link
               key={user.id}
               to={`chats/${user.id}`}
-              onClick={() => createRoom(user.username)}
+              // onClick={() => CreateRoom(user.username)}
             >
               <NaviItem
                 icon={<MdOutlineTaskAlt color="white" size="20" />}
@@ -92,7 +93,7 @@ function MainLayout() {
                 onClick={() => getData("users/",setUserList)}
                 content={
                   <>
-                    <Link to="/chats/1">
+                    <Link to="/chats/72">
                       <NaviItem
                         icon={<MdOutlineTaskAlt color="white" size="20" />}
                         tittle={"Общий чат"}

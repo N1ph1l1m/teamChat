@@ -29,7 +29,7 @@ import "../chatArea/chatArea.scss"
                     <p>{props.title}</p>
                 </div>
                 <div className="messages">
-                <Message text={'Testtt'}  />
+                    {props.content}
                     {showMessage()}
                 </div>
             </div>

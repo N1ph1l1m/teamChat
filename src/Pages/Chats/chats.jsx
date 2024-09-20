@@ -9,9 +9,21 @@ import ChatArea from "../../Widgets/chatArea/chatArea";
 import MessageInput from "../../Shared/inputMessage/messageInput";
 import withAuthentication from "../../App/Utils/withAuthentication";
 import joinroom from "../../Entities/api/joinroom";
+import Message from "../../Shared/Message/message";
+
+const Text = styled.div`
+ color:red;
+ font-size:14px;
+`;
+
+
 function Chats() {
   const { id } = useParams();
   const [userlist, setUserList] = useState([]);
+
+  const [roomName, setRoomName] = useState("");
+  const  [currentUsers,setCurrentUser] = useState([]);
+  const [roomData, setRoomData] = useState([]);
 
 
   useEffect(() => {
@@ -34,7 +46,13 @@ function Chats() {
   return (
     <>
 
-    <ChatArea title = {userlist.username}/>
+    <ChatArea title = {userlist.username}
+      content={<>
+      <Message text={'Testtt'}  />
+      <Message text={'Testtt'}  />
+      <Message text={'Testtt'}  />
+      </>}
+    />
     </>
 
   );
