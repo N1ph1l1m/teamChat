@@ -12,27 +12,24 @@ import joinroom from "../../Entities/api/joinroom";
 import Message from "../../Shared/Message/message";
 
 const Text = styled.div`
- color:red;
- font-size:14px;
+  color: red;
+  font-size: 14px;
 `;
-
 
 function Chats() {
   const { id } = useParams();
-  const [userlist, setUserList] = useState([]);
+  const [roomList, setRoomList] = useState([]);
 
-  const [roomName, setRoomName] = useState("");
-  const  [currentUsers,setCurrentUser] = useState([]);
+  const [currentUsers, setCurrentUser] = useState([]);
   const [roomData, setRoomData] = useState([]);
-
 
   useEffect(() => {
     axios
-      .get(`http://127.0.0.1:8000/users/${id}/`)
+      .get(`http://127.0.0.1:8000/chat/rooms/${id}/`)
       .then((response) => {
         if (response.status === 200) {
-          setUserList(response.data);
-          console.log( "userList " + userlist.username);
+          setRoomList(response.data);
+          //console.log(JSON.stringify(response.data));
         } else {
           console.log("Error: " + response.data.detail);
         }
@@ -42,20 +39,36 @@ function Chats() {
       });
   }, [id]);
 
+  function formatRoomName(roomName) {
+    try {
+      const username = localStorage.getItem("username");
+      const newName = roomName
+        .replace(username, "")
+        .replace(/^_+|_+$/g, "")
+        .trim();
+      return newName.charAt(0).toUpperCase() + newName.slice(1);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <>
-
-    <ChatArea title = {userlist.username}
-      content={<>
-      <Message text={'Testtt'}  />
-      <Message text={'Testtt'}  />
-      <Message text={'Testtt'}  />
-      </>}
-    />
+      <ChatArea
+        title={formatRoomName(roomList.name)}
+        content={
+          <>
+            <Message text={"Testtt"} />
+            <Message text={"Testtt"} />
+            <Message
+            // text={JSON.stringify(roomList.current_users[1].username)}
+            />
+            {/* <Message text={roomList.current_users} /> */}
+          </>
+        }
+      />
     </>
-
   );
 }
 
-export default  Chats;
+export default Chats;

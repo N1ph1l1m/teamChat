@@ -8,7 +8,7 @@ import { FaUsers } from "react-icons/fa";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { Link, Outlet } from "react-router-dom";
 import "../../App/Styles/link.scss";
-import {getData} from "../../Entities/api/getUserList";
+import { getData } from "../../Entities/api/getUserList";
 import { useState } from "react";
 import withAuthentication from "../../App/Utils/withAuthentication";
 import CreateRoom from "../../Entities/api/createRoom";
@@ -40,29 +40,63 @@ const OutletItem = styled.div`
 `;
 
 function MainLayout() {
-
   const [userlist, setUserList] = useState([]);
+  const [roomList, setRoomList] = useState([]);
 
   function UserList() {
-    // Переименуем в users
-
     return (
       <>
         {userlist
           .filter((user) => user.username !== localStorage.getItem("username"))
-          .map((user) => (
-            <Link
-              key={user.id}
-              to={`chats/${user.id}`}
-              // onClick={() => CreateRoom(user.username)}
-            >
-              <NaviItem
-                icon={<MdOutlineTaskAlt color="white" size="20" />}
-                tittle={user.username}
-                badgeCount={user.id}
-              />
-            </Link>
-          ))}
+          .map((user) => {
+            const upName =
+              user.username.charAt(0).toUpperCase() + user.username.slice(1);
+            return (
+              <>
+                <NaviItem
+                  icon={<MdOutlineTaskAlt color="white" size="20" />}
+                  tittle={upName}
+                  badgeCount={user.id}
+                />
+              </>
+            );
+          })}
+      </>
+    );
+  }
+  function RoomList() {
+    console.log(roomList);
+
+    return (
+      <>
+        {roomList
+          .filter((room) =>
+            room.name.includes(`${localStorage.getItem("username")}`)
+          )
+          .map((room) => {
+            // Удаляем "admin", убираем нижнее подчеркивание в начале и в конце, и делаем первую букву заглавной
+            const newName = room.name
+              .replace(`${localStorage.getItem("username")}`, "")
+              .replace(/^_+|_+$/g, "")
+              .trim();
+
+            const capitalized =
+              newName.charAt(0).toUpperCase() + newName.slice(1);
+
+            return (
+              <Link
+                key={room.pk}
+                to={`chats/${room.pk}`}
+                // onClick={() => CreateRoom(user.username)}
+              >
+                <NaviItem
+                  icon={<MdOutlineTaskAlt color="white" size="20" />}
+                  tittle={capitalized} // Используем обновленное имя
+                  badgeCount={room.pk}
+                />
+              </Link>
+            );
+          })}
       </>
     );
   }
@@ -73,7 +107,7 @@ function MainLayout() {
         <Nav
           navItem={
             <>
-              <Link to="/task" className="newLink" >
+              <Link to="/task" className="newLink">
                 <NaviItem
                   icon={<MdOutlineTaskAlt color="white" size="20" />}
                   tittle="Задачи"
@@ -90,7 +124,7 @@ function MainLayout() {
               </Link>
               <DropDown
                 title="Чаты"
-                onClick={() => getData("users/",setUserList)}
+                onClick={() => getData("chat/rooms", setRoomList)}
                 content={
                   <>
                     <Link to="/chats/72">
@@ -100,90 +134,14 @@ function MainLayout() {
                         badgeCount={0}
                       />
                     </Link>
-                    {UserList()}
+                    {RoomList()}
                   </>
                 }
               />
               <DropDown
                 title="Контакты"
-                content={
-                  <>
-                    <DropDown
-                      title="Бухгалтерия"
-                      content={
-                        <>
-                          <NaviItem
-                            icon={<FaUsers color="white" size="20" />}
-                            tittle="User1"
-                            badgeCount=""
-                          />
-
-                          <NaviItem
-                            icon={<FaUsers color="white" size="20" />}
-                            tittle="User2"
-                            badgeCount="2"
-                          />
-
-                          <NaviItem
-                            icon={<FaUsers color="white" size="20" />}
-                            tittle="User3"
-                            badgeCount="10"
-                          />
-                        </>
-                      }
-                    />
-
-                    <DropDown
-                      title="Отдел Маркетинга"
-                      content={
-                        <>
-                          <NaviItem
-                            icon={<FaUsers color="white" size="20" />}
-                            tittle="User1"
-                            badgeCount=""
-                          />
-
-                          <NaviItem
-                            icon={<FaUsers color="white" size="20" />}
-                            tittle="User2"
-                            badgeCount="2"
-                          />
-
-                          <NaviItem
-                            icon={<FaUsers color="white" size="20" />}
-                            tittle="User3"
-                            badgeCount="10"
-                          />
-                        </>
-                      }
-                    />
-
-                    <DropDown
-                      title="Команда N"
-                      content={
-                        <>
-                          <NaviItem
-                            icon={<FaUsers color="white" size="20" />}
-                            tittle="User1"
-                            badgeCount=""
-                          />
-
-                          <NaviItem
-                            icon={<FaUsers color="white" size="20" />}
-                            tittle="User2"
-                            badgeCount="2"
-                          />
-
-                          <NaviItem
-                            icon={<FaUsers color="white" size="20" />}
-                            tittle="User3"
-                            badgeCount="10"
-                          />
-                        </>
-                      }
-                    />
-                  </>
-                }
+                onClick={() => getData("users/", setUserList)}
+                content={<>{UserList()}</>}
               />
             </>
           }
