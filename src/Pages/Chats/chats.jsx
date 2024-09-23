@@ -3,9 +3,9 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
 import MessageInput from "../../Shared/inputMessage/messageInput";
-import ChatArea from "../../Widgets/chatArea/chatArea"
+import ChatArea from "../../Widgets/chatArea/chatArea";
 import Message from "../../Shared/Message/message";
-
+import { getData } from "../../Entities/api/getUserList";
 
 const Text = styled.div`
   color: red;
@@ -18,14 +18,17 @@ function Chats() {
   const [message, setMessage] = useState("");
   const [isWebSocketOpen, setIsWebSocketOpen] = useState(false);
   const [chatSocket, setChatSocket] = useState(null);
+  const [roomList, setRoomList] = useState([]);
 
   useEffect(() => {
     axios
       .get(`http://127.0.0.1:8000/chat/rooms/${id}/`)
       .then((response) => {
         if (response.status === 200) {
+          setRoomList(response.data);
           // Загрузка существующих сообщений комнаты
-          setMessages(response.data.messages || []); // Если сообщений нет, установить пустой массив
+          setMessages(response.data.messages || []);
+          getData(`chat/room/message/`, setMessages); // Если сообщений нет, установить пустой массив
         } else {
           console.log("Error: " + response.data.detail);
         }
@@ -37,7 +40,9 @@ function Chats() {
     const room_pk = id;
     const request_id = 1;
     const token = localStorage.getItem("token").trim();
-    const socket = new WebSocket(`ws://localhost:8000/ws/chat/${room_pk}/?token=${token}`);
+    const socket = new WebSocket(
+      `ws://localhost:8000/ws/chat/${room_pk}/?token=${token}`
+    );
 
     socket.onopen = function () {
       console.log("WebSocket открыт");
@@ -68,7 +73,7 @@ function Chats() {
 
     socket.onmessage = function (e) {
       const data = JSON.parse(e.data);
-      console.log("RealTime", data.data);
+      //console.log("RealTime", data.data);
       switch (data.action) {
         case "retrieve":
           setMessages(data.data.messages || []); // Если нет сообщений, пустой массив
@@ -106,56 +111,45 @@ function Chats() {
       );
 
       setMessage(""); // Очищаем поле после отправки сообщения
-      console.log(messages)
+      console.log(messages);
     } else {
       console.log("WebSocket не открыт. Сообщение не отправлено.");
     }
   };
-  function click(){
-    console.log("click")
+
+  function formatRoomName(roomName) {
+    try {
+      const username = localStorage.getItem("username");
+      const newName = roomName
+        .replace(username, "")
+        .replace(/^_+|_+$/g, "")
+        .trim();
+      return newName.charAt(0).toUpperCase() + newName.slice(1);
+    } catch (error) {
+      //console.log(error);
+    }
   }
 
   return (
     <>
-      {/* <div>
-        <h2>Чат</h2>
-        <div>
-          {messages.length > 0 ? ( // Проверка, что массив не пустой
-            messages.map((msg, index) => (
-              <div key={index}>
-                <strong>{msg.user.username}:</strong> {msg.text} <br />
-                <small>{msg.created_at_formatted}</small>
-              </div>
-            ))
-          ) : (
-            <p>Сообщений пока нет</p> // Отображение, если сообщений нет
-          )}
-        </div>
-      </div>
-
-      <input type="text" size="100" value={message} onChange={handleInputChange} />
-      <br />
-      <input type="button" value="Send" onClick={sendMessage} /> */}
       <ChatArea
-      title="Chat"
-      inputValue={message}
-          input={handleInputChange}
-          sendmessage={sendMessage}
-          content={
-       <>{
-          messages.map((msg, index) => (
-              <Message key={index} text={msg.text} sent />
-            ))
-       }
-
-
-
+        title={formatRoomName(roomList.name)}
+        inputValue={message}
+        input={handleInputChange}
+        sendmessage={sendMessage}
+        content={
+          <>
+            {messages
+              .filter((msg) => msg.room.id === parseInt(id))
+              .map((msg, index) =>
+                msg.user.username === localStorage.getItem("username") ? (
+                  <Message key={index} text={msg.text} sent />
+                ) : (
+                  <Message key={index} text={msg.text} />
+                )
+              )}
           </>
-
-      }
-
-
-
+        }
       />
     </>
   );

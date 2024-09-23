@@ -56,15 +56,14 @@ function Login(props){
           axios.post(url, data)
               .then((response) => {
                   if (response.status === 200) {
-                      var token = response.data.auth_token;  // Получаем токен из ответа
+                      var token = response.data.auth_token;  
                       setMsg("Login successful!");
 
-                      // Сохраняем токен и имя пользователя в localStorage
+          
                       localStorage.setItem("login", true);
                       localStorage.setItem('username', username);
-                      localStorage.setItem('token', token);  // Сохраняем токен
+                      localStorage.setItem('token', token);  
 
-                      // Перенаправление на страницу задач
                       setTimeout(() => {
                           history("/");
                       }, 1000);
@@ -89,6 +88,7 @@ function Login(props){
       }
   }
 
+ 
     return(
         <>
           <section>

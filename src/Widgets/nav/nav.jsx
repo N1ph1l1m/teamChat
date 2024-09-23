@@ -3,37 +3,31 @@ import styled from "styled-components";
 
 import UserItem from "../../Shared/userItem/userItem";
 
-
 const NavWrap = styled.div`
-
   min-width: 260px;
-  ${'' /* height: 100vh; */}
+  ${"" /* height: 100vh; */}
   background-color: #000000;
   display: flex;
   align-items: space-around;
   flex-direction: column;
   padding: 10px;
-  overflow:scroll;
+  overflow: scroll;
 
   &::-webkit-scrollbar {
-  display: none;
-}
-
-
-
+    display: none;
+  }
 `;
 const HeaderWrap = styled.div`
   width: 260px;
   height: 98vh;
-  overflow:scroll;
+  overflow: scroll;
 
-
-    &::-webkit-scrollbar {
-  display: none;
-}
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 const FooterWrap = styled.div`
-  margin-top:10px;
+  margin-top: 10px;
   width: 260px;
 `;
 const TitleCompany = styled.h1`
@@ -42,12 +36,12 @@ const TitleCompany = styled.h1`
   margin-bottom: 15px;
 `;
 function Nav(props) {
-  let user = localStorage.getItem('username')
+  let user = localStorage.getItem("username");
   return (
     <NavWrap>
       <HeaderWrap>
-        <TitleCompany>Company N</TitleCompany>
-       {props.navItem}
+        <TitleCompany>teamChat</TitleCompany>
+        {props.navItem}
       </HeaderWrap>
       <FooterWrap>
         <UserItem tittle={user} />
