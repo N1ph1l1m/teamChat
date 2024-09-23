@@ -71,18 +71,10 @@ function MainLayout() {
       <>
         {roomList
           .filter((room) =>
-            room.name.includes(`${localStorage.getItem("username")}`)
-          )
-          .map((room) => {
+             room.name.includes(`${localStorage.getItem("username")}`)
+           )
+        .map((room) => {
             // Удаляем "admin", убираем нижнее подчеркивание в начале и в конце, и делаем первую букву заглавной
-            const newName = room.name
-              .replace(`${localStorage.getItem("username")}`, "")
-              .replace(/^_+|_+$/g, "")
-              .trim();
-
-            const capitalized =
-              newName.charAt(0).toUpperCase() + newName.slice(1);
-
             return (
               <Link
                 key={room.pk}
@@ -91,7 +83,7 @@ function MainLayout() {
               >
                 <NaviItem
                   icon={<MdOutlineTaskAlt color="white" size="20" />}
-                  tittle={capitalized} // Используем обновленное имя
+                  tittle={room.name} // Используем обновленное имя
                   badgeCount={room.pk}
                 />
               </Link>
@@ -100,6 +92,43 @@ function MainLayout() {
       </>
     );
   }
+
+  // function RoomList() {
+  //   console.log(roomList);
+
+  //   return (
+  //     <>
+  //       {roomList
+  //         .filter((room) =>
+  //           room.name.includes(`${localStorage.getItem("username")}`)
+  //         )
+  //         .map((room) => {
+  //           // Удаляем "admin", убираем нижнее подчеркивание в начале и в конце, и делаем первую букву заглавной
+  //           const newName = room.name
+  //             .replace(`${localStorage.getItem("username")}`, "")
+  //             .replace(/^_+|_+$/g, "")
+  //             .trim();
+
+  //           const capitalized =
+  //             newName.charAt(0).toUpperCase() + newName.slice(1);
+
+  //           return (
+  //             <Link
+  //               key={room.pk}
+  //               to={`chats/${room.pk}`}
+  //               // onClick={() => CreateRoom(user.username)}
+  //             >
+  //               <NaviItem
+  //                 icon={<MdOutlineTaskAlt color="white" size="20" />}
+  //                 tittle={capitalized} // Используем обновленное имя
+  //                 badgeCount={room.pk}
+  //               />
+  //             </Link>
+  //           );
+  //         })}
+  //     </>
+  //   );
+  // }
 
   return (
     <>

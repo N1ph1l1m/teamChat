@@ -1,26 +1,36 @@
 import React , { useState } from "react"
-import Message from "../../Shared/Message/message";
-import MessageInput from "../../Shared/inputMessage/messageInput";
+//import Message from "../../Shared/Message/message";
+//import MessageInput from "../../Shared/inputMessage/messageInput";
 import "../chatArea/chatArea.scss"
+//import "../inputMessage/inputMessage.scss"
     function ChatArea(props){
-        const [message,setMessage] = useState([]);
+        // const [message,setMessage] = useState([]);
+        // const [inputValue, setInputValue] = useState("");
 
 
-        const handleSendMessage = (text)=>{
-            if(text.trim()){
-                setMessage([...message, text])
-            }
-        }
-        function showMessage(){
-            return(
-            <>
-                { message.map((msg,index)=>(
-                        <Message key={index} text={msg} sent />
-                    ))
-                }
-            </>
-            )
-        }
+        // const handleSendMessage = (text)=>{
+        //     if(text.trim()){
+        //         setMessage([...message, text])
+        //     }
+        // }
+        // function showMessage(){
+        //     return(
+        //     <>
+        //         { message.map((msg,index)=>(
+        //                 <Message key={index} text={msg} sent />
+        //             ))
+        //         }
+        //     </>
+        //     )
+        // }
+
+        // const handleInputChange = (e) =>{
+        //     setInputValue(e.target.value);
+        // };
+
+        // function sendMessage(){
+        //     setInputValue("")
+        // }
 
     return(
         <div className='chat-area'>
@@ -30,11 +40,19 @@ import "../chatArea/chatArea.scss"
                 </div>
                 <div className="messages">
                     {props.content}
-                    {showMessage()}
                 </div>
             </div>
-            <MessageInput onSend={handleSendMessage}/>
-        </div>
+            <div className="message-input">
+
+                <textarea
+                    placeholder="Type your message"
+                    value={props.inputValue}
+                    onChange={props.input}
+
+                />
+                <button  onClick={props.sendmessage}>Send</button>
+                </div>
+                        </div>
     )
 }
-export default ChatArea;
+export default ChatArea
