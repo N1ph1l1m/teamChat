@@ -26,8 +26,6 @@ function Chats() {
       .then((response) => {
         if (response.status === 200) {
           setRoomList(response.data);
-          // Загрузка существующих сообщений комнаты
-          setMessages(response.data.messages || []);
           getData(`chat/room/message/`, setMessages); // Если сообщений нет, установить пустой массив
         } else {
           console.log("Error: " + response.data.detail);
@@ -75,11 +73,8 @@ function Chats() {
       const data = JSON.parse(e.data);
       //console.log("RealTime", data.data);
       switch (data.action) {
-        case "retrieve":
-          setMessages(data.data.messages || []); // Если нет сообщений, пустой массив
-          break;
         case "create":
-          setMessages((prevMessages) => [...prevMessages, data.data]); // Добавляем новое сообщение
+          setMessages((prevMessages) => [...prevMessages, data.data]);
           break;
         default:
           break;
@@ -141,12 +136,15 @@ function Chats() {
           <>
             {messages
               .filter((msg) => msg.room.id === parseInt(id))
-              .map((msg, index) =>
-                msg.user.username === localStorage.getItem("username") ? (
-                  <Message key={index} text={msg.text} sent />
+              .map((msg, index)=>{
+                const newText = msg.created_at.substring(11,16);
+
+                 return msg.user.username === localStorage.getItem("username") ? (
+                  <Message key={index} text={msg.text}  time={newText} sent />
                 ) : (
-                  <Message key={index} text={msg.text} />
-                )
+                  <Message key={index} text={msg.text} time={newText} />
+                );
+               }
               )}
           </>
         }
