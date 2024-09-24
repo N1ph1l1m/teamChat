@@ -64,3 +64,8 @@
 .taskNav> span{
   color:gray;
 }
+
+.modalButton{
+  background-color: #390cce;
+  padding: 10px;
+}

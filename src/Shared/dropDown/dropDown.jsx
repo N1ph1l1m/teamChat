@@ -34,7 +34,7 @@ function DropDown(props) {
             <BiDotsHorizontalRounded color="white" size="20" />
           </Icon>
           <Icon>
-            <GoPlus color="white" size="20" />
+            <GoPlus onClick={props.plusClick} color="white" size="20" />
           </Icon>
         </div>
       );
@@ -50,7 +50,6 @@ function DropDown(props) {
     return text;
   };
 
-
   const contentShow = showDrop();
   const hoverIcon = showRightIcon();
   return (
@@ -58,7 +57,7 @@ function DropDown(props) {
       className="wrapDrop"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onClick= {showIcons === false ? props.onClick : null}
+      onClick={showIcons === false ? props.onClick : null}
     >
       <div className="dropItem">
         <div className="leftSide">
@@ -70,7 +69,7 @@ function DropDown(props) {
             )}
           </Icon>
           <span className="textDrop"> {truncateText(props.title, 16)}</span>
-               {/* <span className="textDrop"> {props.title}</span> */}
+          {/* <span className="textDrop"> {props.title}</span> */}
         </div>
         {hoverIcon}
       </div>
