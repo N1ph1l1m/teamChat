@@ -7,6 +7,7 @@
     flex-direction: column;
     justify-content: space-between;
 }
+
 .chat-header{
  color:#FFFFFF;
  height: 87%;
@@ -20,33 +21,59 @@
   height: 10%;
   border-radius:10px 10px 0px 0px;
 }
+.message{
+display: flex;
+flex-direction: wrap column;
+justify-content: start;
+}
 .messages{
     padding:20px;
     overflow: auto;
     height: 90%;
     overflow:scroll y hidden clip ;
 
-
 }
 
-.sent{
-    display: flex;
-    justify-content: flex-end;
-}
-.received{
+
+.sent .received{
     display: flex;
     justify-content: flex-start;
 }
-.message-bubble{
-    max-width: 70%;
-    padding:10px;
+// .received{
+//     display: flex;
+//     justify-content: flex-start;
+// }
+.message-bubble {
+    display: inline-block; /* Подстраивает ширину под содержимое */
+    max-width: 40%;
+    min-width: 60px;
+    padding: 10px;
     border-radius: 10px;
+    background-color: #f0f0f0;
+    text-align: justify;
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
 }
+
+.bubble-time-wrap{
+
+    display:flex;
+    justify-content: flex-end;
+    align-items: start;
+
+}
+
+.bubble-time-text{
+    font-size: 12px;
+}
+
 
 .sent .message-bubble{
     background-color:#390cce;
     color:#FFFFFF;
-    border-bottom-right-radius:0 ;
+    border-bottom-left-radius:0 ;
 }
 
 
