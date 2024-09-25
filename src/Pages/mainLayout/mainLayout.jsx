@@ -11,6 +11,7 @@ import "../../App/Styles/link.scss";
 import { getData } from "../../Entities/api/getUserList";
 import { useState } from "react";
 import withAuthentication from "../../App/Utils/withAuthentication";
+import CreateGroupRoom from "../../Entities/api/CreateGroupName.jsx";
 import CreateRoom from "../../Entities/api/createRoom";
 import Modal from "../../Widgets/createGroupChat/modal";
 
@@ -45,7 +46,9 @@ function MainLayout() {
   const [roomList, setRoomList] = useState([]);
   const [isOpen, setOpen] = useState(false);
   const [group, setGroup] = useState([]);
-  const [groupName, setGroupName] = useState([]);
+  const [groupName, setGroupName] = useState();
+  const [selectedUsers, setSelectedUsers] = useState([]);
+
 
   function UserList() {
     return (
@@ -77,7 +80,6 @@ function MainLayout() {
             room.name.includes(`${localStorage.getItem("username")}`)
           )
           .map((room) => {
-            // Удаляем "admin", убираем нижнее подчеркивание в начале и в конце, и делаем первую букву заглавной
             const newName = room.name
               .replace(`${localStorage.getItem("username")}`, "")
               .replace(/^_+|_+$/g, "")
@@ -103,68 +105,42 @@ function MainLayout() {
       </>
     );
   }
-  const [selectedUsers, setSelectedUsers] = useState([]);
 
-  const handleCheckboxChange = (id) => {
-    if (selectedUsers.includes(id)) {
-      // Если пользователь уже выбран, убираем его из массива
-      setSelectedUsers(selectedUsers.filter((userId) => userId !== id));
-    } else {
-      // Иначе добавляем его в массив
-      setSelectedUsers([...selectedUsers, id]);
-    }
-  };
-
-  function checkRadio(id) {
-    setGroup(id);
-    console.log(group);
-  }
-  function SelectUser() {
+  function GroupRoomList() {
     return (
       <>
-        {userlist
-          .filter((user) => user.username !== localStorage.getItem("username"))
-          .map((user) => {
-            const upName =
-              user.username.charAt(0).toUpperCase() + user.username.slice(1);
+         {roomList
+          .filter((room) => room.current_users.length > 2
+          )
+          .map((room) => {
+                const capitalized =
+              room.name.charAt(0).toUpperCase() + room.name.slice(1);
+
             return (
-              <div key={user.id}>
-                <br />
-                <input
-                  type="checkbox"
-                  id={user.id}
-                  checked={selectedUsers.includes(user.id)}
-                  onChange={() => handleCheckboxChange(user.id)}
+              <Link
+                key={room.pk}
+                to={`chats/${room.pk}`}
+                // onClick={() => CreateRoom(user.username)}
+              >
+                <NaviItem
+                  icon={<MdOutlineTaskAlt color="white" size="20" />}
+                  tittle={capitalized}
+                  badgeCount={room.pk}
                 />
-                <label htmlFor={user.id}>{upName}</label>
-              </div>
+              </Link>
             );
           })}
-        <div>
-          <h3>Selected Users:</h3>
-          <ul>
-            {selectedUsers.map((id) => (
-              <li key={id}>{id}</li>
-            ))}
-          </ul>
-        </div>
       </>
     );
   }
 
-  function handleSubmit() {
-    console.log("Submit function!");
-    console.log("Select users = " + selectedUsers);
-    console.log("Select users = " + groupName);
-
-    setOpen(false);
-  }
 
   function handleCancel() {
     setOpen(false);
     setSelectedUsers([]);
+    setGroupName("");
   }
-  function createGroupChat() {
+  function showModalGroupChat() {
     setOpen(true);
     console.log(isOpen);
     return <></>;
@@ -172,11 +148,23 @@ function MainLayout() {
 
   const handleInputChangeName = (e) => {
     setGroupName(e.target.value);
-    console.log(groupName);
     if (e.target.value === "") {
       console.log("username has left blank");
     }
   };
+
+  const handleCheckboxChange = (username) => {
+    if (selectedUsers.includes(username)) {
+      setSelectedUsers(selectedUsers.filter((u) => u !== username));
+      console.log("select 1 " + selectedUsers);
+    } else {
+      // Иначе добавляем его в массив
+      setSelectedUsers([...selectedUsers, username]);
+      console.log("select 2 " + selectedUsers);
+    }
+  };
+
+
 
   function formGroupChat() {
     return (
@@ -199,8 +187,8 @@ function MainLayout() {
                 <input
                   type="checkbox"
                   id={user.id}
-                  checked={selectedUsers.includes(user.id)}
-                  onChange={() => handleCheckboxChange(user.id)}
+                  checked={selectedUsers.includes(user.username)}
+                  onChange={() => handleCheckboxChange(user.username)}
                 />
                 <label htmlFor={user.id}>{upName}</label>
               </div>
@@ -209,15 +197,24 @@ function MainLayout() {
         <div>
           <h3>Selected Users:</h3>
           <ul>
-            {selectedUsers.map((id) => (
-              <li key={id}>{id}</li>
-            ))}
+            {
+              selectedUsers.map((username) => (
+                <>
+                <li key={username}>{username}</li>
+                </>
+              )
+            )
+            }
           </ul>
         </div>
       </>
     );
   }
+
+
+
   const groupChat = formGroupChat();
+
   return (
     <>
       <Main>
@@ -225,7 +222,10 @@ function MainLayout() {
           title="Создать групповой чат"
           isOpen={isOpen}
           onCancel={handleCancel}
-          onSubmit={handleSubmit}
+          onSubmit={()=>{
+            CreateGroupRoom(groupName,selectedUsers);
+            handleCancel()
+            }}
           children={groupChat}
         />
         <Nav
@@ -249,17 +249,19 @@ function MainLayout() {
               <DropDown
                 title="Чаты"
                 onClick={() => getData("chat/rooms", setRoomList)}
-                plusClick={createGroupChat}
                 content={
                   <>
-                    <Link to="/chats/72">
-                      <NaviItem
-                        icon={<MdOutlineTaskAlt color="white" size="20" />}
-                        tittle={"Общий чат"}
-                        badgeCount={0}
-                      />
-                    </Link>
                     {RoomList()}
+                  </>
+                }
+              />
+               <DropDown
+                title="Груповые чаты"
+                onClick={() => getData("chat/rooms", setRoomList)}
+                plusClick={showModalGroupChat}
+                content={
+                  <>
+                    {GroupRoomList()}
                   </>
                 }
               />

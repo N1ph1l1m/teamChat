@@ -99,7 +99,7 @@ import axios from 'axios';
 //         });
 
 // }
-export default CreateRoom
+export default  CreateRoom
 
 // var url = "http://127.0.0.1:8000/auth/token/login/";
 
