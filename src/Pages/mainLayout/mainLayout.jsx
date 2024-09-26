@@ -8,15 +8,16 @@ import { FaUsers } from "react-icons/fa";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { Link, Outlet } from "react-router-dom";
 import "../../App/Styles/link.scss";
+import "../../Widgets/createGroupChat/createGroupChat.scss"
 import { getData } from "../../Entities/api/getUserList";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import withAuthentication from "../../App/Utils/withAuthentication";
 import CreateGroupRoom from "../../Entities/api/CreateGroupName.jsx";
 import CreateRoom from "../../Entities/api/createRoom";
-import Modal from "../../Widgets/createGroupChat/modal";
+import GroupChat from "../../Widgets/createGroupChat/createGroupChat.jsx"
 
 import joinroom from "../../Entities/api/joinroom";
-
+import Badge from "../../Shared/badge/badge.jsx";
 const Main = styled.div`
   width: 100vw;
   height: 100vh;
@@ -49,6 +50,13 @@ function MainLayout() {
   const [groupName, setGroupName] = useState();
   const [selectedUsers, setSelectedUsers] = useState([]);
 
+
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // useEffect(() => {
+  //   getData("users/", setUserList)
+
+  //   },
+  // )
 
   function UserList() {
     return (
@@ -169,43 +177,47 @@ function MainLayout() {
   function formGroupChat() {
     return (
       <>
-        <input
-          placeholder="Введите название чата"
-          onChange={(e) => handleInputChangeName(e)}
-        ></input>
-        <br />
+        <div className="header-model">
+          <div className="select-avatar"></div>
+          <div className="inputNameGroup">
+            <span className="modalTitle">Название группы</span>
+            <input
+              onChange={(e) => handleInputChangeName(e)}
+              />
+             <ul className="selectedUsers">
+                {
+                  selectedUsers.map((username) => (
+                    <div className="userBadge">
+                    <div className="li-avatar"></div>
+                    <li className="selectedUsersItems" key={username}>{username}</li>
+                    </div>
+                  )
+                )
+                }
+            </ul>
+          </div>
+        </div>
         <span>Выберите участников чата</span>
 
-        {userlist
-          .filter((user) => user.username !== localStorage.getItem("username"))
-          .map((user) => {
-            const upName =
-              user.username.charAt(0).toUpperCase() + user.username.slice(1);
-            return (
-              <div key={user.id}>
-                <br />
-                <input
-                  type="checkbox"
-                  id={user.id}
-                  checked={selectedUsers.includes(user.username)}
-                  onChange={() => handleCheckboxChange(user.username)}
-                />
-                <label htmlFor={user.id}>{upName}</label>
-              </div>
-            );
-          })}
+{userlist
+  .filter((user) => user.username !== localStorage.getItem("username"))
+  .map((user) => {
+    const upName = user.username.charAt(0).toUpperCase() + user.username.slice(1);
+    return (
+      <label className=" checkboxWrap check-color " key={user.id} htmlFor={user.id}>
+
+        <input
+          type="checkbox"
+          className="checkbox"
+          id={user.id}
+          checked={selectedUsers.includes(user.username)}
+          onChange={() => handleCheckboxChange(user.username)}
+        />
+        <span className="checkboxLabel">{upName}</span>
+      </label>
+    );
+  })}
         <div>
-          <h3>Selected Users:</h3>
-          <ul>
-            {
-              selectedUsers.map((username) => (
-                <>
-                <li key={username}>{username}</li>
-                </>
-              )
-            )
-            }
-          </ul>
         </div>
       </>
     );
@@ -218,8 +230,7 @@ function MainLayout() {
   return (
     <>
       <Main>
-        <Modal
-          title="Создать групповой чат"
+        <GroupChat
           isOpen={isOpen}
           onCancel={handleCancel}
           onSubmit={()=>{

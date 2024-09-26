@@ -25,7 +25,7 @@ value,circle,className,inline,outer, ...attrs
     return(
     <span className={classes}>
         {value}
-    </span>    
+    </span>
     )
 };
 
@@ -39,12 +39,12 @@ Badge.propTypes = {
     inline: PropTypes.bool,
     outer: PropTypes.bool,
   };
-  
+
   Badge.defaultProps = {
     circle: false,
     className: '',
     inline: false,
     outer: false,
   };
-  
+
   export default Badge;

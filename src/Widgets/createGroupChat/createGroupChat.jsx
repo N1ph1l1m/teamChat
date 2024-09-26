@@ -3,22 +3,17 @@ import React from "react";
 import Portal from "./portal";
 import PropTypes from "prop-types";
 
-import "./modal.scss";
+import "./createGroupChat.scss";
 import Icon from "../../Shared/icon/icon";
 import Button from "../../Shared/button/button";
 
-const Modal = ({ title, isOpen, onCancel, onSubmit, children }) => {
+const GroupChat = ({ title, isOpen, onCancel, onSubmit, children }) => {
   return (
     <>
       {isOpen && (
         <Portal>
           <div className="modalOverlay">
             <div className="modalWrap">
-              <div className="modalHeader">
-                <div className="modalTitle">
-                  <span>{title}</span>
-                </div>
-              </div>
               <div className="modalBody">{children}</div>
               <div className="modalFooter">
                 <Button className="modalButton" onClick={onCancel} invert>
@@ -36,7 +31,7 @@ const Modal = ({ title, isOpen, onCancel, onSubmit, children }) => {
   );
 };
 
-Modal.propTypes = {
+GroupChat.propTypes = {
   title: PropTypes.string,
   isOpen: PropTypes.bool,
   onCancel: PropTypes.func,
@@ -44,11 +39,11 @@ Modal.propTypes = {
   children: PropTypes.node,
 };
 
-Modal.defaultProps = {
+GroupChat.defaultProps = {
   title: "Modal title",
   isOpen: false,
   onCancel: () => {},
   onSubmit: () => {},
   children: null,
 };
-export default Modal;
+export default GroupChat;
