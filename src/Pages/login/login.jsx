@@ -56,13 +56,16 @@ function Login(props){
           axios.post(url, data)
               .then((response) => {
                   if (response.status === 200) {
-                      var token = response.data.auth_token;  
+                      var token = response.data.auth_token;
+                      var id = response.data.id;
+                      console.log(response)
                       setMsg("Login successful!");
 
-          
+
                       localStorage.setItem("login", true);
                       localStorage.setItem('username', username);
-                      localStorage.setItem('token', token);  
+                      localStorage.setItem('id', id);
+                      localStorage.setItem('token', token);
 
                       setTimeout(() => {
                           history("/");
@@ -88,7 +91,7 @@ function Login(props){
       }
   }
 
- 
+
     return(
         <>
           <section>

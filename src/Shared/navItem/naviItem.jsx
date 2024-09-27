@@ -1,8 +1,9 @@
 import React from "react";
 import "../../App/Styles/navItem.scss";
-
 import Badge from "../badge/badge";
 import Icon from "../icon/icon";
+
+
 
 function NaviItem(props) {
   function numBadge() {

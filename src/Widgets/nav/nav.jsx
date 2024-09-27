@@ -1,14 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-
+import { getData } from "../../Entities/api/getUserList";
+import { useEffect, useState } from "react";
 import UserItem from "../../Shared/userItem/userItem";
 
 const NavWrap = styled.div`
   min-width: 260px;
-  ${"" /* height: 100vh; */}
   background-color: #000000;
   display: flex;
-  align-items: space-around;
   flex-direction: column;
   padding: 10px;
   overflow: scroll;
@@ -35,8 +34,20 @@ const TitleCompany = styled.h1`
   font-size: 16px;
   margin-bottom: 15px;
 `;
+
 function Nav(props) {
-  let user = localStorage.getItem("username");
+  const [authUser, setAuthUser] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getData("users/", setAuthUser);
+    };
+    fetchData();
+  }, []);
+;
+  const userAuth = localStorage.getItem("username");
+  const authenticatedUser = authUser.find((user) => user.username === userAuth);
+
   return (
     <NavWrap>
       <HeaderWrap>
@@ -44,7 +55,10 @@ function Nav(props) {
         {props.navItem}
       </HeaderWrap>
       <FooterWrap>
-        <UserItem tittle={user} />
+        {authenticatedUser && (
+          <UserItem tittle={authenticatedUser.username}
+           icon={<img src = {authenticatedUser.photo} alt ={authenticatedUser.username} />} />
+        )}
       </FooterWrap>
     </NavWrap>
   );

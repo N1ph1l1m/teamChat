@@ -8,16 +8,17 @@ import { FaUsers } from "react-icons/fa";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { Link, Outlet } from "react-router-dom";
 import "../../App/Styles/link.scss";
-import "../../Widgets/createGroupChat/createGroupChat.scss"
+import "../../Widgets/createGroupChat/createGroupChat.scss";
 import { getData } from "../../Entities/api/getUserList";
 import { useState, useEffect } from "react";
 import withAuthentication from "../../App/Utils/withAuthentication";
 import CreateGroupRoom from "../../Entities/api/CreateGroupName.jsx";
 import CreateRoom from "../../Entities/api/createRoom";
-import GroupChat from "../../Widgets/createGroupChat/createGroupChat.jsx"
+import GroupChat from "../../Widgets/createGroupChat/createGroupChat.jsx";
 
 import joinroom from "../../Entities/api/joinroom";
 import Badge from "../../Shared/badge/badge.jsx";
+
 const Main = styled.div`
   width: 100vw;
   height: 100vh;
@@ -50,7 +51,6 @@ function MainLayout() {
   const [groupName, setGroupName] = useState();
   const [selectedUsers, setSelectedUsers] = useState([]);
 
-
   // // eslint-disable-next-line react-hooks/exhaustive-deps
   // useEffect(() => {
   //   getData("users/", setUserList)
@@ -63,13 +63,20 @@ function MainLayout() {
       <>
         {userlist
           .filter((user) => user.username !== localStorage.getItem("username"))
-          .map((user) => {
+
+          .map((user, index) => {
             const upName =
               user.username.charAt(0).toUpperCase() + user.username.slice(1);
             return (
               <>
                 <NaviItem
-                  icon={<MdOutlineTaskAlt color="white" size="20" />}
+                  key={index}
+                  icon={
+                    <img
+                      src={user.photo}
+                      alt={`${user.username}'s avatar`}
+                    />
+                   }
                   tittle={upName}
                   badgeCount={user.id}
                 />
@@ -81,20 +88,23 @@ function MainLayout() {
   }
 
   function RoomList() {
+    const loggedInUsername = localStorage.getItem("username");
     return (
       <>
         {roomList
-          .filter((room) =>
-            room.name.includes(`${localStorage.getItem("username")}`)
-          )
+          .filter((room) => room.name.includes(loggedInUsername))
           .map((room) => {
             const newName = room.name
-              .replace(`${localStorage.getItem("username")}`, "")
+              .replace(loggedInUsername, "")
               .replace(/^_+|_+$/g, "")
               .trim();
 
             const capitalized =
               newName.charAt(0).toUpperCase() + newName.slice(1);
+
+            const otherUser = room.current_users.find(
+              (user) => user.username !== loggedInUsername
+            );
 
             return (
               <Link
@@ -103,7 +113,13 @@ function MainLayout() {
                 // onClick={() => CreateRoom(user.username)}
               >
                 <NaviItem
-                  icon={<MdOutlineTaskAlt color="white" size="20" />}
+                  icon={
+                    <img
+                      src={otherUser?.photo}
+                      alt={`${room.pk}'s avatar`}
+
+                    />
+                  }
                   tittle={capitalized} // Используем обновленное имя
                   badgeCount={room.pk}
                 />
@@ -117,11 +133,10 @@ function MainLayout() {
   function GroupRoomList() {
     return (
       <>
-         {roomList
-          .filter((room) => room.current_users.length > 2
-          )
+        {roomList
+          .filter((room) => room.current_users.length > 2)
           .map((room) => {
-                const capitalized =
+            const capitalized =
               room.name.charAt(0).toUpperCase() + room.name.slice(1);
 
             return (
@@ -142,7 +157,6 @@ function MainLayout() {
     );
   }
 
-
   function handleCancel() {
     setOpen(false);
     setSelectedUsers([]);
@@ -161,18 +175,17 @@ function MainLayout() {
     }
   };
 
-  const handleCheckboxChange = (username) => {
-    if (selectedUsers.includes(username)) {
-      setSelectedUsers(selectedUsers.filter((u) => u !== username));
-      console.log("select 1 " + selectedUsers);
-    } else {
-      // Иначе добавляем его в массив
-      setSelectedUsers([...selectedUsers, username]);
-      console.log("select 2 " + selectedUsers);
-    }
+  const handleCheckboxChange = (username, photo) => {
+    setSelectedUsers((prevSelectedUsers) => {
+      if (prevSelectedUsers.some((user) => user.username === username)) {
+        // Если пользователь уже выбран, удаляем его
+        return prevSelectedUsers.filter((user) => user.username !== username);
+      } else {
+        // Если пользователь не выбран, добавляем его
+        return [...prevSelectedUsers, { username, photo }];
+      }
+    });
   };
-
-
 
   function formGroupChat() {
     return (
@@ -181,49 +194,50 @@ function MainLayout() {
           <div className="select-avatar"></div>
           <div className="inputNameGroup">
             <span className="modalTitle">Название группы</span>
-            <input
-              onChange={(e) => handleInputChangeName(e)}
-              />
-             <ul className="selectedUsers">
-                {
-                  selectedUsers.map((username) => (
-                    <div className="userBadge">
-                    <div className="li-avatar"></div>
-                    <li className="selectedUsersItems" key={username}>{username}</li>
-                    </div>
-                  )
-                )
-                }
+            <input onChange={(e) => handleInputChangeName(e)} />
+            <ul className="selectedUsers">
+              {selectedUsers.map((user) => (
+                <div className="userBadge">
+                  <img className="li-avatar" src={user.photo} alt={user.name}/>
+                  <li className="selectedUsersItems" key={user}>
+                    {user.username}
+                  </li>
+                </div>
+              ))}
             </ul>
           </div>
         </div>
         <span>Выберите участников чата</span>
-
-{userlist
-  .filter((user) => user.username !== localStorage.getItem("username"))
-  .map((user) => {
-    const upName = user.username.charAt(0).toUpperCase() + user.username.slice(1);
-    return (
-      <label className=" checkboxWrap check-color " key={user.id} htmlFor={user.id}>
-
-        <input
-          type="checkbox"
-          className="checkbox"
-          id={user.id}
-          checked={selectedUsers.includes(user.username)}
-          onChange={() => handleCheckboxChange(user.username)}
-        />
-        <span className="checkboxLabel">{upName}</span>
-      </label>
-    );
-  })}
-        <div>
+        <div className="wrapCheckBox">
+        {userlist
+          .filter((user) => user.username !== localStorage.getItem("username"))
+          .map((user) => {
+            const upName =
+              user.username.charAt(0).toUpperCase() + user.username.slice(1);
+            return (
+              <>
+              <label
+                className="checkboxWrap"
+                key={user.id}
+                htmlFor={user.id}
+              >
+                 <img  className="checkboxUserAvatar" src={user.photo} alt={user.username}/>
+                 <input
+                  type="checkbox"
+                  className="checkbox"
+                  id={user.id}
+                  checked={selectedUsers.some((selectedUser) => selectedUser.username === user.username)}
+                  onChange={() => handleCheckboxChange(user.username, user.photo)}
+                />
+                <span className="checkboxLabel">{upName}</span>
+              </label>
+              </>
+            );
+          })}
         </div>
       </>
     );
   }
-
-
 
   const groupChat = formGroupChat();
 
@@ -233,10 +247,10 @@ function MainLayout() {
         <GroupChat
           isOpen={isOpen}
           onCancel={handleCancel}
-          onSubmit={()=>{
-            CreateGroupRoom(groupName,selectedUsers);
-            handleCancel()
-            }}
+          onSubmit={() => {
+            CreateGroupRoom(groupName, selectedUsers);
+            handleCancel();
+          }}
           children={groupChat}
         />
         <Nav
@@ -260,21 +274,16 @@ function MainLayout() {
               <DropDown
                 title="Чаты"
                 onClick={() => getData("chat/rooms", setRoomList)}
-                content={
-                  <>
-                    {RoomList()}
-                  </>
-                }
+                content={<>{RoomList()}</>}
               />
-               <DropDown
+              <DropDown
                 title="Груповые чаты"
-                onClick={() => getData("chat/rooms", setRoomList)}
+                onClick={() => (
+                  getData("users/", setUserList),
+                  getData("chat/rooms", setRoomList)
+                )}
                 plusClick={showModalGroupChat}
-                content={
-                  <>
-                    {GroupRoomList()}
-                  </>
-                }
+                content={<>{GroupRoomList()}</>}
               />
               <DropDown
                 title="Контакты"

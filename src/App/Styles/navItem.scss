@@ -1,29 +1,37 @@
 
 .wrap{
-    
     display: flex;
     flex-direction: row;
     align-items:center;
-    height: 40px;
-    max-width: 240px;
+    height: 50px;
+    width: 100%;
     border-radius: 5px;
+    overflow: auto;
     cursor: pointer;
     &:hover{
         background-color:rgba(116, 116, 116, 0.461);
     }
+    &::-webkit-scrollbar{
+        display: none;
+      }
 }
 .tittle{
     color:#ffffff;
     font-size: 16px;
     display: inline;
     margin-left: 10px;
-    font-weight:400 ;
+    font-weight:600 ;
 }
 .iconText{
     display: flex;
     align-items:center;
     height: 35px;
    // border:1px solid red;
+}
+.iconText  img{
+    width: 40px;
+    height: 40px;
+    border-radius:50px;
 }
 .menuWrap{
     width: 239px ;
@@ -33,7 +41,7 @@
     justify-content: space-between;
     align-items:center;
     padding: 5px;
-   
+
 }
 .badge{
     width: 40px;
@@ -49,5 +57,5 @@
 .bell:hover{
     background-color:purple;
     border-radius: 5px;
-   
+
 }

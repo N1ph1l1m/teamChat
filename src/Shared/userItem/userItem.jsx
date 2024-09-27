@@ -2,6 +2,7 @@ import React from "react";
 import Icon from "../icon/icon";
 import { BsFillBellFill } from "react-icons/bs";
 import { FaRegUserCircle } from "react-icons/fa";
+import { RiLogoutBoxLine } from "react-icons/ri";
 import '../../App/Styles/navItem.scss';
 import {useNavigate} from 'react-router-dom';
 import axios from "axios";
@@ -54,14 +55,14 @@ function UserItem(props) {
       <div className="menuWrap">
         <div className="iconText">
           <Icon>
-            <FaRegUserCircle color="white" size="20" />
+            {props.icon}
           </Icon>
           <p className="tittle">{props.tittle}</p>
         </div>
 
         <div className="bell">
           <Icon onClick={logOut}>
-            <BsFillBellFill color="white" size="20" />
+            <RiLogoutBoxLine color="white" size="25" />
           </Icon>
         </div>
       </div>
