@@ -69,6 +69,7 @@ function MainLayout() {
               user.username.charAt(0).toUpperCase() + user.username.slice(1);
             return (
               <>
+              <Link></Link>
                 <NaviItem
                   key={index}
                   icon={
@@ -87,13 +88,19 @@ function MainLayout() {
     );
   }
 
+
+
+
   function RoomList() {
     const loggedInUsername = localStorage.getItem("username");
+
+    //console.log(roomList.current_users)
     return (
       <>
         {roomList
           .filter((room) => room.name.includes(loggedInUsername))
           .map((room) => {
+           // console.log(room.current_users)
             const newName = room.name
               .replace(loggedInUsername, "")
               .replace(/^_+|_+$/g, "")

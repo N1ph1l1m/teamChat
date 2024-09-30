@@ -26,7 +26,9 @@ function Chats() {
       .then((response) => {
         if (response.status === 200) {
           setRoomList(response.data);
+          // console.log(roomList)
           getData(`chat/room/message/`, setMessages); // Если сообщений нет, установить пустой массив
+
         } else {
           console.log("Error: " + response.data.detail);
         }
@@ -134,18 +136,31 @@ function Chats() {
         sendmessage={sendMessage}
         content={
           <>
-            {messages
-              .filter((msg) => msg.room.id === parseInt(id))
-              .map((msg, index)=>{
-                const newText = msg.created_at.substring(11,16);
+   {messages
+  .filter((msg) => msg.room.id === parseInt(id))
+  .map((msg, index, arr) => {
+    const newText = msg.created_at.substring(11, 16);
+    const messageDate = msg.created_at.substring(0, 10);
+    const previousMessage = arr[index - 1];
+    const previousDate = previousMessage ? previousMessage.created_at.substring(0, 10) : null;
+    const isNewDay = previousDate !== messageDate;
 
-                 return msg.user.username === localStorage.getItem("username") ? (
-                  <Message key={index} text={msg.text}  time={newText} sent />
-                ) : (
-                  <Message key={index} text={msg.text} time={newText} />
-                );
-               }
-              )}
+    return (
+      <div key={index}>
+        {isNewDay && (
+          <Text>{messageDate}</Text>
+        )}
+        {msg.user.username === localStorage.getItem("username") ? (
+          <>
+            <Message text={msg.text} time={newText} sent />
+          </>
+        ) : (
+          <Message text={msg.text} time={newText} />
+        )}
+      </div>
+    );
+  })}
+
           </>
         }
       />

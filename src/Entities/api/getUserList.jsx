@@ -16,35 +16,3 @@ export function getData(url, setData) {
       console.error("Error fetching data:", error);
     });
 }
-
-export function webList(sentdata) {
-  let token = localStorage.getItem("token");
-  const ws = new WebSocket(`ws://localhost:8000/ws/?token=${token}`);
-
-  ws.onopen = function (e) {
-    console.log("WebSocket Open");
-    ws.send(
-      JSON.stringify({
-        action: "list",
-        request_id: new Date().getTime(),
-      })
-    );
-  };
-
-  ws.onmessage = function (e) {
-    const response = JSON.parse(e.data);
-    if (response && response.data) {
-      sentdata(response.data); // Set the array from `data` field
-    }
-  };
-
-  ws.onerror = function (error) {
-    console.error("WebSocket Error: ", error);
-  };
-
-  // Обработчик закрытия соединения
-  ws.onclose = function () {
-    sentdata("");
-    console.log("WebSocket connection closed");
-  };
-}
