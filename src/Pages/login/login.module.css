@@ -1,0 +1,93 @@
+.wrapContainer{
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.itemContainer {
+  width: 100%;
+  max-width: 500px;
+  padding: 50px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  background-color: white;
+
+}
+
+  .titleReg {
+    font-size: 34px;
+    font-weight: 900;
+    text-align: center;
+    color:#3d474d;
+  }
+  .form-outline {
+    border: 1px solid red;
+  }
+
+  .checkAccount {
+    margin: 0 auto;
+    width: 400px;
+    height: 20px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .form-check {
+    margin-top: 9px;
+    width: 30px;
+    cursor: pointer;
+  }
+
+  .authStatus{
+    max-width: 1000px;
+    margin: 0px auto;
+    margin-bottom: 5px;
+  }
+  .success{
+    text-align: center;
+    font-size: 16px;
+    color:green;
+  }
+  .error{
+    text-align: center;
+    font-size: 16px;
+    color:red;
+  }
+  .wrapInput{
+    position: relative;
+    width:80%;
+    margin: 0px auto;
+
+  }
+  .inputNewSize{
+    width: 100%;
+    text-align: center;
+  }
+  .newSize{
+    margin:10px auto;
+    width: 100%;
+    padding: 10px;
+    text-transform: uppercase;
+    background-color:#390cce;
+    font-weight: bold;
+  }
+  .switchState{
+    color:#0af;
+    font-size: 18px;
+    font-weight: 900;
+    cursor:pointer;
+    float:right;
+    position: absolute;
+    right: 50px;
+    top:30px;
+  }
+
+  @media (max-width: 600px) {
+    .itemContainer {
+      padding: 20px;
+      width: 90%;
+    }
+  }

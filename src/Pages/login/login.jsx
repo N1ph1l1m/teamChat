@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from "react";
- import { Link } from "react-router-dom";
 import {useNavigate} from 'react-router-dom';
-//import {useNavigate} from 'react-router-dom';
 import Button from '../../Shared/button/button'
 import Input from '../../Shared/input/input'
 import axios from 'axios';
-
-
-//import '../loginform.css'
+import styles  from "../login/login.module.css"
 function Login(props){
- // const naviget = useNavigate();
 
     const [username, setusername] = useState("");
     const [password, setpassword1] = useState("");
@@ -29,14 +24,14 @@ function Login(props){
             setError("");
             setusername(e.target.value);
             if (e.target.value === "") {
-              setError("username has left blank");
+              setError("Логин не может быть пустым");
             }
             break;
           case "password":
             setpassword1("");
             setpassword1(e.target.value);
             if (e.target.value === "") {
-              setError("password has left blank");
+              setError("Пароль не может быть пустым");
             }
             break;
           default:
@@ -59,8 +54,8 @@ function Login(props){
                       var token = response.data.auth_token;
                       var id = response.data.id;
                       console.log(response)
-                      setMsg("Login successful!");
 
+                      setMsg("Авторизация успешна!");
 
                       localStorage.setItem("login", true);
                       localStorage.setItem('username', username);
@@ -72,69 +67,65 @@ function Login(props){
                       }, 1000);
                   } else {
                       setError("Login failed: " + response.data.detail);
+                      console.log("Login failed: " + response.data.detail)
                   }
               })
               .catch((err) => {
                   if (err.response && err.response.status === 400) {
-                      setError("Bad Request: " + err.response.data.detail);
+                      setError("Неверный логин или пароль");
+                      console.log( err.response.data.detail)
                   } else {
-                      setError("An error occurred: " + err.message);
+                      setError("Произошла ошибка: " + err.message);
                   }
                   console.log(err);
               });
-
-          // Сброс полей формы
           setusername("");
           setpassword1("");
       } else {
-          setError("All fields are required!");
+          setError("Все поля обязательны для заполнения!");
       }
   }
 
 
     return(
-        <>
-          <section>
-          <div className="wrap_container">
-          <div className="item_container">
-          <h1 className="titleReg">Login</h1>
-          <p>
+        <div className={styles.wrapContainer}>
+          <div className={styles.itemContainer}>
+          <h1 className={styles.titleReg}>Login</h1>
+          <div className={styles.authStatus}>
             {msg !== "" ? (
-              <span className="success">{msg}</span>
+              <span className={styles.success}>{msg}</span>
             ) : (
-              <span className="error">{error}</span>
+              <span className={styles.error}>{error}</span>
             )}
-          </p>
-
-          <Input
+          </div>
+            <div className={styles.wrapInput}>
+            <Input
+            className={styles.inputNewSize}
             type="text"
             id="username"
-            placeholder="username"
+            placeholder="Login"
             value={username}
             onChange={(e) => handleInputChange(e, "username")}
           />
           <Input
-            type="passwordword"
+           className={styles.inputNewSize}
+            type="password"
             id="password"
-            placeholder="passwordword"
+            placeholder="Password"
             value={password}
             onChange={(e) => handleInputChange(e, "password")}
           />
-
-          <Button type="submit"
-            className="newSize"
-          onClick={loginSubmit}
-          >
+             <Button type="submit"
+            className={styles.newSize}
+            onClick={loginSubmit}>
             Login
           </Button>
-          <br />
+            </div>
+
+
 
         </div>
-          </div>
-
-      </section>
-      <h1>login</h1>
-        </>
+        </div>
     )
 }
 export default Login;
