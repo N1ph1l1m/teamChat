@@ -1,0 +1,70 @@
+.message{
+    display: flex;
+    flex-direction: wrap column;
+    justify-content: start;
+    align-items:flex-end;
+    margin-bottom: 10px;
+    position: relative;
+    }
+
+.messageAvatar{
+border:1px solid black;
+width: 40px;
+height: 40px;
+border-radius:50px;
+margin-top: 20px;
+margin-right: 3px;
+
+}
+
+.messageBubble {
+    position: relative;
+    display: inline-block;
+    max-width: 40%;
+    min-width: 60px;
+    padding: 10px ;
+    border-radius: 20px;
+    background-color: #f0f0f0;
+    text-align: justify;
+
+}
+.bubbleNameWrap{
+    display:flex;
+    justify-content: flex-start;
+    align-items: start;
+    margin-bottom: 3px;
+}
+.bubbleTimeWrap{
+    display:flex;
+    justify-content: flex-end;
+    align-items: start;
+}
+
+.sent .received{
+    display: flex;
+    justify-content: flex-start;
+}
+
+.bubbleNameText{
+    font-size: 16px;
+    font-weight: 700;
+
+}
+.bubbleTimeText{
+    font-size: 12px;
+}
+
+
+.sent .messageBubble{
+    background-color:#390cce;
+    color:#FFFFFF;
+    border-bottom-left-radius:0 ;
+}
+
+
+
+.received .messageBubble{
+    background-color:#d3cdcd;
+    border-bottom-left-radius:0 ;
+    color:black;
+}

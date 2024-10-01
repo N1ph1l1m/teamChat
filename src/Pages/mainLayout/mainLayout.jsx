@@ -100,7 +100,7 @@ function MainLayout() {
         {roomList
           .filter((room) => room.name.includes(loggedInUsername))
           .map((room) => {
-           // console.log(room.current_users)
+           console.log(room)
             const newName = room.name
               .replace(loggedInUsername, "")
               .replace(/^_+|_+$/g, "")
@@ -109,9 +109,11 @@ function MainLayout() {
             const capitalized =
               newName.charAt(0).toUpperCase() + newName.slice(1);
 
-            const otherUser = room.current_users.find(
-              (user) => user.username !== loggedInUsername
-            );
+
+
+
+          ;
+
 
             return (
               <Link
@@ -122,7 +124,7 @@ function MainLayout() {
                 <NaviItem
                   icon={
                     <img
-                      src={otherUser?.photo}
+                      src={room.host.photo}
                       alt={`${room.pk}'s avatar`}
 
                     />
@@ -149,7 +151,7 @@ function MainLayout() {
             return (
               <Link
                 key={room.pk}
-                to={`chats/${room.pk}`}
+                to={`grchats/${room.pk}`}
                 // onClick={() => CreateRoom(user.username)}
               >
                 <NaviItem
@@ -280,7 +282,8 @@ function MainLayout() {
               </Link>
               <DropDown
                 title="Чаты"
-                onClick={() => getData("chat/rooms", setRoomList)}
+                onClick={() =>
+                getData("chat/rooms", setRoomList)}
                 content={<>{RoomList()}</>}
               />
               <DropDown

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
-
+import MessageInput from "../../Shared/inputMessage/messageInput";
 import ChatArea from "../../Widgets/chatArea/chatArea";
 import Message from "../../Shared/Message/message";
 import { getData } from "../../Entities/api/getUserList";
@@ -12,7 +12,7 @@ const Text = styled.div`
   font-size: 14px;
 `;
 
-function Chats() {
+function GroupChats() {
   const { id } = useParams();
   const [messages, setMessages] = useState([]); // Массив для хранения сообщений, по умолчанию пустой массив
   const [message, setMessage] = useState("");
@@ -137,7 +137,7 @@ function Chats() {
    {messages
   .filter((msg) => msg.room.id === parseInt(id))
   .map((msg, index, arr) => {
-    {/* console.log(arr) */}
+    console.log(arr)
     const newText = msg.created_at.substring(11, 16);
     const messageDate = msg.created_at.substring(0, 10);
     const previousMessage = arr[index - 1];
@@ -156,7 +156,7 @@ function Chats() {
             <Message text={msg.text} time={newText} sent avatar={msg.user.photo}/>
           </>
         ) : (<>
-          <Message text={msg.text} time={newText}  avatar={msg.user.photo}  />
+          <Message text={msg.text} time={newText}  avatar={msg.user.photo}   username={msg.user.username}/>
         </>)}
       </div>
     );
@@ -168,4 +168,4 @@ function Chats() {
   );
 }
 
-export default Chats;
+export default GroupChats;

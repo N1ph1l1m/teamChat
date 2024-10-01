@@ -21,11 +21,8 @@
   height: 10%;
   border-radius:10px 10px 0px 0px;
 }
-.message{
-display: flex;
-flex-direction: wrap column;
-justify-content: start;
-}
+
+
 .messages{
     padding:20px;
     overflow: auto;
@@ -35,50 +32,9 @@ justify-content: start;
 }
 
 
-.sent .received{
-    display: flex;
-    justify-content: flex-start;
-}
-
-.message-bubble {
-    display: inline-block; /* Подстраивает ширину под содержимое */
-    max-width: 40%;
-    min-width: 60px;
-    padding: 10px;
-    border-radius: 10px;
-    background-color: #f0f0f0;
-    text-align: justify;
-    word-wrap: break-word;
-    word-break: break-word;
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
-}
-
-.bubble-time-wrap{
-
-    display:flex;
-    justify-content: flex-end;
-    align-items: start;
-
-}
-
-.bubble-time-text{
-    font-size: 12px;
-}
 
 
-.sent .message-bubble{
-    background-color:#390cce;
-    color:#FFFFFF;
-    border-bottom-left-radius:0 ;
-}
 
-
-.received .message-bubble{
-    background-color:#eaeaea;
-    border-bottom-left-radius:0 ;
-    color:black;
-}
 
 
 .message-input{
