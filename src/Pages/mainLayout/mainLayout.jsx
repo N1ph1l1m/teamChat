@@ -69,15 +69,12 @@ function MainLayout() {
               user.username.charAt(0).toUpperCase() + user.username.slice(1);
             return (
               <>
-              <Link></Link>
+                <Link></Link>
                 <NaviItem
                   key={index}
                   icon={
-                    <img
-                      src={user.photo}
-                      alt={`${user.username}'s avatar`}
-                    />
-                   }
+                    <img src={user.photo} alt={`${user.username}'s avatar`} />
+                  }
                   tittle={upName}
                   badgeCount={user.id}
                 />
@@ -88,9 +85,6 @@ function MainLayout() {
     );
   }
 
-
-
-
   function RoomList() {
     const loggedInUsername = localStorage.getItem("username");
 
@@ -100,7 +94,6 @@ function MainLayout() {
         {roomList
           .filter((room) => room.name.includes(loggedInUsername))
           .map((room) => {
-           console.log(room)
             const newName = room.name
               .replace(loggedInUsername, "")
               .replace(/^_+|_+$/g, "")
@@ -108,12 +101,6 @@ function MainLayout() {
 
             const capitalized =
               newName.charAt(0).toUpperCase() + newName.slice(1);
-
-
-
-
-          ;
-
 
             return (
               <Link
@@ -123,11 +110,7 @@ function MainLayout() {
               >
                 <NaviItem
                   icon={
-                    <img
-                      src={room.host.photo}
-                      alt={`${room.pk}'s avatar`}
-
-                    />
+                    <img src={room.host.photo} alt={`${room.pk}'s avatar`} />
                   }
                   tittle={capitalized} // Используем обновленное имя
                   badgeCount={room.pk}
@@ -207,7 +190,7 @@ function MainLayout() {
             <ul className="selectedUsers">
               {selectedUsers.map((user) => (
                 <div className="userBadge">
-                  <img className="li-avatar" src={user.photo} alt={user.name}/>
+                  <img className="li-avatar" src={user.photo} alt={user.name} />
                   <li className="selectedUsersItems" key={user}>
                     {user.username}
                   </li>
@@ -218,31 +201,42 @@ function MainLayout() {
         </div>
         <span>Выберите участников чата</span>
         <div className="wrapCheckBox">
-        {userlist
-          .filter((user) => user.username !== localStorage.getItem("username"))
-          .map((user) => {
-            const upName =
-              user.username.charAt(0).toUpperCase() + user.username.slice(1);
-            return (
-              <>
-              <label
-                className="checkboxWrap"
-                key={user.id}
-                htmlFor={user.id}
-              >
-                 <img  className="checkboxUserAvatar" src={user.photo} alt={user.username}/>
-                 <input
-                  type="checkbox"
-                  className="checkbox"
-                  id={user.id}
-                  checked={selectedUsers.some((selectedUser) => selectedUser.username === user.username)}
-                  onChange={() => handleCheckboxChange(user.username, user.photo)}
-                />
-                <span className="checkboxLabel">{upName}</span>
-              </label>
-              </>
-            );
-          })}
+          {userlist
+            .filter(
+              (user) => user.username !== localStorage.getItem("username")
+            )
+            .map((user) => {
+              const upName =
+                user.username.charAt(0).toUpperCase() + user.username.slice(1);
+              return (
+                <>
+                  <label
+                    className="checkboxWrap"
+                    key={user.id}
+                    htmlFor={user.id}
+                  >
+                    <img
+                      className="checkboxUserAvatar"
+                      src={user.photo}
+                      alt={user.username}
+                    />
+                    <input
+                      type="checkbox"
+                      className="checkbox"
+                      id={user.id}
+                      checked={selectedUsers.some(
+                        (selectedUser) =>
+                          selectedUser.username === user.username
+                      )}
+                      onChange={() =>
+                        handleCheckboxChange(user.username, user.photo)
+                      }
+                    />
+                    <span className="checkboxLabel">{upName}</span>
+                  </label>
+                </>
+              );
+            })}
         </div>
       </>
     );
@@ -282,8 +276,7 @@ function MainLayout() {
               </Link>
               <DropDown
                 title="Чаты"
-                onClick={() =>
-                getData("chat/rooms", setRoomList)}
+                onClick={() => getData("chat/rooms", setRoomList)}
                 content={<>{RoomList()}</>}
               />
               <DropDown

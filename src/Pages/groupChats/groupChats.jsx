@@ -20,14 +20,43 @@ function GroupChats() {
   const [chatSocket, setChatSocket] = useState(null);
   const [roomList, setRoomList] = useState([]);
 
+  const [currentUserAvatar, setCurrentUserAvatar] = useState(null);
+  const [otherUserAvatars, setOtherUserAvatars] = useState([]); // Изменяем на массив
+
   useEffect(() => {
     axios
       .get(`http://127.0.0.1:8000/chat/rooms/${id}/`)
       .then((response) => {
         if (response.status === 200) {
           setRoomList(response.data);
-          getData(`chat/room/message/`, setMessages);
 
+          if (
+            response.data.current_users &&
+            response.data.current_users.length > 0
+          ) {
+            const currentUser = localStorage.getItem("username");
+
+            // Находим текущего пользователя
+            const currentUserObj = response.data.current_users.find(
+              (user) => user.username === currentUser
+            );
+
+            // Если нашли текущего пользователя, устанавливаем его аватар
+            if (currentUserObj) setCurrentUserAvatar(currentUserObj.photo);
+
+            // Создаем массив аватаров для других пользователей
+            const otherUsers = response.data.current_users.filter(
+              (user) => user.username !== currentUser
+            );
+            setOtherUserAvatars(
+              otherUsers.map((user) => ({
+                username: user.username,
+                avatar: user.photo,
+              }))
+            ); // Заполняем массив объектов с именем пользователя и аватаром
+          }
+
+          getData(`chat/room/message/`, setMessages);
         } else {
           console.log("Error: " + response.data.detail);
         }
@@ -82,7 +111,7 @@ function GroupChats() {
     };
 
     setChatSocket(socket);
-    console.log(messages)
+    // console.log(messages);
     return () => {
       if (socket) {
         socket.close();
@@ -106,7 +135,6 @@ function GroupChats() {
       );
 
       setMessage("");
-      console.log(messages);
     } else {
       console.log("WebSocket не открыт. Сообщение не отправлено.");
     }
@@ -134,33 +162,51 @@ function GroupChats() {
         sendmessage={sendMessage}
         content={
           <>
-   {messages
-  .filter((msg) => msg.room.id === parseInt(id))
-  .map((msg, index, arr) => {
-    console.log(arr)
-    const newText = msg.created_at.substring(11, 16);
-    const messageDate = msg.created_at.substring(0, 10);
-    const previousMessage = arr[index - 1];
-    const previousDate = previousMessage ? previousMessage.created_at.substring(0, 10) : null;
-    const isNewDay = previousDate !== messageDate;
-    const userNameMesage =
-    msg.user.username.charAt(0).toUpperCase() + msg.user.username.slice(1);
+            {messages
+              .filter((msg) => msg.room.id === parseInt(id))
+              .map((msg, index, arr) => {
+                const newText = msg.created_at.substring(11, 16);
+                const messageDate = msg.created_at.substring(0, 10);
+                const previousMessage = arr[index - 1];
+                const previousDate = previousMessage
+                  ? previousMessage.created_at.substring(0, 10)
+                  : null;
+                const isNewDay = previousDate !== messageDate;
+                const userNameMesage =
+                  msg.user.username.charAt(0).toUpperCase() +
+                  msg.user.username.slice(1);
 
-    return (
-      <div key={index}>
-        {isNewDay && (
-          <Text>{messageDate}</Text>
-        )}
-         {msg.user.username === localStorage.getItem("username")? (
-          <>
-            <Message text={msg.text} time={newText} sent avatar={msg.user.photo}/>
-          </>
-        ) : (<>
-          <Message text={msg.text} time={newText}  avatar={msg.user.photo}   username={msg.user.username}/>
-        </>)}
-      </div>
-    );
-  })}
+                return (
+                  <div key={index}>
+                    {isNewDay && <Text>{messageDate}</Text>}
+                    {msg.user.username === localStorage.getItem("username") ? (
+                      <>
+                        <Message
+                          text={msg.text}
+                          time={newText}
+                          sent
+                          avatar={currentUserAvatar}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        {/* Найдите объект пользователя с именем msg.user.username */}
+                        {otherUserAvatars
+                          .filter((user) => user.username === msg.user.username)
+                          .map((user) => (
+                            <Message
+                              key={user.username} // Используйте имя пользователя в качестве ключа
+                              text={msg.text}
+                              time={newText}
+                              avatar={user.avatar}
+                              username={msg.user.username}
+                            />
+                          ))}
+                      </>
+                    )}
+                  </div>
+                );
+              })}
           </>
         }
       />

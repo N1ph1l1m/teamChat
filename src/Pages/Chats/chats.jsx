@@ -14,11 +14,16 @@ const Text = styled.div`
 
 function Chats() {
   const { id } = useParams();
-  const [messages, setMessages] = useState([]); // Массив для хранения сообщений, по умолчанию пустой массив
+  const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [isWebSocketOpen, setIsWebSocketOpen] = useState(false);
   const [chatSocket, setChatSocket] = useState(null);
   const [roomList, setRoomList] = useState([]);
+  const [userTest, setUserTest] = useState();
+
+  // Добавляем состояния для аватаров
+  const [currentUserAvatar, setCurrentUserAvatar] = useState(null);
+  const [otherUserAvatar, setOtherUserAvatar] = useState(null);
 
   useEffect(() => {
     axios
@@ -26,8 +31,31 @@ function Chats() {
       .then((response) => {
         if (response.status === 200) {
           setRoomList(response.data);
-          getData(`chat/room/message/`, setMessages);
 
+          // Проверка на наличие пользователей в данных
+          if (
+            response.data.current_users &&
+            response.data.current_users.length > 0
+          ) {
+            const currentUser = localStorage.getItem("username");
+
+            // Находим пользователя, который не текущий
+            const otherUser = response.data.current_users.find(
+              (user) => user.username !== currentUser
+            );
+            const currentUserObj = response.data.current_users.find(
+              (user) => user.username === currentUser
+            );
+
+            // Если нашли другого пользователя, устанавливаем его аватар
+            if (otherUser) setOtherUserAvatar(otherUser.photo);
+
+            // Если нашли текущего пользователя, устанавливаем его аватар
+            if (currentUserObj) setCurrentUserAvatar(currentUserObj.photo);
+          }
+
+          // Получаем сообщения
+          getData(`chat/room/message/`, setMessages);
         } else {
           console.log("Error: " + response.data.detail);
         }
@@ -75,6 +103,7 @@ function Chats() {
       switch (data.action) {
         case "create":
           setMessages((prevMessages) => [...prevMessages, data.data]);
+          setUserTest([data.data]);
           break;
         default:
           break;
@@ -82,7 +111,7 @@ function Chats() {
     };
 
     setChatSocket(socket);
-    console.log(messages)
+
     return () => {
       if (socket) {
         socket.close();
@@ -102,9 +131,10 @@ function Chats() {
           message: message,
           action: "create_message",
           request_id: request_id,
+          user: userTest,
         })
       );
-
+      console.log(message);
       setMessage("");
       console.log(messages);
     } else {
@@ -134,33 +164,40 @@ function Chats() {
         sendmessage={sendMessage}
         content={
           <>
-   {messages
-  .filter((msg) => msg.room.id === parseInt(id))
-  .map((msg, index, arr) => {
-    {/* console.log(arr) */}
-    const newText = msg.created_at.substring(11, 16);
-    const messageDate = msg.created_at.substring(0, 10);
-    const previousMessage = arr[index - 1];
-    const previousDate = previousMessage ? previousMessage.created_at.substring(0, 10) : null;
-    const isNewDay = previousDate !== messageDate;
-    const userNameMesage =
-    msg.user.username.charAt(0).toUpperCase() + msg.user.username.slice(1);
+            {messages
+              .filter((msg) => msg.room.id === parseInt(id))
+              .map((msg, index, arr) => {
+                const newText = msg.created_at.substring(11, 16);
+                const messageDate = msg.created_at.substring(0, 10);
+                const previousMessage = arr[index - 1];
+                const previousDate = previousMessage
+                  ? previousMessage.created_at.substring(0, 10)
+                  : null;
+                const isNewDay = previousDate !== messageDate;
+                const userNameMessage =
+                  msg.user.username.charAt(0).toUpperCase() +
+                  msg.user.username.slice(1);
 
-    return (
-      <div key={index}>
-        {isNewDay && (
-          <Text>{messageDate}</Text>
-        )}
-         {msg.user.username === localStorage.getItem("username")? (
-          <>
-            <Message text={msg.text} time={newText} sent avatar={msg.user.photo}/>
-          </>
-        ) : (<>
-          <Message text={msg.text} time={newText}  avatar={msg.user.photo}  />
-        </>)}
-      </div>
-    );
-  })}
+                return (
+                  <div key={index}>
+                    {isNewDay && <Text>{messageDate}</Text>}
+                    {msg.user.username === localStorage.getItem("username") ? (
+                      <Message
+                        text={msg.text}
+                        time={newText}
+                        sent
+                        avatar={currentUserAvatar} // Аватар текущего пользователя
+                      />
+                    ) : (
+                      <Message
+                        text={msg.text}
+                        time={newText}
+                        avatar={otherUserAvatar} // Аватар другого пользователя
+                      />
+                    )}
+                  </div>
+                );
+              })}
           </>
         }
       />
