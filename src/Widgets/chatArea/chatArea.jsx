@@ -4,32 +4,7 @@ import React, { useState } from "react";
 import "../chatArea/chatArea.scss";
 //import "../inputMessage/inputMessage.scss"
 function ChatArea(props) {
-  // const [message,setMessage] = useState([]);
-  // const [inputValue, setInputValue] = useState("");
 
-  // const handleSendMessage = (text)=>{
-  //     if(text.trim()){
-  //         setMessage([...message, text])
-  //     }
-  // }
-  // function showMessage(){
-  //     return(
-  //     <>
-  //         { message.map((msg,index)=>(
-  //                 <Message key={index} text={msg} sent />
-  //             ))
-  //         }
-  //     </>
-  //     )
-  // }
-
-  // const handleInputChange = (e) =>{
-  //     setInputValue(e.target.value);
-  // };
-
-  // function sendMessage(){
-  //     setInputValue("")
-  // }
 
   return (
     <div className="chat-area">

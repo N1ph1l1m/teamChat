@@ -14,7 +14,7 @@ const Text = styled.div`
 
 function GroupChats() {
   const { id } = useParams();
-  const [messages, setMessages] = useState([]); // Массив для хранения сообщений, по умолчанию пустой массив
+  const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [isWebSocketOpen, setIsWebSocketOpen] = useState(false);
   const [chatSocket, setChatSocket] = useState(null);
@@ -137,7 +137,7 @@ function GroupChats() {
    {messages
   .filter((msg) => msg.room.id === parseInt(id))
   .map((msg, index, arr) => {
-    console.log(arr)
+    {/* console.log(arr) */}
     const newText = msg.created_at.substring(11, 16);
     const messageDate = msg.created_at.substring(0, 10);
     const previousMessage = arr[index - 1];

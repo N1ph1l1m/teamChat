@@ -6,6 +6,7 @@ import styled from "styled-components";
 import ChatArea from "../../Widgets/chatArea/chatArea";
 import Message from "../../Shared/Message/message";
 import { getData } from "../../Entities/api/getUserList";
+import { render } from "@testing-library/react";
 
 const Text = styled.div`
   color: gray;
@@ -14,7 +15,7 @@ const Text = styled.div`
 
 function Chats() {
   const { id } = useParams();
-  const [messages, setMessages] = useState([]); // Массив для хранения сообщений, по умолчанию пустой массив
+  const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [isWebSocketOpen, setIsWebSocketOpen] = useState(false);
   const [chatSocket, setChatSocket] = useState(null);
@@ -36,8 +37,10 @@ function Chats() {
         console.error("Error fetching data:", error);
       });
 
+
     const room_pk = id;
     const request_id = 1;
+
     const token = localStorage.getItem("token").trim();
     const socket = new WebSocket(
       `ws://localhost:8000/ws/chat/${room_pk}/?token=${token}`
@@ -75,6 +78,7 @@ function Chats() {
       switch (data.action) {
         case "create":
           setMessages((prevMessages) => [...prevMessages, data.data]);
+          console.log(data.data)
           break;
         default:
           break;
@@ -84,6 +88,7 @@ function Chats() {
     setChatSocket(socket);
     console.log(messages)
     return () => {
+
       if (socket) {
         socket.close();
       }
@@ -91,7 +96,7 @@ function Chats() {
   }, [id]);
 
   const handleInputChange = (e) => {
-    setMessage(e.target.value);
+    setMessage(e.target.value) ;
   };
 
   const sendMessage = () => {
@@ -105,8 +110,8 @@ function Chats() {
         })
       );
 
+      console.log(message);
       setMessage("");
-      console.log(messages);
     } else {
       console.log("WebSocket не открыт. Сообщение не отправлено.");
     }
@@ -125,6 +130,8 @@ function Chats() {
     }
   }
 
+
+
   return (
     <>
       <ChatArea
@@ -134,33 +141,29 @@ function Chats() {
         sendmessage={sendMessage}
         content={
           <>
-   {messages
-  .filter((msg) => msg.room.id === parseInt(id))
-  .map((msg, index, arr) => {
-    {/* console.log(arr) */}
-    const newText = msg.created_at.substring(11, 16);
-    const messageDate = msg.created_at.substring(0, 10);
-    const previousMessage = arr[index - 1];
-    const previousDate = previousMessage ? previousMessage.created_at.substring(0, 10) : null;
-    const isNewDay = previousDate !== messageDate;
-    const userNameMesage =
-    msg.user.username.charAt(0).toUpperCase() + msg.user.username.slice(1);
-
-    return (
-      <div key={index}>
-        {isNewDay && (
-          <Text>{messageDate}</Text>
-        )}
-         {msg.user.username === localStorage.getItem("username")? (
-          <>
-            <Message text={msg.text} time={newText} sent avatar={msg.user.photo}/>
-          </>
-        ) : (<>
-          <Message text={msg.text} time={newText}  avatar={msg.user.photo}  />
-        </>)}
-      </div>
-    );
-  })}
+          {messages
+    .filter((msg) => msg.room.id === parseInt(id))
+    .map((msg, index, arr) => {
+      const newText = msg.created_at.substring(11, 16);
+      const messageDate = msg.created_at.substring(0, 10);
+      const previousMessage = arr[index - 1];
+      const previousDate = previousMessage ? previousMessage.created_at.substring(0, 10) : null;
+      const isNewDay = previousDate !== messageDate;
+      return (
+        <div key={index}>
+          {isNewDay && (
+            <Text>{messageDate}</Text>
+          )}
+           {msg.user.username === localStorage.getItem("username")? (
+            <>
+              <Message text={msg.text} time={newText}  avatar={msg.user.photo} sent />
+            </>
+          ) : (<>
+            <Message text={msg.text} time={newText}  avatar={msg.user.photo}  />
+          </>)}
+        </div>
+      );
+    })}
           </>
         }
       />

@@ -99,22 +99,22 @@ function MainLayout() {
       <>
         {roomList
           .filter((room) => room.name.includes(loggedInUsername))
-          .map((room) => {
-           console.log(room)
+          .map((room,index,arr) => {
+           //console.log(room)
+           try{
             const newName = room.name
               .replace(loggedInUsername, "")
               .replace(/^_+|_+$/g, "")
               .trim();
 
             const capitalized =
-              newName.charAt(0).toUpperCase() + newName.slice(1);
+              newName.charAt(0).toUpperCase() + newName.slice(1);;
+            //console.log(arr)
 
-
-
-
-          ;
-
-
+                    const nonAdminUser = room.current_users.filter(
+          (user) => user.username !== loggedInUsername
+        )[0];
+        const avatarSrc = nonAdminUser ? nonAdminUser.photo : room.host.photo;
             return (
               <Link
                 key={room.pk}
@@ -124,17 +124,23 @@ function MainLayout() {
                 <NaviItem
                   icon={
                     <img
-                      src={room.host.photo}
+                      src={avatarSrc}
+
                       alt={`${room.pk}'s avatar`}
 
                     />
                   }
-                  tittle={capitalized} // Используем обновленное имя
+                  tittle={capitalized}
                   badgeCount={room.pk}
                 />
               </Link>
             );
-          })}
+           }catch(error){
+            console.error(error)
+           }
+
+          })
+          }
       </>
     );
   }
@@ -173,7 +179,6 @@ function MainLayout() {
   }
   function showModalGroupChat() {
     setOpen(true);
-    console.log(isOpen);
     return <></>;
   }
 
@@ -215,9 +220,11 @@ function MainLayout() {
               ))}
             </ul>
           </div>
+
         </div>
-        <span>Выберите участников чата</span>
+
         <div className="wrapCheckBox">
+          <span>Выберите участников чата</span>
         {userlist
           .filter((user) => user.username !== localStorage.getItem("username"))
           .map((user) => {
