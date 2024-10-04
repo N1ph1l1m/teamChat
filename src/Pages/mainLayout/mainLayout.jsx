@@ -50,6 +50,7 @@ function MainLayout() {
   const [group, setGroup] = useState([]);
   const [groupName, setGroupName] = useState();
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const authUser = localStorage.getItem("username");
 
   // // eslint-disable-next-line react-hooks/exhaustive-deps
   // useEffect(() => {
@@ -62,7 +63,7 @@ function MainLayout() {
     return (
       <>
         {userlist
-          .filter((user) => user.username !== localStorage.getItem("username"))
+          .filter((user) => user.username !== authUser)
 
           .map((user, index) => {
             const upName =
@@ -86,14 +87,12 @@ function MainLayout() {
   }
 
   function RoomList() {
-    const loggedInUsername = localStorage.getItem("username");
+    const loggedInUsername = authUser;
 
     //console.log(roomList.current_users)
     return (
       <>
-
         {roomList
-
           .filter((room) => room.name.includes(loggedInUsername))
           .map((room) => {
             const newName = room.name
@@ -101,26 +100,22 @@ function MainLayout() {
               .replace(/^_+|_+$/g, "")
               .trim();
 
+            console.log(room.current_users);
             const capitalized =
               newName.charAt(0).toUpperCase() + newName.slice(1);
-
+            const avatar = room.current_users
+              ? room.current_users[0].photo
+              : "avatar2";
             return (
-              <Link
-                key={room.pk}
-                to={`chats/${room.pk}`}
-                // onClick={() => CreateRoom(user.username)}
-              >
+              <Link key={room.pk} to={`chats/${room.pk}`}>
                 <NaviItem
-                  icon={
-                    <img src={room.host.photo} alt={`${room.pk}'s avatar`} />
-                  }
+                  icon={<img src={avatar} alt={"avatar"} />}
                   tittle={capitalized}
                   badgeCount={room.pk}
                 />
               </Link>
             );
-            })
-          }
+          })}
       </>
     );
   }
@@ -200,14 +195,11 @@ function MainLayout() {
               ))}
             </ul>
           </div>
-
         </div>
 
         <div className="wrapCheckBox">
           {userlist
-            .filter(
-              (user) => user.username !== localStorage.getItem("username")
-            )
+            .filter((user) => user.username !== authUser)
             .map((user) => {
               const upName =
                 user.username.charAt(0).toUpperCase() + user.username.slice(1);

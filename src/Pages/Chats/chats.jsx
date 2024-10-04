@@ -18,18 +18,19 @@ function Chats() {
   const [message, setMessage] = useState("");
   const [isWebSocketOpen, setIsWebSocketOpen] = useState(false);
   const [chatSocket, setChatSocket] = useState(null);
-  const [roomList, setRoomList] = useState(null); // Изменено на null для отслеживания
-  // Добавляем состояния для аватаров
-  const [currentUserAvatar, setCurrentUserAvatar] = useState(null);
+  const [roomList, setRoomList] = useState(null);
+
   const [otherUserAvatar, setOtherUserAvatar] = useState(null);
+  const [authUser, setAuthUser] = useState([]);
+
+  const autUsr = localStorage.getItem("username");
 
   useEffect(() => {
     async function getRoomData() {
       try {
-        const data = await axios.get(`http://127.0.0.1:8000/chat/rooms/${id}/`);
         console.log("getRoomData");
+        const data = await axios.get(`http://127.0.0.1:8000/chat/rooms/${id}/`);
         if (data) {
-          // console.log("setRoomData =  " + JSON.stringify(data))
           setRoomList(data.data);
           console.log("setRoomList");
           return data;
@@ -39,18 +40,20 @@ function Chats() {
       }
     }
 
-    // function setRoomData(data) {
-    //   if (data) {
-    //     console.log("setRoomData =  " + JSON.stringify(data))
-    //     setRoomList(data.data);
-    //     console.log("setRoomList");
-    //     return data;
-    //   }
-    // }
+    async function fetchData() {
+      try {
+        console.log("fentchData");
+        const data = await getData("users/", setAuthUser);
+        return data;
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
     async function getMessageData() {
+      console.log("Message");
       const data = await getData(`chat/room/message/`, setMessages);
-      console.log("setMessage");
+
       return data;
     }
 
@@ -59,6 +62,7 @@ function Chats() {
     const token = localStorage.getItem("token").trim();
 
     function webSocket() {
+      console.log("websocket");
       const socket = new WebSocket(
         `ws://localhost:8000/ws/chat/${room_pk}/?token=${token}`
       );
@@ -93,8 +97,15 @@ function Chats() {
         const data = JSON.parse(e.data);
         switch (data.action) {
           case "create":
-            setMessages((prevMessages) => [...prevMessages, data.data]);
-            console.log("onmessage");
+            setMessages((prevMessages) => {
+              const messageExists = prevMessages.some(
+                (msg) => msg.id === data.data.id
+              );
+              if (!messageExists) {
+                return [...prevMessages, data.data];
+              }
+              return prevMessages;
+            });
             break;
           default:
             break;
@@ -104,41 +115,27 @@ function Chats() {
       setChatSocket(socket);
     }
 
-    async function showMessageAvatar(roomList) {
-      console.log("avatar")
-      //console.log(roomList)
-
-      if (roomList.data ) {
-        const currentUser = localStorage.getItem("username");
-        const currentUserObj =  roomList.data.current_users.find(
-          (user) => user.username === currentUser
+    function showMessageAvatar(roomList) {
+      console.log("avatar");
+      if (roomList.data) {
+        const otherUser = roomList.data.current_users.find(
+          (user) => user.username !== autUsr
         );
-        // Находим пользователя, который не текущий
-        const otherUser =   roomList.data.current_users.find(
-          (user) => user.username !== currentUser
-        );
-
-        // Если нашли другого пользователя, устанавливаем его аватар
         if (otherUser) setOtherUserAvatar(otherUser.photo);
-
-        // Если нашли текущего пользователя, устанавливаем его аватар
-        if (currentUserObj)  setCurrentUserAvatar(currentUserObj.photo);
       } else {
         console.error("roomList или current_users отсутствуют или пусты");
       }
     }
 
     async function go() {
+      fetchData();
       const dataRoom = await getRoomData();
       webSocket();
-      await showMessageAvatar(dataRoom);
+      showMessageAvatar(dataRoom);
       await getMessageData();
-
     }
-
     go();
   }, [id]);
-
 
   const handleInputChange = (e) => {
     setMessage(e.target.value);
@@ -163,7 +160,7 @@ function Chats() {
 
   function formatRoomName(roomName) {
     try {
-      const username = localStorage.getItem("username");
+      const username = autUsr;
       const newName = roomName
         .replace(username, "")
         .replace(/^_+|_+$/g, "")
@@ -173,6 +170,9 @@ function Chats() {
       console.log(error);
     }
   }
+
+  const userAuth = autUsr;
+  const authenticatedUser = authUser.find((user) => user.username === userAuth);
 
   return (
     <>
@@ -193,12 +193,6 @@ function Chats() {
                   ? previousMessage.created_at.substring(0, 10)
                   : null;
                 const isNewDay = previousDate !== messageDate;
-                const userNameMessage =
-                  msg.user.username.charAt(0).toUpperCase() +
-                  msg.user.username.slice(1);
-                  console.log(currentUserAvatar)
-                  console.log(otherUserAvatar)
-
 
                 return (
                   <div key={index}>
@@ -208,13 +202,13 @@ function Chats() {
                         text={msg.text}
                         time={newText}
                         sent
-                        avatar={currentUserAvatar} // Аватар текущего пользователя
+                        avatar={authenticatedUser.photo}
                       />
                     ) : (
                       <Message
                         text={msg.text}
                         time={newText}
-                        avatar={otherUserAvatar} // Аватар другого пользователя
+                        avatar={otherUserAvatar}
                       />
                     )}
                   </div>

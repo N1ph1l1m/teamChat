@@ -20,103 +20,124 @@ function GroupChats() {
   const [chatSocket, setChatSocket] = useState(null);
   const [roomList, setRoomList] = useState([]);
 
-  const [currentUserAvatar, setCurrentUserAvatar] = useState(null);
-  const [otherUserAvatars, setOtherUserAvatars] = useState([]); // Изменяем на массив
+  const [otherUserAvatars, setOtherUserAvatars] = useState([]);
+  const [authUser, setAuthUser] = useState([]);
+
+  const autUsr = localStorage.getItem("username");
 
   useEffect(() => {
-    axios
-      .get(`http://127.0.0.1:8000/chat/rooms/${id}/`)
-      .then((response) => {
-        if (response.status === 200) {
-          setRoomList(response.data);
+    async function getRoomData() {
+      console.log("getRoomData");
+      const data = await axios.get(`http://127.0.0.1:8000/chat/rooms/${id}/`);
+      if (data) {
+        setRoomList(data.data);
+        return data;
+      }
+    }
+    async function fetchData() {
+      try {
+        console.log("fentchData");
+        const data = await getData("users/", setAuthUser);
+        return data;
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
-          if (
-            response.data.current_users &&
-            response.data.current_users.length > 0
-          ) {
-            const currentUser = localStorage.getItem("username");
+    function avatars(roomList) {
+      console.log("avatars");
+      if (roomList) {
+        const otherUsers = roomList.data.current_users.filter(
+          (user) => user.username !== autUsr
+        );
+        setOtherUserAvatars(
+          otherUsers.map((user) => ({
+            username: user.username,
+            avatar: user.photo,
+          }))
+        );
+        console.log(otherUsers);
+      }
+    }
 
-            // Находим текущего пользователя
-            const currentUserObj = response.data.current_users.find(
-              (user) => user.username === currentUser
-            );
+    async function getMessageData() {
+      console.log("Message");
+      const data = await getData(`chat/room/message/`, setMessages);
 
-            // Если нашли текущего пользователя, устанавливаем его аватар
-            if (currentUserObj) setCurrentUserAvatar(currentUserObj.photo);
-
-            // Создаем массив аватаров для других пользователей
-            const otherUsers = response.data.current_users.filter(
-              (user) => user.username !== currentUser
-            );
-            setOtherUserAvatars(
-              otherUsers.map((user) => ({
-                username: user.username,
-                avatar: user.photo,
-              }))
-            ); // Заполняем массив объектов с именем пользователя и аватаром
-          }
-
-          getData(`chat/room/message/`, setMessages);
-        } else {
-          console.log("Error: " + response.data.detail);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+      return data;
+    }
 
     const room_pk = id;
     const request_id = 1;
     const token = localStorage.getItem("token").trim();
-    const socket = new WebSocket(
-      `ws://localhost:8000/ws/chat/${room_pk}/?token=${token}`
-    );
 
-    socket.onopen = function () {
-      console.log("WebSocket открыт");
-      setIsWebSocketOpen(true);
-
-      socket.send(
-        JSON.stringify({
-          pk: room_pk,
-          action: "join_room",
-          request_id: request_id,
-        })
+    function websocket() {
+      const socket = new WebSocket(
+        `ws://localhost:8000/ws/chat/${room_pk}/?token=${token}`
       );
-      socket.send(
-        JSON.stringify({
-          pk: room_pk,
-          action: "retrieve",
-          request_id: request_id,
-        })
-      );
-      socket.send(
-        JSON.stringify({
-          pk: room_pk,
-          action: "subscribe_to_messages_in_room",
-          request_id: request_id,
-        })
-      );
-    };
 
-    socket.onmessage = function (e) {
-      const data = JSON.parse(e.data);
-      switch (data.action) {
-        case "create":
-          setMessages((prevMessages) => [...prevMessages, data.data]);
-          break;
-        default:
-          break;
-      }
-    };
+      socket.onopen = function () {
+        console.log("WebSocket открыт");
+        setIsWebSocketOpen(true);
 
-    setChatSocket(socket);
-    // console.log(messages);
-    return () => {
-      if (socket) {
-        socket.close();
-      }
-    };
+        socket.send(
+          JSON.stringify({
+            pk: room_pk,
+            action: "join_room",
+            request_id: request_id,
+          })
+        );
+        socket.send(
+          JSON.stringify({
+            pk: room_pk,
+            action: "retrieve",
+            request_id: request_id,
+          })
+        );
+        socket.send(
+          JSON.stringify({
+            pk: room_pk,
+            action: "subscribe_to_messages_in_room",
+            request_id: request_id,
+          })
+        );
+      };
+
+      socket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        switch (data.action) {
+          case "create":
+            setMessages((prevMessages) => {
+              const messageExists = prevMessages.some(
+                (msg) => msg.id === data.data.id
+              );
+              if (!messageExists) {
+                return [...prevMessages, data.data];
+              }
+              return prevMessages;
+            });
+            break;
+          default:
+            break;
+        }
+      };
+
+      setChatSocket(socket);
+      return () => {
+        if (socket) {
+          socket.close();
+        }
+      };
+    }
+
+    async function go() {
+      fetchData();
+      const dataRoom = await getRoomData();
+      websocket();
+      avatars(dataRoom);
+      await getMessageData();
+    }
+    go();
   }, [id]);
 
   const handleInputChange = (e) => {
@@ -142,7 +163,7 @@ function GroupChats() {
 
   function formatRoomName(roomName) {
     try {
-      const username = localStorage.getItem("username");
+      const username = autUsr;
       const newName = roomName
         .replace(username, "")
         .replace(/^_+|_+$/g, "")
@@ -152,6 +173,9 @@ function GroupChats() {
       //console.log(error);
     }
   }
+
+  const userAuth = autUsr;
+  const authenticatedUser = authUser.find((user) => user.username === userAuth);
 
   return (
     <>
@@ -185,7 +209,7 @@ function GroupChats() {
                           text={msg.text}
                           time={newText}
                           sent
-                          avatar={currentUserAvatar}
+                          avatar={authenticatedUser.photo}
                         />
                       </>
                     ) : (
@@ -195,11 +219,11 @@ function GroupChats() {
                           .filter((user) => user.username === msg.user.username)
                           .map((user) => (
                             <Message
-                              key={user.username} // Используйте имя пользователя в качестве ключа
+                              key={user.username}
                               text={msg.text}
                               time={newText}
                               avatar={user.avatar}
-                              username={msg.user.username}
+                              username={userNameMesage}
                             />
                           ))}
                       </>
