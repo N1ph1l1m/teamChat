@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
-
 import ChatArea from "../../Widgets/chatArea/chatArea";
 import Message from "../../Shared/Message/message";
 import { getData } from "../../Entities/api/getUserList";
@@ -193,13 +192,17 @@ function Chats() {
                   ? previousMessage.created_at.substring(0, 10)
                   : null;
                 const isNewDay = previousDate !== messageDate;
-
+                const photos =
+                  msg.photos.length > 0
+                    ? msg.photos.map((photo) => photo.image)
+                    : [];
                 return (
                   <div key={index}>
                     {isNewDay && <Text>{messageDate}</Text>}
                     {msg.user.username === localStorage.getItem("username") ? (
                       <Message
                         text={msg.text}
+                        photos={photos}
                         time={newText}
                         sent
                         avatar={authenticatedUser.photo}
@@ -208,6 +211,7 @@ function Chats() {
                       <Message
                         text={msg.text}
                         time={newText}
+                        photos={photos}
                         avatar={otherUserAvatar}
                       />
                     )}

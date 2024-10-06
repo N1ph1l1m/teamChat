@@ -199,17 +199,21 @@ function GroupChats() {
                 const userNameMesage =
                   msg.user.username.charAt(0).toUpperCase() +
                   msg.user.username.slice(1);
-
+                const photos =
+                  msg.photos.length > 0
+                    ? msg.photos.map((photo) => photo.image)
+                    : [];
                 return (
                   <div key={index}>
                     {isNewDay && <Text>{messageDate}</Text>}
                     {msg.user.username === localStorage.getItem("username") ? (
                       <>
                         <Message
+                          avatar={authenticatedUser.photo}
                           text={msg.text}
+                          photos={photos}
                           time={newText}
                           sent
-                          avatar={authenticatedUser.photo}
                         />
                       </>
                     ) : (
@@ -220,10 +224,11 @@ function GroupChats() {
                           .map((user) => (
                             <Message
                               key={user.username}
-                              text={msg.text}
-                              time={newText}
                               avatar={user.avatar}
                               username={userNameMesage}
+                              text={msg.text}
+                              photos={photos}
+                              time={newText}
                             />
                           ))}
                       </>

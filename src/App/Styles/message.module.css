@@ -20,12 +20,13 @@ margin-right: 3px;
 .messageBubble {
     position: relative;
     display: inline-block;
-    max-width: 40%;
+    max-width: 50%;
     min-width: 60px;
     padding: 10px ;
     border-radius: 20px;
     background-color: #f0f0f0;
     text-align: justify;
+    overflow: hidden;
 
 }
 .bubbleNameWrap{
@@ -61,10 +62,52 @@ margin-right: 3px;
     border-bottom-left-radius:0 ;
 }
 
-
-
 .received .messageBubble{
     background-color:#d3cdcd;
     border-bottom-left-radius:0 ;
     color:black;
+}
+
+
+.wrapPhoto{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.photoMessage{
+    cursor: pointer;
+    margin-right: 5px;
+    margin-top: 10px;
+    max-width: 40%;
+    min-width: 200px;
+    height: 80%;
+  
+  
+}
+
+.photoMessage3{
+    cursor: pointer;
+    margin-right: 5px;
+    margin-top: 10px;
+    max-width: 40%;
+    min-width: 200px;
+    height: 80%;
+    border-radius: 10px;
+  
+}
+.photoMessage3:first-child{
+    max-width: 80%;
+    min-width: 60%;
+}
+
+
+
+.photoMessageOne{
+    cursor: pointer;
+    margin-top: 10px;
+    max-width: 80%;
+    height: 80%;
+    border-radius: 10px;
 }
