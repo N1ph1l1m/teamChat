@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import styled from "styled-components";
 import ChatArea from "../../Widgets/chatArea/chatArea";
 import Message from "../../Shared/Message/message";
+import Icon from "../../Shared/icon/icon";
+import { BiMessageAltX } from "react-icons/bi";
 import { getData } from "../../Entities/api/getUserList";
+import  styles from "../../App/Styles/chats.module.css"
 
-const Text = styled.div`
-  color: gray;
-  font-size: 14px;
-`;
 
 function Chats() {
   const { id } = useParams();
@@ -52,7 +50,6 @@ function Chats() {
     async function getMessageData() {
       console.log("Message");
       const data = await getData(`chat/room/message/`, setMessages);
-
       return data;
     }
 
@@ -140,6 +137,7 @@ function Chats() {
     setMessage(e.target.value);
   };
 
+
   const sendMessage = () => {
     if (isWebSocketOpen && chatSocket) {
       const request_id = 1;
@@ -155,6 +153,51 @@ function Chats() {
     } else {
       console.log("WebSocket не открыт. Сообщение не отправлено.");
     }
+
+  };
+  const handleFileChange = (e)=>{
+    console.log(e.target.files)
+    setMessage(e.target.files);
+    console.log(message)
+  }
+
+
+  const sendMessagePhoto = () => {
+    if(!message){
+      console.log("Please select a file");
+      return
+    }
+    const url = ""
+    const formData = new FormData();
+    formData.append('file',message);
+
+    axios.post(url,formData,{
+      headers:{
+        'Content-Type':"multipart/form-data"
+      }
+    }).then(response=>{
+      console.log("Файл загружен",response.data);
+
+      if (isWebSocketOpen && chatSocket) {
+        const request_id = 1;
+        chatSocket.send(
+          JSON.stringify({
+            message: formData,
+            action: "create_message",
+            request_id: request_id,
+          })
+        );
+        console.log(message);
+        setMessage("");
+      } else {
+        console.log("WebSocket не открыт. Сообщение не отправлено.");
+      }
+    }).catch(error =>{
+      console.error('Ошибка при загрузке файла:',error)
+    })
+
+
+
   };
 
   function formatRoomName(roomName) {
@@ -172,53 +215,66 @@ function Chats() {
 
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
-
   return (
     <>
       <ChatArea
         title={roomList ? formatRoomName(roomList.name) : ""}
         inputValue={message}
         input={handleInputChange}
+        file = {handleFileChange}
         sendmessage={sendMessage}
         content={
           <>
-            {messages
-              .filter((msg) => msg.room.id === parseInt(id))
-              .map((msg, index, arr) => {
-                const newText = msg.created_at.substring(11, 16);
-                const messageDate = msg.created_at.substring(0, 10);
-                const previousMessage = arr[index - 1];
-                const previousDate = previousMessage
-                  ? previousMessage.created_at.substring(0, 10)
-                  : null;
-                const isNewDay = previousDate !== messageDate;
-                const photos =
-                  msg.photos.length > 0
-                    ? msg.photos.map((photo) => photo.image)
-                    : [];
-                return (
-                  <div key={index}>
-                    {isNewDay && <Text>{messageDate}</Text>}
-                    {msg.user.username === localStorage.getItem("username") ? (
-                      <Message
-                        text={msg.text}
-                        photos={photos}
-                        time={newText}
-                        sent
-                        avatar={authenticatedUser.photo}
-                      />
-                    ) : (
-                      <Message
-                        text={msg.text}
-                        time={newText}
-                        photos={photos}
-                        avatar={otherUserAvatar}
-                      />
-                    )}
-                  </div>
-                );
-              })}
-          </>
+          {messages.filter((msg)=> msg.room.id === parseInt(id)).length === 0 ?
+          (
+            <div className={styles.nullMessageWrap}>
+            <Icon>
+            <BiMessageAltX color="gray" size="25" />
+           </Icon>
+          <p className={styles.nullMessageText}>Сообщений пока нет</p>
+            </div>
+
+          ):(
+              messages
+                .filter((msg) => msg.room.id === parseInt(id))
+                .map((msg, index, arr) => {
+                  const newText = msg.created_at.substring(11, 16);
+                  const messageDate = msg.created_at.substring(0, 10);
+                  const previousMessage = arr[index - 1];
+                  const previousDate = previousMessage
+                    ? previousMessage.created_at.substring(0, 10)
+                    : null;
+                  const isNewDay = previousDate !== messageDate;
+                  const photos = Array.isArray(msg.photos) && msg.photos.length > 0
+                      ? msg.photos.map((photo) => photo.image)
+                      : [];
+                  {/* console.log(msg) */}
+                  return (
+                    <div key={index}>
+                      {isNewDay && <p className={styles.dataTimeMessage}>{messageDate}</p>}
+                      {msg.user.username === localStorage.getItem("username") ? (
+                        <Message
+                          text={msg.text}
+                          photos={photos}
+                          time={newText}
+                          sent
+                          avatar={authenticatedUser.photo}
+                        />
+                      ) : (
+                        <Message
+                          text={msg.text}
+                          time={newText}
+                          photos={photos}
+                          avatar={otherUserAvatar}
+                        />
+                      )}
+                    </div>
+                  );
+                })
+
+          )
+          }
+        </>
         }
       />
     </>

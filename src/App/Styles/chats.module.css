@@ -1,0 +1,21 @@
+.nullMessageWrap{
+    margin: 0px auto;
+    display: flex;
+    width: 400px;
+    height: 100%;
+    /* //border:1px solid red; */
+    justify-content: center;
+    align-items: center;
+}
+.nullMessageText{
+    color:gray;
+    font-size: 16px;
+    margin-top: 9px;
+
+}
+.dataTimeMessage{
+    margin-top: -10px;
+    color:gray;
+    font: 12px;
+    margin-bottom: 10px;
+}

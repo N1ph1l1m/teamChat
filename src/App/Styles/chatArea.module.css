@@ -1,5 +1,5 @@
 
-.chat-area{
+.chatAreaWrap{
     width: 100%;
     border-radius:10px;
     height: 100%;
@@ -7,59 +7,76 @@
     flex-direction: column;
     justify-content: space-between;
 }
-
-.chat-header{
+.chatHeader{
  color:#FFFFFF;
- height: 87%;
+ height: 94%;
  text-align: center;
  display: flex;
  flex-direction: column;
  justify-content: flex-start;
 }
-.chat-header-item{
+.chatHeaderItem{
   background-color: #390cce;
   height: 10%;
   border-radius:10px 10px 0px 0px;
 }
-
-
 .messages{
     padding:20px;
     overflow: auto;
     height: 90%;
     overflow:scroll y hidden clip ;
-
 }
-
-
-
-
-
-
-
-.message-input{
+.messages::-webkit-scrollbar {
+    width: 12px;
+}
+.messages::-webkit-scrollbar-track {
+    background: rgba(128, 128, 128, 0.164);
+    border-radius:5px;
+  }
+.messages::-webkit-scrollbar-thumb{
+    background-color: rgba(22, 22, 22, 0.658);
+    border-radius: 20px;
+    border: 3px solid rgb(206, 206, 205);
+}
+.messageInput{
     background-color:white;
-    padding: 15px;
-    border-top:1px solid #e0e0e0 ;
+    padding: 10px;
+    border-top:2px solid #cfcfcf ;
     display:flex;
+    justify-content: flex-start;
     align-items: center;
     border-radius:10px;
 }
-.message-input textarea{
+.messageInput textarea{
 flex:1;
 border:none;
 border-radius: 5px;
-padding: 10px;
 resize: none;
 outline: none;
 font-family: Arial, Helvetica, sans-serif;
 }
-
-.message-input button{
+.messageInput button{
     background-color:#390cce;
     border:none;
     border-radius: 5px;
     color:#FFFFFF;
     padding: 10px 20px;
+}
+.inputFileWrap{
+    margin-right: 10px;
+}
+.inputFileWrap i{
+    cursor: pointer;
+}
+.messageInput input{
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
     margin-top: 10px;
+}
+
+@media screen and (max-height:800px) {
+    .chatHeader{
+        height: 92%;
+    }
 }

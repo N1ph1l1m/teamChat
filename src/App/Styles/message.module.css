@@ -5,8 +5,7 @@
     align-items:flex-end;
     margin-bottom: 10px;
     position: relative;
-    }
-
+}
 .messageAvatar{
 border:1px solid black;
 width: 40px;
@@ -14,9 +13,7 @@ height: 40px;
 border-radius:50px;
 margin-top: 20px;
 margin-right: 3px;
-
 }
-
 .messageBubble {
     position: relative;
     display: inline-block;
@@ -49,33 +46,26 @@ margin-right: 3px;
 .bubbleNameText{
     font-size: 16px;
     font-weight: 700;
-
 }
 .bubbleTimeText{
     font-size: 12px;
 }
-
-
 .sent .messageBubble{
     background-color:#390cce;
     color:#FFFFFF;
     border-bottom-left-radius:0 ;
 }
-
 .received .messageBubble{
     background-color:#d3cdcd;
     border-bottom-left-radius:0 ;
     color:black;
 }
-
-
 .wrapPhoto{
     display: flex;
     flex-direction: row;
     justify-content: center;
     flex-wrap: wrap;
 }
-
 .photoMessage{
     cursor: pointer;
     margin-right: 5px;
@@ -83,10 +73,7 @@ margin-right: 3px;
     max-width: 40%;
     min-width: 200px;
     height: 80%;
-  
-  
 }
-
 .photoMessage3{
     cursor: pointer;
     margin-right: 5px;
@@ -95,15 +82,11 @@ margin-right: 3px;
     min-width: 200px;
     height: 80%;
     border-radius: 10px;
-  
 }
 .photoMessage3:first-child{
     max-width: 80%;
     min-width: 60%;
 }
-
-
-
 .photoMessageOne{
     cursor: pointer;
     margin-top: 10px;

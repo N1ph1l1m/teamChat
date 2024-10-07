@@ -6,6 +6,9 @@ import MessageInput from "../../Shared/inputMessage/messageInput";
 import ChatArea from "../../Widgets/chatArea/chatArea";
 import Message from "../../Shared/Message/message";
 import { getData } from "../../Entities/api/getUserList";
+import  styles from "../../App/Styles/chats.module.css"
+import Icon from "../../Shared/icon/icon";
+import { BiMessageAltX } from "react-icons/bi";
 
 const Text = styled.div`
   color: gray;
@@ -56,7 +59,6 @@ function GroupChats() {
             avatar: user.photo,
           }))
         );
-        console.log(otherUsers);
       }
     }
 
@@ -186,7 +188,14 @@ function GroupChats() {
         sendmessage={sendMessage}
         content={
           <>
-            {messages
+            {messages.filter((msg)=> msg.room.id === parseInt(id)).length === 0 ?
+              (    <div className={styles.nullMessageWrap}>
+            <Icon>
+            <BiMessageAltX color="gray" size="25" />
+           </Icon>
+          <p className={styles.nullMessageText}>Сообщений пока нет</p>
+            </div>)
+           : (messages
               .filter((msg) => msg.room.id === parseInt(id))
               .map((msg, index, arr) => {
                 const newText = msg.created_at.substring(11, 16);
@@ -199,8 +208,7 @@ function GroupChats() {
                 const userNameMesage =
                   msg.user.username.charAt(0).toUpperCase() +
                   msg.user.username.slice(1);
-                const photos =
-                  msg.photos.length > 0
+                const photos  =Array.isArray(msg.photos) && msg.photos.length > 0
                     ? msg.photos.map((photo) => photo.image)
                     : [];
                 return (
@@ -218,7 +226,6 @@ function GroupChats() {
                       </>
                     ) : (
                       <>
-                        {/* Найдите объект пользователя с именем msg.user.username */}
                         {otherUserAvatars
                           .filter((user) => user.username === msg.user.username)
                           .map((user) => (
@@ -235,7 +242,7 @@ function GroupChats() {
                     )}
                   </div>
                 );
-              })}
+              }))}
           </>
         }
       />

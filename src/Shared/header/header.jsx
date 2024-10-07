@@ -1,9 +1,9 @@
 import React from 'react';
-import "../../App/Styles/header.scss";
+import styles  from "../../App/Styles/header.module.css";
 function Header(props) {
     return (
-        <div className='wrapHeader'>
-            <span className='headerTitle'>
+        <div className={styles.wrapHeader}>
+            <span className={styles.headerTitle}>
                 {props.tittle}
             </span>
         </div>

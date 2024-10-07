@@ -15,33 +15,9 @@ import withAuthentication from "../../App/Utils/withAuthentication";
 import CreateGroupRoom from "../../Entities/api/CreateGroupName.jsx";
 import CreateRoom from "../../Entities/api/createRoom";
 import GroupChat from "../../Widgets/createGroupChat/createGroupChat.jsx";
-
 import joinroom from "../../Entities/api/joinroom";
 import Badge from "../../Shared/badge/badge.jsx";
-
-const Main = styled.div`
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
-const WrapOutlet = styled.div`
-  width: 100%;
-  height: 100vh;
-  background-color: black;
-  overflow: hidden;
-`;
-const OutletItem = styled.div`
-  margin-top: 10px;
-  background-color: white;
-  height: 97%;
-  width: 99%;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-`;
+import styles from "../../App/Styles/mainLayout.module.css"
 
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
@@ -87,31 +63,27 @@ function MainLayout() {
   }
 
   function RoomList() {
-    const loggedInUsername = authUser;
+
 
     //console.log(roomList.current_users)
     return (
       <>
         {roomList
-          .filter((room) => room.name.includes(loggedInUsername))
+          .filter((room) => room.name.includes(authUser))
           .map((room) => {
             const newName = room.name
-              .replace(loggedInUsername, "")
+              .replace(authUser, "")
               .replace(/^_+|_+$/g, "")
               .trim();
-
-            console.log(room.current_users);
-            const capitalized =
-              newName.charAt(0).toUpperCase() + newName.slice(1);
-            const avatar = room.current_users
-              ? room.current_users[0].photo
-              : "avatar2";
+            const capitalized = newName.charAt(0).toUpperCase() + newName.slice(1);
+            const otherUser = room.current_users.find((user) => user.username !== authUser);
+            const avatar = otherUser ? otherUser.photo : null
             return (
               <Link key={room.pk} to={`chats/${room.pk}`}>
                 <NaviItem
                   icon={<img src={avatar} alt={"avatar"} />}
                   tittle={capitalized}
-                  badgeCount={room.pk}
+                  badgeCount={room.message.length}
                 />
               </Link>
             );
@@ -138,7 +110,7 @@ function MainLayout() {
                 <NaviItem
                   icon={<MdOutlineTaskAlt color="white" size="20" />}
                   tittle={capitalized}
-                  badgeCount={room.pk}
+                  badgeCount={room.message.length}
                 />
               </Link>
             );
@@ -241,7 +213,7 @@ function MainLayout() {
 
   return (
     <>
-      <Main>
+      <div className={styles.mainWrap}>
         <GroupChat
           isOpen={isOpen}
           onCancel={handleCancel}
@@ -291,12 +263,12 @@ function MainLayout() {
             </>
           }
         />
-        <WrapOutlet>
-          <OutletItem>
+        <div className={styles.mainOutletWrap}>
+          <div className={styles.mainOutletItem}>
             <Outlet />
-          </OutletItem>
-        </WrapOutlet>
-      </Main>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

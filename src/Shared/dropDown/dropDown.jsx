@@ -3,8 +3,7 @@ import Icon from "../icon/icon";
 import { GoPlus } from "react-icons/go";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
-
-import "../../App/Styles/dropDown.scss";
+import styles from "../../App/Styles/dropDown.module.css";
 
 function DropDown(props) {
   const [showIcons, setShowIcons] = useState(false);
@@ -29,7 +28,7 @@ function DropDown(props) {
   function showRightIcon() {
     if (isHovered) {
       return (
-        <div className="rightSide">
+        <div>
           <Icon>
             <BiDotsHorizontalRounded color="white" size="20" />
           </Icon>
@@ -39,7 +38,7 @@ function DropDown(props) {
         </div>
       );
     } else {
-      return <div className="zeroWidth"></div>;
+      return <div className={styles.zeroWidth}></div>;
     }
   }
 
@@ -54,13 +53,13 @@ function DropDown(props) {
   const hoverIcon = showRightIcon();
   return (
     <div
-      className="wrapDrop"
+        className={styles.wrapDrop}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={showIcons === false ? props.onClick : null}
     >
-      <div className="dropItem">
-        <div className="leftSide">
+      <div className={styles.dropItem}>
+        <div className={styles.leftSide}>
           <Icon onClick={switchDropDown}>
             {showIcons ? (
               <IoIosArrowDown color="white" size="20" />
@@ -68,7 +67,7 @@ function DropDown(props) {
               <IoIosArrowForward color="white" size="20" />
             )}
           </Icon>
-          <span className="textDrop"> {truncateText(props.title, 16)}</span>
+          <span className={styles.textDrop}> {truncateText(props.title, 16)}</span>
           {/* <span className="textDrop"> {props.title}</span> */}
         </div>
         {hoverIcon}

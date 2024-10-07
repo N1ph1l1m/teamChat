@@ -10,13 +10,18 @@ export default function Message({
   time,
   username,
   photos,
-}) {
+})
+
+
+
+{
   function showPhoto() {
     if (photos.length === 1) {
       return (
         <>
           <div className={styles.wrapPhoto}>
             {photos.map((photo, index) => (
+                // eslint-disable-next-line jsx-a11y/img-redundant-alt
               <img
                 key={index}
                 className={styles.photoMessageOne}
@@ -32,6 +37,7 @@ export default function Message({
         <>
           <div className={styles.wrapPhoto}>
             {photos.map((photo, index) => (
+              // eslint-disable-next-line jsx-a11y/img-redundant-alt
               <img
                 key={index}
                 className={styles.photoMessage3}
@@ -47,6 +53,7 @@ export default function Message({
         <>
           <div className={styles.wrapPhoto}>
             {photos.map((photo, index) => (
+                // eslint-disable-next-line jsx-a11y/img-redundant-alt
               <img
                 key={index}
                 className={styles.photoMessage}
@@ -57,9 +64,10 @@ export default function Message({
           </div>
         </>
       );
+    }else{
+      return null;
     }
 
-    return null;
   }
   const photoRender = showPhoto();
   return (
