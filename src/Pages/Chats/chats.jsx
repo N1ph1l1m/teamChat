@@ -13,6 +13,7 @@ function Chats() {
   const { id } = useParams();
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
+  const [image, setImage] = useState("");
   const [isWebSocketOpen, setIsWebSocketOpen] = useState(false);
   const [chatSocket, setChatSocket] = useState(null);
   const [roomList, setRoomList] = useState(null);
@@ -111,6 +112,9 @@ function Chats() {
       setChatSocket(socket);
     }
 
+
+
+
     function showMessageAvatar(roomList) {
       console.log("avatar");
       if (roomList.data) {
@@ -133,8 +137,18 @@ function Chats() {
     go();
   }, [id]);
 
+
+  useEffect(() => {
+
+    console.log("Messages изменились:", messages);
+
+//
+
+  }, [messages]);
+
   const handleInputChange = (e) => {
     setMessage(e.target.value);
+    console.log(message);
   };
 
 
@@ -155,50 +169,197 @@ function Chats() {
     }
 
   };
-  const handleFileChange = (e)=>{
-    console.log(e.target.files)
-    setMessage(e.target.files);
-    console.log(message)
-  }
+  // const handleFileChange = (e)=>{
+  //   console.log(e.target.files)
+  //   setMessage(e.target.files);
+  //   console.log(message)
 
+  // }
 
-  const sendMessagePhoto = () => {
-    if(!message){
-      console.log("Please select a file");
-      return
+  const handleFileChange = (e) => {
+    if (e.target.files.length > 0) {
+      console.log(e.target.files);
+      setImage(e.target.files[0]); // Сохраняем только первый файл
+      console.log(e.target.files[0]);
+    } else {
+      console.log("No file selected");
     }
-    const url = ""
-    const formData = new FormData();
-    formData.append('file',message);
+  };
 
-    axios.post(url,formData,{
-      headers:{
-        'Content-Type':"multipart/form-data"
+
+
+  // const sendMessagePhoto = () => {
+  //   if(!message){
+  //     console.log("Please select a file");
+  //     return
+  //   }
+  //   const url = `http://127.0.0.1:8000/chat/room/${id}/user/${autUsr}/message/`
+  //   const formData = new FormData();
+  //   formData.append('file',message);
+
+  //   axios.post(url,formData,{
+  //     headers:{
+  //       'Content-Type':"multipart/form-data"
+  //     }
+  //   }).then(response=>{
+  //     console.log("Файл загружен",response.data);
+
+  //     if (isWebSocketOpen && chatSocket) {
+  //       const request_id = 1;
+  //       chatSocket.send(
+  //         JSON.stringify({
+  //           message: formData,
+  //           action: "create_message",
+  //           request_id: request_id,
+  //         })
+  //       );
+  //       console.log(message);
+  //       setMessage("");
+  //     } else {
+  //       console.log("WebSocket не открыт. Сообщение не отправлено.");
+  //     }
+  //   }).catch(error =>{
+  //     console.error('Ошибка при загрузке файла:',error)
+  //   })
+  // };
+
+  // async function  sendMessagePhoto(){
+  //   try{
+  //     if(message && !image){
+  //       if (isWebSocketOpen && chatSocket) {
+  //         const request_id = 1;
+  //         chatSocket.send(
+  //           JSON.stringify({
+  //             message: message,
+  //             action: "create_message",
+  //             request_id: request_id,
+  //           })
+  //         );
+  //         console.log(message);
+  //         setMessage("");
+  //       } else {
+  //         console.log("WebSocket не открыт. Сообщение не отправлено.");
+  //       }
+  //     }
+
+  //     if ( !image && !message) {
+  //       console.log("Please select a file");
+  //       return;
+  //     }
+  //     console.log(image)
+  //     const url = `http://127.0.0.1:8000/chat/room/${id}/user/${autUsr}/message/`;
+  //     const formData = new FormData();
+  //     formData.append('image', image);
+  //     formData.append('text', message);
+  //     console.log("Отправляемые файлы " + formData.data)
+
+  //     const response = await axios.post(url, formData, {
+  //       headers: {
+  //          'Content-Type': "multipart/form-data",
+  //        },
+  //     })
+  //       console.log("Файл загружен", response.data.image);
+
+  //       if (isWebSocketOpen && chatSocket) {
+  //         const request_id = 1;
+  //         chatSocket.send(
+  //           JSON.stringify({
+  //               action: "create_message",
+  //               message: response.data.text, // Текст сообщения
+  //               image: response.data.image,   // Изображение
+  //               request_id: request_id,
+  //           })
+  //       );
+  //       setMessages((prevMessages) => [
+  //         ...prevMessages,
+  //         {
+  //            id: response.data.id, // assuming response includes id
+  //           text: response.data.text,
+  //           image: response.data.image, // assuming response includes the image URL
+  //           created_at: new Date().toISOString(), // Use the current date
+  //           user: { username: autUsr, photo: authenticatedUser.photo }, // Use current user data
+  //         },
+  //       ]);
+  //         console.log(response.data); // Используем данные из ответа
+  //         setMessage(""); // Очищаем сообщение
+  //         setImage("")
+  //       } else {
+  //         console.log("WebSocket не открыт. Сообщение не отправлено.");
+  //       }
+  //     }catch(error){
+  //         console.error('Ошибка при загрузке файла:', error);
+  //     }
+  //     chatSocket.onmessage = function (e) {
+  //       const data = JSON.parse(e.data);
+  //       switch (data.action) {
+  //         case "create":
+  //           setMessages((prevMessages) => {
+  //             const messageExists = prevMessages.some(
+  //               (msg) => msg.id === data.data.id
+  //             );
+  //             if (!messageExists) {
+  //               return [...prevMessages, data.data];
+  //             }
+  //             return prevMessages;
+  //           });
+  //           break;
+  //         default:
+  //           break;
+  //       }
+  //     };
+  // };
+
+  async function sendMessagePhoto() {
+    try {
+      // Check for empty message and image
+      if (message && !image) {
+        if (isWebSocketOpen && chatSocket) {
+          const request_id = 1;
+          chatSocket.send(
+            JSON.stringify({
+              message: message,
+              action: "create_message",
+              request_id: request_id,
+            })
+          );
+          setMessage("");
+        }
+      } else if (!image && !message) {
+        console.log("Please select a file");
+        return;
       }
-    }).then(response=>{
-      console.log("Файл загружен",response.data);
 
+      // Prepare the FormData
+      const url = `http://127.0.0.1:8000/chat/room/${id}/user/${autUsr}/message/`;
+      const formData = new FormData();
+      formData.append("image", image);
+      formData.append("text", message);
+
+      // Send the request
+      const response = await axios.post(url, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      // After the response, check if WebSocket is open and send the data
       if (isWebSocketOpen && chatSocket) {
         const request_id = 1;
         chatSocket.send(
           JSON.stringify({
-            message: formData,
             action: "create_message",
+            message: response.data.text, // Use the text message
+            image: response.data.image,   // Use the image URL from the response
             request_id: request_id,
           })
         );
-        console.log(message);
-        setMessage("");
-      } else {
-        console.log("WebSocket не открыт. Сообщение не отправлено.");
+        setMessage(""); // Clear the message
+        setImage(""); // Clear the image
       }
-    }).catch(error =>{
-      console.error('Ошибка при загрузке файла:',error)
-    })
-
-
-
-  };
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
+  }
 
   function formatRoomName(roomName) {
     try {
@@ -222,58 +383,51 @@ function Chats() {
         inputValue={message}
         input={handleInputChange}
         file = {handleFileChange}
-        sendmessage={sendMessage}
+        sendmessage={sendMessagePhoto}
         content={
           <>
-          {messages.filter((msg)=> msg.room.id === parseInt(id)).length === 0 ?
-          (
-            <div className={styles.nullMessageWrap}>
-            <Icon>
-            <BiMessageAltX color="gray" size="25" />
-           </Icon>
-          <p className={styles.nullMessageText}>Сообщений пока нет</p>
-            </div>
+    {messages.filter((msg) => msg.room && msg.room.id === parseInt(id)).length === 0 ? (
+  <div className={styles.nullMessageWrap}>
+    <Icon>
+      <BiMessageAltX color="gray" size="25" />
+    </Icon>
+    <p className={styles.nullMessageText}>Сообщений пока нет</p>
+  </div>
+) : (
+  messages
+    .filter((msg) => msg.room && msg.room.id === parseInt(id))
+    .map((msg, index, arr) => {
+      const newText = msg.created_at.substring(11, 16);
+      const messageDate = msg.created_at.substring(0, 10);
+      const previousMessage = arr[index - 1];
+      const previousDate = previousMessage
+        ? previousMessage.created_at.substring(0, 10)
+        : null;
+      const isNewDay = previousDate !== messageDate;
 
-          ):(
-              messages
-                .filter((msg) => msg.room.id === parseInt(id))
-                .map((msg, index, arr) => {
-                  const newText = msg.created_at.substring(11, 16);
-                  const messageDate = msg.created_at.substring(0, 10);
-                  const previousMessage = arr[index - 1];
-                  const previousDate = previousMessage
-                    ? previousMessage.created_at.substring(0, 10)
-                    : null;
-                  const isNewDay = previousDate !== messageDate;
-                  const photos = Array.isArray(msg.photos) && msg.photos.length > 0
-                      ? msg.photos.map((photo) => photo.image)
-                      : [];
-                  {/* console.log(msg) */}
-                  return (
-                    <div key={index}>
-                      {isNewDay && <p className={styles.dataTimeMessage}>{messageDate}</p>}
-                      {msg.user.username === localStorage.getItem("username") ? (
-                        <Message
-                          text={msg.text}
-                          photos={photos}
-                          time={newText}
-                          sent
-                          avatar={authenticatedUser.photo}
-                        />
-                      ) : (
-                        <Message
-                          text={msg.text}
-                          time={newText}
-                          photos={photos}
-                          avatar={otherUserAvatar}
-                        />
-                      )}
-                    </div>
-                  );
-                })
-
-          )
-          }
+      return (
+        <div key={index}>
+          {isNewDay && <p className={styles.dataTimeMessage}>{messageDate}</p>}
+          {msg.user.username === localStorage.getItem("username") ? (
+            <Message
+              text={msg.text}
+              photos={msg.image}
+              time={newText}
+              sent
+              avatar={authenticatedUser.photo}
+            />
+          ) : (
+            <Message
+              text={msg.text}
+              time={newText}
+              photos={msg.image}
+              avatar={otherUserAvatar}
+            />
+          )}
+        </div>
+      );
+    })
+)}
         </>
         }
       />

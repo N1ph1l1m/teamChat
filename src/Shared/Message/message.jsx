@@ -16,57 +16,80 @@ export default function Message({
 
 {
   function showPhoto() {
-    if (photos.length === 1) {
-      return (
-        <>
-          <div className={styles.wrapPhoto}>
-            {photos.map((photo, index) => (
-                // eslint-disable-next-line jsx-a11y/img-redundant-alt
-              <img
-                key={index}
-                className={styles.photoMessageOne}
-                src={photo}
-                alt={`message photo ${index}`}
-              />
-            ))}
-          </div>
-        </>
-      );
-    } else if (photos.length === 3) {
-      return (
-        <>
-          <div className={styles.wrapPhoto}>
-            {photos.map((photo, index) => (
-              // eslint-disable-next-line jsx-a11y/img-redundant-alt
-              <img
-                key={index}
-                className={styles.photoMessage3}
-                src={photo}
-                alt={`message photo ${index + 1}`}
-              />
-            ))}
-          </div>
-        </>
-      );
-    } else if (photos.length > 0) {
-      return (
-        <>
-          <div className={styles.wrapPhoto}>
-            {photos.map((photo, index) => (
-                // eslint-disable-next-line jsx-a11y/img-redundant-alt
-              <img
-                key={index}
-                className={styles.photoMessage}
-                src={photo}
-                alt={`message photo ${index + 1}`}
-              />
-            ))}
-          </div>
-        </>
-      );
-    }else{
-      return null;
+
+
+    if (photos === null || (Array.isArray(photos) && photos.length === 0)) {
+      return null; // Возвращаем null, если photos null или пустой массив
     }
+
+
+    if(!Array.isArray(photos)){
+      return (
+        <div className={styles.wrapPhoto}>
+
+            <img
+              className={styles.photoMessage}
+              src={photos}
+              alt={`message photo `}
+            />
+        </div>
+        )
+
+    }else{
+      if (photos.length === 1) {
+        return (
+          <>
+            <div className={styles.wrapPhoto}>
+              {photos.map((photo, index) => (
+                  // eslint-disable-next-line jsx-a11y/img-redundant-alt
+                <img
+                  key={index}
+                  className={styles.photoMessageOne}
+                  src={photo}
+                  alt={`message photo ${index}`}
+                />
+              ))}
+            </div>
+          </>
+        );
+      } else if (photos.length === 3) {
+        return (
+          <>
+            <div className={styles.wrapPhoto}>
+              {photos.map((photo, index) => (
+                // eslint-disable-next-line jsx-a11y/img-redundant-alt
+                <img
+                  key={index}
+                  className={styles.photoMessage3}
+                  src={photo}
+                  alt={`message photo ${index + 1}`}
+                />
+              ))}
+            </div>
+          </>
+        );
+      } else if (photos.length > 0) {
+        return (
+          <>
+            <div className={styles.wrapPhoto}>
+              {photos.map((photo, index) => (
+                  // eslint-disable-next-line jsx-a11y/img-redundant-alt
+                <img
+                  key={index}
+                  className={styles.photoMessage}
+                  src={photo}
+                  alt={`message photo ${index + 1}`}
+                />
+              ))}
+            </div>
+          </>
+        );
+      }else{
+        return null;
+      }
+    }
+
+
 
   }
   const photoRender = showPhoto();

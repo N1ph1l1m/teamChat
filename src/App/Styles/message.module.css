@@ -94,3 +94,7 @@ margin-right: 3px;
     height: 80%;
     border-radius: 10px;
 }
+
+.displayNone{
+    display: none;
+}
