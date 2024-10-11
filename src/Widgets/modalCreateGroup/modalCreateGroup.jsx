@@ -1,25 +1,28 @@
 import React from "react";
-// import styled from "styled-components";
 import Portal from "./portal";
 import PropTypes from "prop-types";
 
-import "./createGroupChat.scss";
+import styles from "../../App/Styles/modalWindow.module.css";
 import Icon from "../../Shared/icon/icon";
 import Button from "../../Shared/button/button";
 
-const GroupChat = ({ title, isOpen, onCancel, onSubmit, children }) => {
+const ModalCreateGroup = ({ title, isOpen, onCancel, onSubmit, children }) => {
   return (
     <>
       {isOpen && (
         <Portal>
-          <div className="modalOverlay">
-            <div className="modalWrap">
-              <div className="modalBody">{children}</div>
-              <div className="modalFooter">
-                <Button className="modalButton" onClick={onCancel} invert>
+          <div className={styles.modalOverlay}>
+            <div className={styles.modalWrap}>
+              <div className={styles.modalBody}>{children}</div>
+              <div className={styles.modalFooter}>
+                <Button
+                  className={styles.modalButton}
+                  onClick={onCancel}
+                  invert
+                >
                   Закрыть
                 </Button>
-                <Button className="modalButton" onClick={onSubmit}>
+                <Button className={styles.modalButton} onClick={onSubmit}>
                   Создать
                 </Button>
               </div>
@@ -31,7 +34,7 @@ const GroupChat = ({ title, isOpen, onCancel, onSubmit, children }) => {
   );
 };
 
-GroupChat.propTypes = {
+ModalCreateGroup.propTypes = {
   title: PropTypes.string,
   isOpen: PropTypes.bool,
   onCancel: PropTypes.func,
@@ -39,11 +42,11 @@ GroupChat.propTypes = {
   children: PropTypes.node,
 };
 
-GroupChat.defaultProps = {
+ModalCreateGroup.defaultProps = {
   title: "Modal title",
   isOpen: false,
   onCancel: () => {},
   onSubmit: () => {},
   children: null,
 };
-export default GroupChat;
+export default ModalCreateGroup;

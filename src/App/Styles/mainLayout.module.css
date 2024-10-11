@@ -1,23 +1,159 @@
-.mainWrap{
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+.mainWrap {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
-.mainOutletWrap{
-    width: 100%;
-    height: 100vh;
-    background-color: black;
-    overflow: hidden;
+.mainOutletWrap {
+  width: 100%;
+  height: 100vh;
+  background-color: black;
+  overflow: hidden;
 }
 .mainOutletItem {
-    margin-top: 10px;
-    background-color: white;
-    height: 97%;
-    width: 99%;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: start;
+  margin-top: 10px;
+  background-color: white;
+  height: 97%;
+  width: 99%;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.headerModel {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 400px;
+  justify-content: flex-start;
+}
+.selectAvatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50px;
+  border: 1px solid green;
+}
+.inputNameGroup {
+  min-height: 100px;
+  background-color: white;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+.inputNameGroup input {
+  height: 30px;
+  width: 100%;
+  border: none;
+  resize: none;
+  outline: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  border-bottom: 1px solid gray;
+}
+.modalTitle {
+  font-weight: bold;
+  text-align: start;
+  font-size: 16px;
+}
+
+.selectedUsers {
+  display: inline-block;
+  min-height: 36px;
+  padding: 0px;
+  width: 300px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.userBadge {
+  width: 90px;
+  height: 31px;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  border-radius: 20px;
+  background-color: rgb(240, 235, 235);
+  border-left: 0px;
+  margin-right: 5px;
+  margin-top: 5px;
+}
+.liAvatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50px;
+  border: 1px solid green;
+  margin-right: 5px;
+}
+.selectedUsersItems {
+  display: inline;
+  height: 30px;
+  left: 0px;
+  margin-right: 5px;
+  margin-top: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.wrapCheckBox {
+  margin-top: 5px;
+  height: 40%;
+  overflow: hidden;
+}
+.checkBoxWrap {
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  height: 60px;
+  padding: 5px;
+  border-radius: 10px;
+  cursor: pointer;
+  position: relative;
+}
+.checkBoxWrap:hover {
+  background-color: rgba(116, 116, 116, 0.461);
+}
+.checkboxUserAvatar {
+  width: 55px;
+  height: 55px;
+  border-left: 20px;
+  /* border:1px solid green; */
+  border-radius: 55px;
+}
+
+.checkbox {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  display: none;
+}
+
+.checkboxLabel {
+  font-size: 16px;
+  width: 100%;
+  height: 30px;
+  padding-left: 10px;
+  border-radius: 10px;
+}
+
+.checkbox:checked + .checkboxLabel {
+  background-color: #007bff;
+  color: white;
+}
+
+@media (max-height: 720px) {
+  .wrapCheckBox {
+    height: 30%;
+  }
 }

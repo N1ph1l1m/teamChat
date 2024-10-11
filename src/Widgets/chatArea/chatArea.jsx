@@ -3,9 +3,23 @@ import React, { useState } from "react";
 //import MessageInput from "../../Shared/inputMessage/messageInput";
 import styles from "../../App/Styles/chatArea.module.css";
 import { MdAddPhotoAlternate } from "react-icons/md";
-import Icon from  "../../Shared/icon/icon"
+import Icon from "../../Shared/icon/icon";
 function ChatArea(props) {
+  // function showPrew() {
+  //   if (props.handleImage != null) {
+  //     return (
+  //       <>
+  //         <div className={styles.selectImg}>
+  //           <img src={props.handleImage} alt="img" />
+  //         </div>
+  //       </>
+  //     );
+  //   } else {
+  //     return null;
+  //   }
+  // }
 
+  // const showPr = showPrew();
 
   return (
     <div className={styles.chatAreaWrap}>
@@ -17,19 +31,19 @@ function ChatArea(props) {
       </div>
       <div className={styles.messageInput}>
         <div className={styles.inputFileWrap}>
-        <input
-              type="file"
-              id="photo"
-              name="photo"
-              accept="image/png, image/jpeg"
-              onChange={props.file}
-              multiple />
-        <label for="photo">
-        <Icon className={styles.icon}>
-        <MdAddPhotoAlternate  color="gray" size="25"/>
-        </Icon>
-        </label>
-
+          <input
+            type="file"
+            id="photo"
+            name="photo"
+            accept="image/png, image/jpeg"
+            onChange={props.file}
+            multiple
+          />
+          <label for="photo">
+            <Icon className={styles.icon}>
+              <MdAddPhotoAlternate color="gray" size="25" />
+            </Icon>
+          </label>
         </div>
 
         <textarea

@@ -1,0 +1,92 @@
+.modalOverlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  
+  .modalWrap {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 10px;
+    box-sizing: content-box;
+    overflow: hidden;
+  }
+  
+.closeModel{
+position: absolute;
+cursor: pointer;
+z-index: 5;
+font-weight: 800px;
+}
+
+  .modalBody {
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+  .modalBody::-webkit-scrollbar {
+    display: none;
+  }
+
+
+  .wrapContentModal{
+    position: relative;
+    margin: 0px auto;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    flex-direction: column;
+    padding: 1px;
+    /* width: 30%; */
+    
+    }
+    .wrapContentModal > img{
+        border-radius: 10px 10px 0px 0px ;
+        width: 400px;
+        height: 200px; 
+        margin-bottom: 3px;
+    }
+    
+    .inputWrap{
+        border-top: 1px solid gray; 
+        width: 100%;
+        display: flex;
+        justify-content: space-between;    
+        padding: 0px 10px;
+        padding-top: 5px;
+    }
+    
+    
+    .inputWrap > textarea{
+            
+        width: 90%;
+        border:none;
+        font-size: 16px;
+    resize: none;
+    outline: none;
+    font-family: Arial, Helvetica, sans-serif;
+    }
+    
+    
+
+  .modalFooter {
+    margin-top: 5px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  
+  .modalFooter button:last-child {
+    margin-left: 10px;
+  }
+  

@@ -8,16 +8,15 @@ import { FaUsers } from "react-icons/fa";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { Link, Outlet } from "react-router-dom";
 import "../../App/Styles/link.scss";
-import "../../Widgets/createGroupChat/createGroupChat.scss";
 import { getData } from "../../Entities/api/getUserList";
 import { useState, useEffect } from "react";
 import withAuthentication from "../../App/Utils/withAuthentication";
 import CreateGroupRoom from "../../Entities/api/CreateGroupName.jsx";
 import CreateRoom from "../../Entities/api/createRoom";
-import GroupChat from "../../Widgets/createGroupChat/createGroupChat.jsx";
+import ModalCreateGroup from "../../Widgets/modalCreateGroup/modalCreateGroup.jsx";
 import joinroom from "../../Entities/api/joinroom";
 import Badge from "../../Shared/badge/badge.jsx";
-import styles from "../../App/Styles/mainLayout.module.css"
+import styles from "../../App/Styles/mainLayout.module.css";
 
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
@@ -63,8 +62,6 @@ function MainLayout() {
   }
 
   function RoomList() {
-
-
     //console.log(roomList.current_users)
     return (
       <>
@@ -75,9 +72,12 @@ function MainLayout() {
               .replace(authUser, "")
               .replace(/^_+|_+$/g, "")
               .trim();
-            const capitalized = newName.charAt(0).toUpperCase() + newName.slice(1);
-            const otherUser = room.current_users.find((user) => user.username !== authUser);
-            const avatar = otherUser ? otherUser.photo : null
+            const capitalized =
+              newName.charAt(0).toUpperCase() + newName.slice(1);
+            const otherUser = room.current_users.find(
+              (user) => user.username !== authUser
+            );
+            const avatar = otherUser ? otherUser.photo : null;
             return (
               <Link key={room.pk} to={`chats/${room.pk}`}>
                 <NaviItem
@@ -125,6 +125,7 @@ function MainLayout() {
     setGroupName("");
   }
   function showModalGroupChat() {
+    console.log("click");
     setOpen(true);
     return <></>;
   }
@@ -139,10 +140,8 @@ function MainLayout() {
   const handleCheckboxChange = (username, photo) => {
     setSelectedUsers((prevSelectedUsers) => {
       if (prevSelectedUsers.some((user) => user.username === username)) {
-        // Если пользователь уже выбран, удаляем его
         return prevSelectedUsers.filter((user) => user.username !== username);
       } else {
-        // Если пользователь не выбран, добавляем его
         return [...prevSelectedUsers, { username, photo }];
       }
     });
@@ -151,16 +150,20 @@ function MainLayout() {
   function formGroupChat() {
     return (
       <>
-        <div className="header-model">
-          <div className="select-avatar"></div>
-          <div className="inputNameGroup">
-            <span className="modalTitle">Название группы</span>
+        <div className={styles.headerModel}>
+          <div className={styles.selectAvatar}></div>
+          <div className={styles.inputNameGroup}>
+            <span className={styles.modalTitle}>Название группы</span>
             <input onChange={(e) => handleInputChangeName(e)} />
-            <ul className="selectedUsers">
+            <ul className={styles.selectedUsers}>
               {selectedUsers.map((user) => (
-                <div className="userBadge">
-                  <img className="li-avatar" src={user.photo} alt={user.name} />
-                  <li className="selectedUsersItems" key={user}>
+                <div className={styles.userBadge}>
+                  <img
+                    className={styles.liAvatar}
+                    src={user.photo}
+                    alt={user.name}
+                  />
+                  <li className={styles.selectedUsersItems} key={user}>
                     {user.username}
                   </li>
                 </div>
@@ -169,7 +172,7 @@ function MainLayout() {
           </div>
         </div>
 
-        <div className="wrapCheckBox">
+        <div className={styles.wrapCheckBox}>
           {userlist
             .filter((user) => user.username !== authUser)
             .map((user) => {
@@ -178,18 +181,18 @@ function MainLayout() {
               return (
                 <>
                   <label
-                    className="checkboxWrap"
+                    className={styles.checkBoxWrap}
                     key={user.id}
                     htmlFor={user.id}
                   >
                     <img
-                      className="checkboxUserAvatar"
+                      className={styles.checkboxUserAvatar}
                       src={user.photo}
                       alt={user.username}
                     />
                     <input
                       type="checkbox"
-                      className="checkbox"
+                      className={styles.checkbox}
                       id={user.id}
                       checked={selectedUsers.some(
                         (selectedUser) =>
@@ -199,7 +202,7 @@ function MainLayout() {
                         handleCheckboxChange(user.username, user.photo)
                       }
                     />
-                    <span className="checkboxLabel">{upName}</span>
+                    <span className={styles.checkboxLabel}>{upName}</span>
                   </label>
                 </>
               );
@@ -214,7 +217,7 @@ function MainLayout() {
   return (
     <>
       <div className={styles.mainWrap}>
-        <GroupChat
+        <ModalCreateGroup
           isOpen={isOpen}
           onCancel={handleCancel}
           onSubmit={() => {

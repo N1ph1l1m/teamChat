@@ -10,38 +10,29 @@ export default function Message({
   time,
   username,
   photos,
-})
-
-
-
-{
+}) {
   function showPhoto() {
-
-
     if (photos === null || (Array.isArray(photos) && photos.length === 0)) {
       return null; // Возвращаем null, если photos null или пустой массив
     }
 
-
-    if(!Array.isArray(photos)){
+    if (!Array.isArray(photos)) {
       return (
         <div className={styles.wrapPhoto}>
-
-            <img
-              className={styles.photoMessage}
-              src={photos}
-              alt={`message photo `}
-            />
+          <img
+            className={styles.photoMessage}
+            src={photos}
+            alt={`message photo `}
+          />
         </div>
-        )
-
-    }else{
+      );
+    } else {
       if (photos.length === 1) {
         return (
           <>
             <div className={styles.wrapPhoto}>
               {photos.map((photo, index) => (
-                  // eslint-disable-next-line jsx-a11y/img-redundant-alt
+                // eslint-disable-next-line jsx-a11y/img-redundant-alt
                 <img
                   key={index}
                   className={styles.photoMessageOne}
@@ -73,7 +64,7 @@ export default function Message({
           <>
             <div className={styles.wrapPhoto}>
               {photos.map((photo, index) => (
-                  // eslint-disable-next-line jsx-a11y/img-redundant-alt
+                // eslint-disable-next-line jsx-a11y/img-redundant-alt
                 <img
                   key={index}
                   className={styles.photoMessage}
@@ -84,13 +75,10 @@ export default function Message({
             </div>
           </>
         );
-      }else{
+      } else {
         return null;
       }
     }
-
-
-
   }
   const photoRender = showPhoto();
   return (
@@ -105,7 +93,7 @@ export default function Message({
 
         <div className={styles.bubbleText}>{text}</div>
         {photoRender}
-
+      
         <div className={styles.bubbleTimeWrap}>
           <span className={styles.bubbleTimeText}>{time}</span>{" "}
         </div>
