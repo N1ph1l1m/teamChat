@@ -18,9 +18,7 @@ function Chats() {
   const [isWebSocketOpen, setIsWebSocketOpen] = useState(false);
   const [chatSocket, setChatSocket] = useState(null);
   const [roomList, setRoomList] = useState(null);
-  const [imageRender, setImageRender] = useState({});
   const [imagePrew, setImagePrew] = useState({});
-  const [imageRenderAnswer, setImageRenderAnswer] = useState({});
   const [otherUserAvatar, setOtherUserAvatar] = useState(null);
   const [authUser, setAuthUser] = useState([]);
   const [modal, setModel] = useState(false);
@@ -108,15 +106,6 @@ function Chats() {
               return prevMessages;
             });
 
-            if (data.data.user.username !== autUsr) {
-              const img = data.data.image.substring(7);
-
-              setImageRenderAnswer((prev) => ({
-                ...prev,
-                [data.data.id]: img, // Заполняем массив данными
-              }));
-              console.log("ans img " + img);
-            }
             break;
           default:
             break;
@@ -165,25 +154,29 @@ function Chats() {
   // };
 
   const handleInputFileChange = (e) => {
-    if (e.target.files.length > 0) {
-      const file = e.target.files[0];
-      setImage(file); // Сохраняем сам файл, а не только его имя
-      console.log("Выбранный файл изображения:", file);
+    try {
+      if (e.target.files.length > 0) {
+        const file = e.target.files[0];
+        setImage(file); // Сохраняем сам файл, а не только его имя
+        console.log("Выбранный файл изображения:", file);
 
-      // Генерация URL для предпросмотра выбранного изображения
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePrew((prev) => ({
-          ...prev,
-          preview: reader.result, // Сохраняем URL предпросмотра
-        }));
-      };
-      reader.readAsDataURL(file); // Чтение файла для получения URL
-      if (imagePrew) {
-        setModel(true);
+        // Генерация URL для предпросмотра выбранного изображения
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagePrew((prev) => ({
+            ...prev,
+            preview: reader.result, // Сохраняем URL предпросмотра
+          }));
+        };
+        reader.readAsDataURL(file); // Чтение файла для получения URL
+        if (imagePrew) {
+          setModel(true);
+        }
+      } else {
+        console.log("Файл не выбран");
       }
-    } else {
-      console.log("Файл не выбран");
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -224,18 +217,16 @@ function Chats() {
             },
           });
 
-          const imageData = response.data.image;
+          const imageData = `http://127.0.0.1:8000${response.data.image}`;
           console.log("Response from server:", response.data);
 
-          setImageRender((prev) => ({
-            ...prev,
-            [response.data.id]: imageData, // Добавляем новое изображение
-          }));
-
+          const request_id = 1;
           chatSocket.send(
             JSON.stringify({
+              message: "",
               image: imageData,
               action: "create_message",
+              request_id: request_id,
             })
           );
           setImage("");
@@ -260,16 +251,13 @@ function Chats() {
           const imageData = response.data.image;
           console.log("Response from server:", response.data);
 
-          setImageRender((prev) => ({
-            ...prev,
-            [response.data.id]: imageData, // Добавляем новое изображение
-          }));
-
+          const request_id = 1;
           chatSocket.send(
             JSON.stringify({
               message: message,
               image: imageData,
               action: "create_message",
+              request_id: request_id,
             })
           );
 
@@ -299,31 +287,12 @@ function Chats() {
     }
   }
 
-  function renderModalSendMessage() {
-    return (
-      <>
-        <div className={styles.wrapContentModal}>
-          <img src={imagePrew.preview} />
-          <div className={styles.inputWrap}>
-            <textarea
-              placeholder="Type your message"
-              value={message}
-              onChange={handleInputTextChange}
-            />{" "}
-            <Icon>
-              <IoSend onClick={sendMess} color="gray" size="25" />
-            </Icon>
-          </div>
-        </div>
-      </>
-    );
-  }
   // imagePrew.preview
   const userAuth = autUsr;
   const imgPr = imagePrew.prew;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
   const selectImg = image;
-  const modalSendMessage = renderModalSendMessage();
+
   return (
     <>
       <ModalSendMessage
@@ -361,9 +330,11 @@ function Chats() {
                     ? previousMessage.created_at.substring(0, 10)
                     : null;
                   const isNewDay = previousDate !== messageDate;
-                  const anwPhoto = imageRenderAnswer[msg.id] || msg.image;
+                  const anwPhoto =
+                    msg.image && msg.image.startsWith("http://127.0.0.1:8000")
+                      ? msg.image
+                      : `http://127.0.0.1:8000${msg.image || ""}`;
                   console.log(anwPhoto);
-
                   return (
                     <div key={index}>
                       {isNewDay && (
@@ -373,7 +344,7 @@ function Chats() {
                       localStorage.getItem("username") ? (
                         <Message
                           text={msg.text}
-                          photos={imageRender[msg.id] || msg.image}
+                          photos={anwPhoto}
                           time={newText}
                           sent
                           avatar={authenticatedUser.photo}
