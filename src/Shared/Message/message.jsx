@@ -10,6 +10,8 @@ export default function Message({
   time,
   username,
   photos,
+  modalPhoto,
+  photoData,
 }) {
   function showPhoto() {
     if (photos === null || (Array.isArray(photos) && photos.length === 0)) {
@@ -23,7 +25,9 @@ export default function Message({
             className={styles.photoMessage}
             src={photos}
             alt={`message photo `}
+            onClick={() => modalPhoto(photoData)}
           />
+
         </div>
       );
     } else {
@@ -32,7 +36,6 @@ export default function Message({
           <>
             <div className={styles.wrapPhoto}>
               {photos.map((photo, index) => (
-                // eslint-disable-next-line jsx-a11y/img-redundant-alt
                 <img
                   key={index}
                   className={styles.photoMessageOne}
@@ -40,6 +43,7 @@ export default function Message({
                   alt={`message photo ${index}`}
                 />
               ))}
+              <button onClick={modalPhoto}>fff</button>
             </div>
           </>
         );
@@ -56,13 +60,14 @@ export default function Message({
                   alt={`message photo ${index + 1}`}
                 />
               ))}
+              <button onClick={modalPhoto}>fff</button>
             </div>
           </>
         );
       } else if (photos.length > 0) {
         return (
           <>
-            <div className={styles.wrapPhoto}>
+            <div className={styles.wrapPhoto}  >
               {photos.map((photo, index) => (
                 // eslint-disable-next-line jsx-a11y/img-redundant-alt
                 <img
@@ -70,12 +75,15 @@ export default function Message({
                   className={styles.photoMessage}
                   src={photo}
                   alt={`message photo ${index + 1}`}
+
                 />
+
               ))}
+              <button onClick={modalPhoto}>fff</button>
             </div>
           </>
         );
-      } else {
+      }else {
         return null;
       }
     }
@@ -86,18 +94,43 @@ export default function Message({
       className={`${styles.message} ${sent ? styles.sent : styles.received}`}
     >
       <img className={styles.messageAvatar} src={avatar} alt={"avatar user"} />
-      <div className={styles.messageBubble}>
-        <div className={styles.bubbleNameWrap}>
-          <span className={styles.bubbleNameText}>{username}</span>{" "}
-        </div>
 
-        <div className={styles.bubbleText}>{text}</div>
-        {photoRender}
-      
+     {text && !photos && (
+      <div className={styles.messageBubbleText}>
+        <div className={styles.bubbleNameWrap}>
+          <span className={styles.bubbleNameText}>{username}</span>
+        </div>
+        <span>{text}</span>
         <div className={styles.bubbleTimeWrap}>
-          <span className={styles.bubbleTimeText}>{time}</span>{" "}
+          <span className={styles.bubbleTimeText}>{time}</span>
         </div>
       </div>
-    </div>
+    )}
+
+
+    {!text && photos && (
+      <div className={styles.messageBublePhoto}>
+        {photoRender}
+        <div className={styles.bubbleTimeWrapPhoto}>
+          <span className={styles.bubbleTimeTextPhoto}>{time}</span>
+        </div>
+      </div>
+    )}
+
+
+    {text && photos && (
+      <div className={styles.messageBubbleAll}>
+        <div className={styles.bubbleNameWrap}>
+          <span className={styles.bubbleNameText}>{username}</span>
+        </div>
+        {photoRender}
+        <div className={styles.bubbleText}>{text}
+        <div className={styles.bubbleTimeWrap}>
+          <span className={styles.bubbleTimeText}>{time}</span>
+        </div>
+        </div>
+      </div>
+    )}
+  </div>
   );
 }

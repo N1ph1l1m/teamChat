@@ -8,8 +8,8 @@ import Button from "../../Shared/button/button";
 import { IoSend } from "react-icons/io5";
 import { IoIosClose } from "react-icons/io";
 
-const ModalSendMessage = ({
-  title,
+const ModalPhoto = ({
+   title,
   isOpen,
   onCancel,
   onSubmit,
@@ -34,10 +34,10 @@ const ModalSendMessage = ({
                 />
               </Icon>
               </div>
-
-              <div className={styles.modalBody}>
+              <img src={image} alt="img" />
+              {/* <div className={styles.modalBody}>
                 <div className={styles.wrapContentModal}>
-                  <img src={image} alt="img" />
+
                   <div className={styles.inputWrap}>
                     <textarea
                       placeholder="Подпись"
@@ -45,11 +45,11 @@ const ModalSendMessage = ({
                       onChange={input}
                     />{" "}
                     <Icon>
-                      <IoSend  onClick={onSubmit} color="rgb(116, 116, 116)" size="25" />
+                      <IoSend onClick={onSubmit} color="rgb(116, 116, 116)" size="25" />
                     </Icon>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </Portal>
@@ -58,7 +58,7 @@ const ModalSendMessage = ({
   );
 };
 
-ModalSendMessage.propTypes = {
+ModalPhoto.propTypes = {
   title: PropTypes.string,
   isOpen: PropTypes.bool,
   onCancel: PropTypes.func,
@@ -66,11 +66,11 @@ ModalSendMessage.propTypes = {
   children: PropTypes.node,
 };
 
-ModalSendMessage.defaultProps = {
+ModalPhoto.defaultProps = {
   title: "Modal title",
   isOpen: false,
   onCancel: () => {},
   onSubmit: () => {},
   children: null,
 };
-export default ModalSendMessage;
+export default ModalPhoto;

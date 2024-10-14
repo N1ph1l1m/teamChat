@@ -1,92 +1,115 @@
 .modalOverlay {
-    background-color: rgba(0, 0, 0, 0.5);
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  }
-  
-  .modalWrap {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #FFFFFF;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    border-radius: 10px;
-    box-sizing: content-box;
-    overflow: hidden;
-  }
-  
-.closeModel{
-position: absolute;
-cursor: pointer;
-z-index: 5;
-font-weight: 800px;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
-  .modalBody {
-    flex-grow: 1;
-    overflow-y: auto;
-  }
-  .modalBody::-webkit-scrollbar {
-    display: none;
-  }
+.modalWrap {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 10px;
+  box-sizing: content-box;
+  overflow: hidden;
+  width: 500px;
+}
 
 
-  .wrapContentModal{
-    position: relative;
-    margin: 0px auto;
-    display: flex;
-    justify-content: center;
-    align-items:center;
-    flex-direction: column;
-    padding: 1px;
-    /* width: 30%; */
-    
-    }
-    .wrapContentModal > img{
-        border-radius: 10px 10px 0px 0px ;
-        width: 400px;
-        height: 200px; 
-        margin-bottom: 3px;
-    }
-    
-    .inputWrap{
-        border-top: 1px solid gray; 
-        width: 100%;
-        display: flex;
-        justify-content: space-between;    
-        padding: 0px 10px;
-        padding-top: 5px;
-    }
-    
-    
-    .inputWrap > textarea{
-            
-        width: 90%;
-        border:none;
-        font-size: 16px;
-    resize: none;
-    outline: none;
-    font-family: Arial, Helvetica, sans-serif;
-    }
-    
-    
+.modalHeader{
+  display: flex;
+  justify-content: space-between;
+  align-items:center;
+  flex-direction: row;
 
-  .modalFooter {
-    margin-top: 5px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+
+}
+.modalTitle{
+  font-size: 16px;
+  color:rgb(116, 116, 116);
+  font-weight: 800px ;
+}
+
+.closeModel {
+  margin-top: 10px;
+  font-weight: 800px;
+  cursor: pointer;
+}
+
+.modalBody {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+.modalBody::-webkit-scrollbar {
+  display: none;
+}
+
+.wrapContentModal {
+  position: relative;
+  margin: 0px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 1px;
+}
+.wrapContentModal > img {
+  width: 600px;
+  height: 400px;
+  object-fit: contain;
+  margin-bottom: 3px;
+}
+
+.inputWrap {
+  width: 100%;
+  border-top: 1px solid rgb(197, 197, 197);
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 10px;
+  padding-top: 5px;
+}
+
+.inputWrap > textarea {
+  width: 100%;
+  height: 30px;
+  border: none;
+  font-size: 18px;
+  resize: none;
+  outline: none;
+  font-family: Arial, Helvetica, sans-serif;
+
+}
+.inputWrap> i{
+ cursor: pointer;
+}
+
+.modalFooter {
+  margin-top: 5px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.modalFooter button:last-child {
+  margin-left: 10px;
+}
+
+/* @media screen and  (max-width: 1200px){
+  .wrapContentModal > img {
+    max-width: 400px;
+    height: 400px;
+
+    border:3px solid green;
   }
-  
-  .modalFooter button:last-child {
-    margin-left: 10px;
-  }
-  
+} */

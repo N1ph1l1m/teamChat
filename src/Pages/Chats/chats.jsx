@@ -8,13 +8,14 @@ import { BiMessageAltX } from "react-icons/bi";
 import { getData } from "../../Entities/api/getUserList";
 import styles from "../../App/Styles/chats.module.css";
 import ModalWindow from "../../Widgets/modalCreateGroup/modalCreateGroup";
+import ModalPhoto from "../../Widgets/modalPhoto/modalPhoto";
 import ModalSendMessage from "../../Widgets/modalSendMessage/modalSendMessage";
 import { IoSend } from "react-icons/io5";
 function Chats() {
   const { id } = useParams();
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
-  const [image, setImage] = useState("");
+  const [sendImage, setSendImage] = useState("");
   const [isWebSocketOpen, setIsWebSocketOpen] = useState(false);
   const [chatSocket, setChatSocket] = useState(null);
   const [roomList, setRoomList] = useState(null);
@@ -23,6 +24,7 @@ function Chats() {
   const [authUser, setAuthUser] = useState([]);
   const [modal, setModel] = useState(false);
   const autUsr = localStorage.getItem("username");
+  const [modalPhoto, setModalPhoto] = useState('');
 
   useEffect(() => {
     async function getRoomData() {
@@ -157,10 +159,9 @@ function Chats() {
     try {
       if (e.target.files.length > 0) {
         const file = e.target.files[0];
-        setImage(file); // Сохраняем сам файл, а не только его имя
+        setSendImage(file);
         console.log("Выбранный файл изображения:", file);
 
-        // Генерация URL для предпросмотра выбранного изображения
         const reader = new FileReader();
         reader.onloadend = () => {
           setImagePrew((prev) => ({
@@ -185,8 +186,9 @@ function Chats() {
   }
 
   async function sendMess() {
+    console.log(modal)
     try {
-      if (message && !image) {
+      if (message && !sendImage) {
         console.log("Отправка только текста");
         if (isWebSocketOpen && chatSocket) {
           const request_id = 1;
@@ -203,14 +205,13 @@ function Chats() {
           console.log("WebSocket не открыт. Сообщение не отправлено.");
           return;
         }
-      } else if (image && !message) {
+      } else if (sendImage && !message) {
         // Отправка только изображения
         console.log("Отправка только изображения");
         if (isWebSocketOpen && chatSocket) {
           const url = `http://127.0.0.1:8000/chat/room/${id}/user/${autUsr}/message/`;
           const formData = new FormData();
-          formData.append("image", image);
-
+          formData.append("image", sendImage);
           const response = await axios.post(url, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -229,17 +230,16 @@ function Chats() {
               request_id: request_id,
             })
           );
-          setImage("");
+          setSendImage("");
           setImagePrew("");
           setModel(false);
         }
-      } else if (message && image) {
-        // Отправка и текста, и изображения
+      } else if (message && sendImage) {
         console.log("Отправка текста и изображения");
         if (isWebSocketOpen && chatSocket) {
           const url = `http://127.0.0.1:8000/chat/room/${id}/user/${autUsr}/message/`;
           const formData = new FormData();
-          formData.append("image", image);
+          formData.append("image", sendImage);
           formData.append("text", message);
 
           const response = await axios.post(url, formData, {
@@ -262,7 +262,7 @@ function Chats() {
           );
 
           setMessage("");
-          setImage("");
+          setSendImage("")
           setImagePrew("");
           setModel(false);
         } else {
@@ -272,6 +272,7 @@ function Chats() {
     } catch (error) {
       console.error("Error sending message:", error);
     }
+
   }
 
   function formatRoomName(roomName) {
@@ -286,22 +287,30 @@ function Chats() {
       console.log(error);
     }
   }
+  const modalPh = (photoData)=>{
+    console.log('click')
+    console.log(`Data  = ${photoData.src} `)
+    setModalPhoto(photoData.src)
+    setModel(true)
+  }
 
-  // imagePrew.preview
   const userAuth = autUsr;
-  const imgPr = imagePrew.prew;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
-  const selectImg = image;
-
   return (
     <>
       <ModalSendMessage
+        title="Отправить сообщение "
         onCancel={handleCancel}
         onSubmit={sendMess}
         image={imagePrew.preview}
         input={handleInputTextChange}
         inputValue={message}
         isOpen={modal}
+      />
+      <ModalPhoto
+        image ={modalPhoto}
+        isOpen={modal}
+        onCancel={handleCancel}
       />
       <ChatArea
         title={roomList ? formatRoomName(roomList.name) : ""}
@@ -330,11 +339,15 @@ function Chats() {
                     ? previousMessage.created_at.substring(0, 10)
                     : null;
                   const isNewDay = previousDate !== messageDate;
-                  const anwPhoto =
+
+                  const image =
                     msg.image && msg.image.startsWith("http://127.0.0.1:8000")
                       ? msg.image
-                      : `http://127.0.0.1:8000${msg.image || ""}`;
-                  console.log(anwPhoto);
+                      : msg.image
+                      ? `http://127.0.0.1:8000${msg.image}`
+                      : null;
+
+                      const photoData = { id: msg.id, src: image, text: msg.text, time: newText };
                   return (
                     <div key={index}>
                       {isNewDay && (
@@ -344,17 +357,21 @@ function Chats() {
                       localStorage.getItem("username") ? (
                         <Message
                           text={msg.text}
-                          photos={anwPhoto}
+                          photos={image}
                           time={newText}
                           sent
                           avatar={authenticatedUser.photo}
+                          modalPhoto={modalPh}
+                          photoData = {photoData}
                         />
                       ) : (
                         <Message
                           text={msg.text}
                           time={newText}
-                          photos={anwPhoto}
+                          photos={image}
                           avatar={otherUserAvatar}
+                          modalPhoto={modalPh}
+                          photoData = {photoData}
                         />
                       )}
                     </div>

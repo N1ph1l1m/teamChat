@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 //import Message from "../../Shared/Message/message";
 //import MessageInput from "../../Shared/inputMessage/messageInput";
+import { IoSend } from "react-icons/io5";
 import styles from "../../App/Styles/chatArea.module.css";
 import { MdAddPhotoAlternate } from "react-icons/md";
 import Icon from "../../Shared/icon/icon";
@@ -41,7 +42,7 @@ function ChatArea(props) {
           />
           <label for="photo">
             <Icon className={styles.icon}>
-              <MdAddPhotoAlternate color="gray" size="25" />
+              <MdAddPhotoAlternate color="gray" size="30" />
             </Icon>
           </label>
         </div>
@@ -51,7 +52,14 @@ function ChatArea(props) {
           value={props.inputValue}
           onChange={props.input}
         />
-        <button onClick={props.sendmessage}>Send</button>
+
+        <Icon>
+          <IoSend
+            onClick={props.sendmessage}
+            color="rgb(116, 116, 116)"
+            size="25"
+          />
+        </Icon>
       </div>
     </div>
   );

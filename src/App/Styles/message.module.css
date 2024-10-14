@@ -1,101 +1,134 @@
-.message{
-    display: flex;
-    flex-direction: wrap column;
-    justify-content: start;
-    align-items:flex-end;
-    margin-bottom: 10px;
-    position: relative;
+.message {
+  display: flex;
+  flex-direction: wrap column;
+  justify-content: start;
+  align-items: flex-end;
+  margin-bottom: 10px;
+  position: relative;
 }
-.messageAvatar{
-border:1px solid black;
-width: 40px;
-height: 40px;
-border-radius:50px;
-margin-top: 20px;
-margin-right: 3px;
-}
-.messageBubble {
-    position: relative;
-    display: inline-block;
-    max-width: 50%;
-    min-width: 60px;
-    padding: 10px ;
-    border-radius: 20px;
-    background-color: #f0f0f0;
-    text-align: justify;
-    overflow: hidden;
-
-}
-.bubbleNameWrap{
-    display:flex;
-    justify-content: flex-start;
-    align-items: start;
-    margin-bottom: 3px;
-}
-.bubbleTimeWrap{
-    display:flex;
-    justify-content: flex-end;
-    align-items: start;
+.messageAvatar {
+  border: 1px solid black;
+  width: 40px;
+  height: 40px;
+  border-radius: 50px;
+  margin-top: 20px;
+  margin-right: 3px;
 }
 
-.sent .received{
-    display: flex;
-    justify-content: flex-start;
+.messageBubbleText {
+  position: relative;
+  display: inline-block;
+  max-width: 350px;
+  min-width: 60px;
+  padding: 10px;
+  border-radius: 20px;
+  text-align: justify;
+  overflow: hidden;
+
 }
 
-.bubbleNameText{
-    font-size: 16px;
-    font-weight: 700;
+.sent .messageBubbleText {
+  background-color: #390cce;
+  color: #ffffff;
+  border-bottom-left-radius: 0;
 }
-.bubbleTimeText{
-    font-size: 12px;
-}
-.sent .messageBubble{
-    background-color:#390cce;
-    color:#FFFFFF;
-    border-bottom-left-radius:0 ;
-}
-.received .messageBubble{
-    background-color:#d3cdcd;
-    border-bottom-left-radius:0 ;
-    color:black;
-}
-.wrapPhoto{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-.photoMessage{
-    cursor: pointer;
-    margin-right: 5px;
-    margin-top: 10px;
-    max-width: 40%;
-    min-width: 200px;
-    height: 80%;
-}
-.photoMessage3{
-    cursor: pointer;
-    margin-right: 5px;
-    margin-top: 10px;
-    max-width: 40%;
-    min-width: 200px;
-    height: 80%;
-    border-radius: 10px;
-}
-.photoMessage3:first-child{
-    max-width: 80%;
-    min-width: 60%;
-}
-.photoMessageOne{
-    cursor: pointer;
-    margin-top: 10px;
-    max-width: 80%;
-    height: 80%;
-    border-radius: 10px;
+.received .messageBubbleText {
+  background-color: #d3cdcd;
+  border-bottom-left-radius: 0;
+  color: black;
 }
 
-.displayNone{
-    display: none;
+.bubbleNameWrap {
+  display: flex;
+  justify-content: flex-start;
+  align-items: start;
+  margin-bottom: 3px;
 }
 
+.bubbleTimeText {
+  font-size: 12px;
+}
+
+.messageBublePhoto {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  position: relative;
+}
+
+.bubbleTimeWrap {
+  display: flex;
+  justify-content: flex-end;
+  align-items: start;
+}
+
+.sent .received {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.bubbleNameText {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.wrapPhoto {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  flex-wrap: wrap;
+}
+
+.photoMessage {
+  cursor: pointer;
+  width: 300px;
+  max-height: 400px;
+  object-fit: contain;
+  border-radius: 20px;
+  border:1px solid rgba(0, 0, 0, 0.384);
+}
+.bubbleTimeWrapPhoto {
+  position: absolute;
+  bottom: 5px;
+  right: 15px;
+  display: none;
+}
+.bubbleTimeTextPhoto {
+  color: white;
+  background-color: rgba(0, 0, 0, 0.377);
+  border-radius: 5px;
+  font-size: 12px;
+  padding: 3px;
+  font-weight: 600;
+}
+.messageBublePhoto:hover > .bubbleTimeWrapPhoto {
+  display: block; /* Показываем время при наведении на фото */
+}
+
+.messageBubbleAll {
+  position: relative;
+  display: inline-block;
+  max-width: 350px;
+  min-width: 60px;
+  border-radius: 10px 10px 0px 0px;
+  text-align: justify;
+  overflow: hidden;
+}
+
+.messageBubbleAll > .wrapPhoto > img {
+  border-radius: 10px 10px 0px 0px;
+}
+.sent .messageBubbleAll > .bubbleText {
+  width: 300px;
+  background-color: #390cce;
+  color: #ffffff;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 10px;
+  padding: 5px;
+}
+.received .messageBubbleAll > .bubleText {
+  background-color: #d3cdcd;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 10px;
+  color: black;
+}
