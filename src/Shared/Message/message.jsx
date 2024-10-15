@@ -43,7 +43,6 @@ export default function Message({
                   alt={`message photo ${index}`}
                 />
               ))}
-              <button onClick={modalPhoto}>fff</button>
             </div>
           </>
         );
@@ -79,6 +78,7 @@ export default function Message({
                 />
 
               ))}
+
               <button onClick={modalPhoto}>fff</button>
             </div>
           </>

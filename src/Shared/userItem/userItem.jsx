@@ -62,7 +62,7 @@ function UserItem(props) {
 
         <div className="bell">
           <Icon onClick={logOut}>
-            <RiLogoutBoxLine color="white" size="25" />
+            <RiLogoutBoxLine color="black" size="25" />
           </Icon>
         </div>
       </div>

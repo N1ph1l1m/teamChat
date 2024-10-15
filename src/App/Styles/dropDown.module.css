@@ -1,8 +1,9 @@
 .wrapDrop{
-    width: 240px;
+    width: 100%;
     min-height:30px;
     border-radius: 5px;
     margin-bottom: 5px;
+
 }
 .dropItem{
   height: 30px;
@@ -24,7 +25,7 @@
     align-items:center;
 }
 .textDrop{
-    color:white;
+    color:black;
     font-size: 16px;
     margin-left: 20px;
     margin-bottom: 2px;
@@ -35,6 +36,7 @@
     width: 230px;
     padding: 1px;
     min-height:50px;
+
 }
 
 .zeroWidth{

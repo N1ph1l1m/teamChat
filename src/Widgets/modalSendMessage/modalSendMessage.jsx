@@ -1,7 +1,7 @@
 import React from "react";
 import Portal from "../modalCreateGroup/portal";
 import PropTypes from "prop-types";
-
+import {useState} from "react";
 import styles from "../../App/Styles/modalSendMessage.module.css";
 import Icon from "../../Shared/icon/icon";
 import Button from "../../Shared/button/button";
@@ -17,7 +17,7 @@ const ModalSendMessage = ({
   input,
   inputValue,
 }) => {
-  return (
+ return (
     <>
       {isOpen && (
         <Portal>

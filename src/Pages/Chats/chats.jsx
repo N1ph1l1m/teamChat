@@ -23,8 +23,10 @@ function Chats() {
   const [otherUserAvatar, setOtherUserAvatar] = useState(null);
   const [authUser, setAuthUser] = useState([]);
   const [modal, setModel] = useState(false);
+  const [photoModal,setPhotoModal] = useState(false);
   const autUsr = localStorage.getItem("username");
   const [modalPhoto, setModalPhoto] = useState('');
+    const [isSending, setIsSending] = useState(false);
 
   useEffect(() => {
     async function getRoomData() {
@@ -158,6 +160,7 @@ function Chats() {
   const handleInputFileChange = (e) => {
     try {
       if (e.target.files.length > 0) {
+        setModel(true);
         const file = e.target.files[0];
         setSendImage(file);
         console.log("Выбранный файл изображения:", file);
@@ -171,7 +174,7 @@ function Chats() {
         };
         reader.readAsDataURL(file); // Чтение файла для получения URL
         if (imagePrew) {
-          setModel(true);
+
         }
       } else {
         console.log("Файл не выбран");
@@ -181,11 +184,17 @@ function Chats() {
     }
   };
 
-  function handleCancel() {
+  function handleCancelAddPhoto() {
     setModel(false);
   }
 
+  function handleCancelPhoto() {
+    setPhotoModal(false);
+  }
+
   async function sendMess() {
+    if (isSending) return;
+    setIsSending(true);
     console.log(modal)
     try {
       if (message && !sendImage) {
@@ -230,6 +239,7 @@ function Chats() {
               request_id: request_id,
             })
           );
+
           setSendImage("");
           setImagePrew("");
           setModel(false);
@@ -261,18 +271,23 @@ function Chats() {
             })
           );
 
-          setMessage("");
-          setSendImage("")
-          setImagePrew("");
-          setModel(false);
+
         } else {
           console.log("WebSocket не открыт.");
         }
       }
+      setMessage("");
+      setSendImage("")
+      setImagePrew("");
+
     } catch (error) {
       console.error("Error sending message:", error);
     }
-
+    finally{
+      setModel(false);
+      setIsSending(false);
+      console.log(modal);
+    }
   }
 
   function formatRoomName(roomName) {
@@ -291,16 +306,18 @@ function Chats() {
     console.log('click')
     console.log(`Data  = ${photoData.src} `)
     setModalPhoto(photoData.src)
-    setModel(true)
+    setPhotoModal(true)
   }
-
+function click(){
+  console.log('click');
+}
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
   return (
     <>
       <ModalSendMessage
         title="Отправить сообщение "
-        onCancel={handleCancel}
+        onCancel={handleCancelAddPhoto}
         onSubmit={sendMess}
         image={imagePrew.preview}
         input={handleInputTextChange}
@@ -309,8 +326,8 @@ function Chats() {
       />
       <ModalPhoto
         image ={modalPhoto}
-        isOpen={modal}
-        onCancel={handleCancel}
+        isOpen={photoModal}
+        onCancel={handleCancelPhoto}
       />
       <ChatArea
         title={roomList ? formatRoomName(roomList.name) : ""}

@@ -6,22 +6,6 @@ import styles from "../../App/Styles/chatArea.module.css";
 import { MdAddPhotoAlternate } from "react-icons/md";
 import Icon from "../../Shared/icon/icon";
 function ChatArea(props) {
-  // function showPrew() {
-  //   if (props.handleImage != null) {
-  //     return (
-  //       <>
-  //         <div className={styles.selectImg}>
-  //           <img src={props.handleImage} alt="img" />
-  //         </div>
-  //       </>
-  //     );
-  //   } else {
-  //     return null;
-  //   }
-  // }
-
-  // const showPr = showPrew();
-
   return (
     <div className={styles.chatAreaWrap}>
       <div className={styles.chatHeader}>

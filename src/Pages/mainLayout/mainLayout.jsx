@@ -108,7 +108,7 @@ function MainLayout() {
                 // onClick={() => CreateRoom(user.username)}
               >
                 <NaviItem
-                  icon={<MdOutlineTaskAlt color="white" size="20" />}
+                  icon={<MdOutlineTaskAlt color="black" size="20" />}
                   tittle={capitalized}
                   badgeCount={room.message.length}
                 />
@@ -231,7 +231,7 @@ function MainLayout() {
             <>
               <Link to="/task" className="newLink">
                 <NaviItem
-                  icon={<MdOutlineTaskAlt color="white" size="20" />}
+                  icon={<MdOutlineTaskAlt color="black" size="20" />}
                   tittle="Задачи"
                   badgeCount="3"
                 />
@@ -239,7 +239,7 @@ function MainLayout() {
 
               <Link to="/auto" className="newLink">
                 <NaviItem
-                  icon={<MdOutlineTaskAlt color="white" size="20" />}
+                  icon={<MdOutlineTaskAlt color="black" size="20" />}
                   tittle="Автоматизации"
                   badgeCount="20"
                 />

@@ -30,10 +30,10 @@ function DropDown(props) {
       return (
         <div>
           <Icon>
-            <BiDotsHorizontalRounded color="white" size="20" />
+            <BiDotsHorizontalRounded color="black" size="20" />
           </Icon>
           <Icon>
-            <GoPlus onClick={props.plusClick} color="white" size="20" />
+            <GoPlus onClick={props.plusClick} color="black" size="20" />
           </Icon>
         </div>
       );
@@ -62,9 +62,9 @@ function DropDown(props) {
         <div className={styles.leftSide}>
           <Icon onClick={switchDropDown}>
             {showIcons ? (
-              <IoIosArrowDown color="white" size="20" />
+              <IoIosArrowDown color="black" size="20" />
             ) : (
-              <IoIosArrowForward color="white" size="20" />
+              <IoIosArrowForward color="black" size="20" />
             )}
           </Icon>
           <span className={styles.textDrop}> {truncateText(props.title, 16)}</span>
