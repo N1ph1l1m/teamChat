@@ -63,8 +63,8 @@
   padding: 1px;
 }
 .wrapContentModal > img {
-  width: 600px;
-  height: 400px;
+  width: 100px;
+  height: 100px;
   object-fit: contain;
   margin-bottom: 3px;
 }

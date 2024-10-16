@@ -37,7 +37,16 @@ const ModalSendMessage = ({
 
               <div className={styles.modalBody}>
                 <div className={styles.wrapContentModal}>
-                  <img src={image} alt="img" />
+                {
+      Array.isArray(image) && image.length > 0 ? (
+        image.map((img, index) => (
+          <img key={index} src={img} alt={`image-${index}`} />
+        ))
+      ) : (
+        <img src={image} alt="img" />
+      )
+    }
+
                   <div className={styles.inputWrap}>
                     <textarea
                       placeholder="Подпись"

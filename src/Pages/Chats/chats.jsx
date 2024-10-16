@@ -161,20 +161,25 @@ function Chats() {
     try {
       if (e.target.files.length > 0) {
         setModel(true);
-        const file = e.target.files[0];
-        setSendImage(file);
-        console.log("Выбранный файл изображения:", file);
+        const files = Array.from(e.target.files);
+        setSendImage(files);
+        console.log("Выбранный файл изображения:", files);
 
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setImagePrew((prev) => ({
-            ...prev,
-            preview: reader.result, // Сохраняем URL предпросмотра
-          }));
-        };
-        reader.readAsDataURL(file); // Чтение файла для получения URL
-        if (imagePrew) {
+        const prewImages = []
+        files.forEach((file)=>{
+          const reader = new FileReader();
+          reader.onloadend = () =>{
+            prewImages.push(reader.result);
+            setImagePrew((prev)=>({
+              ...prev,
+              preview: [...(prev.preview || []), reader.result],
+            }));
+          };
+          reader.readAsDataURL(file)
+        })
 
+        if (imagePrew && imagePrew.preview) {
+          console.log("Предпросмотр изображений:", imagePrew.previews);
         }
       } else {
         console.log("Файл не выбран");
@@ -192,103 +197,335 @@ function Chats() {
     setPhotoModal(false);
   }
 
-  async function sendMess() {
-    if (isSending) return;
-    setIsSending(true);
-    console.log(modal)
-    try {
-      if (message && !sendImage) {
-        console.log("Отправка только текста");
-        if (isWebSocketOpen && chatSocket) {
-          const request_id = 1;
-          chatSocket.send(
-            JSON.stringify({
-              message: message,
-              action: "create_message",
-              request_id: request_id,
-            })
-          );
-          console.log(message);
-          setMessage("");
-        } else {
+  // async function sendMess() {
+  //   if (isSending) return;
+  //   setIsSending(true);
+  //   console.log(modal)
+  //   try {
+  //     if (message && !sendImage) {
+  //       console.log("Отправка только текста");
+  //       if (isWebSocketOpen && chatSocket) {
+  //         const request_id = 1;
+  //         chatSocket.send(
+  //           JSON.stringify({
+  //             message: message,
+  //             action: "create_message",
+  //             request_id: request_id,
+  //           })
+  //         );
+  //         console.log(message);
+  //         setMessage("");
+  //       } else {
+  //         console.log("WebSocket не открыт. Сообщение не отправлено.");
+  //         return;
+  //       }
+  //     } else if (sendImage && !message) {
+  //       // Отправка только изображения
+  //       console.log("Отправка только изображения");
+  //       if (isWebSocketOpen && chatSocket) {
+  //         // const url = `http://127.0.0.1:8000/chat/room/${id}/user/${autUsr}/message/`;
+  //         const url = `http://127.0.0.1:8000/chat/photo-upload/`;
+  //         const formData = new FormData();
+  //         formData.append("image", sendImage);
+  //         const response = await axios.post(url, formData, {
+  //           headers: {
+  //             "Content-Type": "multipart/form-data",
+  //           },
+  //         });
+  //         console.log(response.data.image)
+  //        // const imageData = `http://127.0.0.1:8000${response.data.image}`;
+  //         const imageData = response.data.image
+  //         console.log("Response from server:", imageData);
+
+  //         const request_id = 1;
+  //         chatSocket.send(
+  //           JSON.stringify({
+  //             message: "",
+  //             images: imageData,
+  //             action: "create_message",
+  //             request_id: request_id,
+  //           })
+  //         );
+
+  //         setSendImage("");
+  //         setImagePrew("");
+  //         setModel(false);
+  //       }
+  //     } else if (message && sendImage) {
+  //       console.log("Отправка текста и изображения");
+  //       if (isWebSocketOpen && chatSocket) {
+  //          const url = `http://127.0.0.1:8000/chat/room/${id}/user/${autUsr}/message/`;
+  //         //const url = `http://127.0.0.1:8000/chat/photo-upload`;
+  //         const formData = new FormData();
+  //         formData.append("image", sendImage);
+  //         formData.append("text", message);
+
+  //         const response = await axios.post(url, formData, {
+  //           headers: {
+  //             "Content-Type": "multipart/form-data",
+  //           },
+  //         });
+
+  //         const imageData = response.data.image;
+  //         console.log("Response from server:", response.data);
+
+  //         const request_id = 1;
+  //         chatSocket.send(
+  //           JSON.stringify({
+  //             message: message,
+  //             image: imageData,
+  //             action: "create_message",
+  //             request_id: request_id,
+  //           })
+  //         );
+
+
+  //       } else {
+  //         console.log("WebSocket не открыт.");
+  //       }
+  //     }
+  //     setMessage("");
+  //     setSendImage("")
+  //     setImagePrew("");
+
+  //   } catch (error) {
+  //     console.error("Error sending message:", error);
+  //   }
+  //   finally{
+  //     setModel(false);
+  //     setIsSending(false);
+  //     console.log(modal);
+  //   }
+  // }
+
+//2
+  // async function sendMess() {
+  //   if (isSending) return;
+  //   setIsSending(true);
+  //   console.log(modal)
+  //   try {
+  //     if (message && !sendImage) {
+  //       console.log("Отправка только текста");
+  //       if (isWebSocketOpen && chatSocket) {
+  //         const request_id = 1;
+  //         chatSocket.send(
+  //           JSON.stringify({
+  //             message: message,
+  //             action: "create_message",
+  //             images: [],
+  //             request_id: request_id,
+  //           })
+  //         );
+  //         console.log(message);
+  //         setMessage("");
+  //       } else {
+  //         console.log("WebSocket не открыт. Сообщение не отправлено.");
+  //         return;
+  //       }
+  //     } else if (sendImage && !message) {
+  //       // Отправка только изображения
+  //       console.log("Отправка только изображения");
+  //       if (isWebSocketOpen && chatSocket) {
+  //         const url = `http://127.0.0.1:8000/chat/photo-upload/`;
+  //         const formData = new FormData();
+  //         formData.append("image", sendImage);
+  //         const response = await axios.post(url, formData, {
+  //           headers: {
+  //             "Content-Type": "multipart/form-data",
+  //           },
+  //         });
+  //         console.log(response.data)
+  //        // const imageData = `http://127.0.0.1:8000${response.data.image}`;
+  //         // const imageData = response.data.image
+  //         // console.log("Response from server:", imageData);
+  //         const imageData = response.data.id;
+  //         const request_id = 1;
+  //         chatSocket.send(
+  //           JSON.stringify({
+  //             message: "",
+  //             images: imageData ? [imageData] : [],
+  //             action: "create_message",
+  //             request_id: request_id,
+  //           })
+  //         );
+
+  //         setSendImage("");
+  //         setImagePrew("");
+  //         setModel(false);
+  //       }
+  //     } else if (message && sendImage) {
+  //       console.log("Отправка текста и изображения");
+  //       if (isWebSocketOpen && chatSocket) {
+  //         //  const url = `http://127.0.0.1:8000/chat/room/${id}/user/${autUsr}/message/`;
+  //         const url = `http://127.0.0.1:8000/chat/photo-upload/`;
+  //         const formData = new FormData();
+  //         formData.append("image", sendImage);
+  //         formData.append("text", message);
+
+  //         const response = await axios.post(url, formData, {
+  //           headers: {
+  //             "Content-Type": "multipart/form-data",
+  //           },
+  //         });
+
+  //         const imageData = response.data.id;
+  //         console.log("Response from server:", imageData);
+
+  //         const request_id = 1;
+  //         chatSocket.send(
+  //           JSON.stringify({
+  //             message: message || "",
+  //             action: "create_message",
+  //             images: imageData ? [imageData] : [],
+  //             request_id: request_id,
+  //           })
+  //         );
+
+
+  //       } else {
+  //         console.log("WebSocket не открыт.");
+  //       }
+  //     }
+  //     setMessage("");
+  //     setSendImage("")
+  //     setImagePrew("");
+
+  //   } catch (error) {
+  //     console.error("Error sending message:", error);
+  //   }
+  //   finally{
+  //     setModel(false);
+  //     setIsSending(false);
+  //     console.log(modal);
+  //   }
+  // }
+
+//   async function sendMess() {
+//     if (isSending) return;
+//     setIsSending(true);
+//     console.log(sendImage)
+//     try {
+//       let imageData = [];
+
+//       if (sendImage) {
+//         if(Array.isArray(sendImage) && sendImage> 1){
+//           sendImage.map((img,index)=>{
+//             console.log("Отправка изображения");
+//             const formData = new FormData();
+//             formData.append("image", img);
+
+//             const url = 'http://127.0.0.1:8000/chat/photo-upload/';
+//             const response = await axios.post(url, formData, {
+//               headers: {
+//                 "Content-Type": "multipart/form-data",
+//               },
+//             });
+
+//             imageData = response.data.id;
+//           })
+//         }
+
+//         console.log("Response from server:", imageData);
+//       }
+
+//       // Проверка на открытость WebSocket соединения
+//       if (!isWebSocketOpen || !chatSocket) {
+//         console.log("WebSocket не открыт. Сообщение не отправлено.");
+//         return;
+//       }
+
+//       // Формируем данные для отправки
+//       const request_id = 1;
+//       const messageData = {
+//         message: message || "",
+//         images: imageData ? [imageData] : [],// Текст сообщения, если есть
+//  // Данные изображения, если есть
+//         action: "create_message",
+//         request_id: request_id,
+//       };
+
+//       // Отправляем сообщение через WebSocket
+//       chatSocket.send(JSON.stringify(messageData));
+
+//       // Очищаем состояние формы
+//       setMessage("");
+//       setSendImage("");
+//       setImagePrew("");
+//       setModel(false);
+
+//     } catch (error) {
+//       console.error("Error sending message:", error);
+//     } finally {
+//       setIsSending(false);
+//     }
+//   }
+
+
+async function sendMess() {
+  if (isSending) return;
+  setIsSending(true);
+  // console.log(sendImage);
+
+  try {
+      let imageData = [];
+
+      if (sendImage) {
+          if (Array.isArray(sendImage) && sendImage.length > 0) {
+              // Отправляем все изображения и ждем завершения всех запросов
+              const uploadPromises = Array.from(sendImage).map(async (img) => {
+                  console.log("Отправка изображения");
+                  const formData = new FormData();
+                  formData.append("image", img);
+
+                  const url = 'http://127.0.0.1:8000/chat/photo-upload/';
+                  const response = await axios.post(url, formData, {
+                      headers: {
+                          "Content-Type": "multipart/form-data",
+                      },
+                  });
+                    console.log(response.data)
+                  return response.data.id; // Возвращаем id изображения с сервера
+              });
+
+              // Дожидаемся всех завершенных запросов
+              imageData = await Promise.all(uploadPromises);
+              console.log(imageData.image)
+          }
+      }
+
+      console.log("Response from server (images):", imageData);
+
+      // Проверка на открытость WebSocket соединения
+      if (!isWebSocketOpen || !chatSocket) {
           console.log("WebSocket не открыт. Сообщение не отправлено.");
           return;
-        }
-      } else if (sendImage && !message) {
-        // Отправка только изображения
-        console.log("Отправка только изображения");
-        if (isWebSocketOpen && chatSocket) {
-          const url = `http://127.0.0.1:8000/chat/room/${id}/user/${autUsr}/message/`;
-          const formData = new FormData();
-          formData.append("image", sendImage);
-          const response = await axios.post(url, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
-
-          const imageData = `http://127.0.0.1:8000${response.data.image}`;
-          console.log("Response from server:", response.data);
-
-          const request_id = 1;
-          chatSocket.send(
-            JSON.stringify({
-              message: "",
-              image: imageData,
-              action: "create_message",
-              request_id: request_id,
-            })
-          );
-
-          setSendImage("");
-          setImagePrew("");
-          setModel(false);
-        }
-      } else if (message && sendImage) {
-        console.log("Отправка текста и изображения");
-        if (isWebSocketOpen && chatSocket) {
-          const url = `http://127.0.0.1:8000/chat/room/${id}/user/${autUsr}/message/`;
-          const formData = new FormData();
-          formData.append("image", sendImage);
-          formData.append("text", message);
-
-          const response = await axios.post(url, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
-
-          const imageData = response.data.image;
-          console.log("Response from server:", response.data);
-
-          const request_id = 1;
-          chatSocket.send(
-            JSON.stringify({
-              message: message,
-              image: imageData,
-              action: "create_message",
-              request_id: request_id,
-            })
-          );
-
-
-        } else {
-          console.log("WebSocket не открыт.");
-        }
       }
-      setMessage("");
-      setSendImage("")
-      setImagePrew("");
 
-    } catch (error) {
-      console.error("Error sending message:", error);
-    }
-    finally{
+      // Формируем данные для отправки
+      const request_id = 1;
+      const messageData = {
+          message: message || "", // Текст сообщения, если есть
+          images: imageData || [], // Все загруженные изображения
+          action: "create_message",
+          request_id: request_id,
+      };
+
+      // Отправляем сообщение через WebSocket
+      chatSocket.send(JSON.stringify(messageData));
+
+      // Очищаем состояние формы
+      setMessage("");
+      setSendImage("");
+      setImagePrew("");
       setModel(false);
+
+  } catch (error) {
+      console.error("Error sending message:", error);
+  } finally {
       setIsSending(false);
-      console.log(modal);
-    }
   }
+}
+
 
   function formatRoomName(roomName) {
     try {
@@ -359,10 +596,16 @@ function click(){
 
                   const image =
                     msg.image && msg.image.startsWith("http://127.0.0.1:8000")
-                      ? msg.image
-                      : msg.image
+                      ? msg.images.image
+                      : msg.images.image
                       ? `http://127.0.0.1:8000${msg.image}`
                       : null;
+                  console.log(msg.images)
+                  const imgArr = []
+                    const imgs = msg.images.map(imageses=>imageses.image)
+                    {/* console.log(typeof(imgs)) */}
+
+
 
                       const photoData = { id: msg.id, src: image, text: msg.text, time: newText };
                   return (
@@ -374,7 +617,7 @@ function click(){
                       localStorage.getItem("username") ? (
                         <Message
                           text={msg.text}
-                          photos={image}
+                          photos={imgs}
                           time={newText}
                           sent
                           avatar={authenticatedUser.photo}
