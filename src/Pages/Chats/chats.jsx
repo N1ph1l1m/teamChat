@@ -22,6 +22,7 @@ function Chats() {
   const [imagePrew, setImagePrew] = useState({});
   const [otherUserAvatar, setOtherUserAvatar] = useState(null);
   const [authUser, setAuthUser] = useState([]);
+  const [sendingPhoto,setSendingPhoto] = useState([]);
   const [modal, setModel] = useState(false);
   const [photoModal,setPhotoModal] = useState(false);
   const autUsr = localStorage.getItem("username");
@@ -103,6 +104,7 @@ function Chats() {
               const messageExists = prevMessages.some(
                 (msg) => msg.id === data.data.id
               );
+              console.log(data.data.images)
 
               if (!messageExists) {
                 return [...prevMessages, data.data];
@@ -191,274 +193,12 @@ function Chats() {
 
   function handleCancelAddPhoto() {
     setModel(false);
+    setImagePrew("")
   }
 
   function handleCancelPhoto() {
     setPhotoModal(false);
   }
-
-  // async function sendMess() {
-  //   if (isSending) return;
-  //   setIsSending(true);
-  //   console.log(modal)
-  //   try {
-  //     if (message && !sendImage) {
-  //       console.log("Отправка только текста");
-  //       if (isWebSocketOpen && chatSocket) {
-  //         const request_id = 1;
-  //         chatSocket.send(
-  //           JSON.stringify({
-  //             message: message,
-  //             action: "create_message",
-  //             request_id: request_id,
-  //           })
-  //         );
-  //         console.log(message);
-  //         setMessage("");
-  //       } else {
-  //         console.log("WebSocket не открыт. Сообщение не отправлено.");
-  //         return;
-  //       }
-  //     } else if (sendImage && !message) {
-  //       // Отправка только изображения
-  //       console.log("Отправка только изображения");
-  //       if (isWebSocketOpen && chatSocket) {
-  //         // const url = `http://127.0.0.1:8000/chat/room/${id}/user/${autUsr}/message/`;
-  //         const url = `http://127.0.0.1:8000/chat/photo-upload/`;
-  //         const formData = new FormData();
-  //         formData.append("image", sendImage);
-  //         const response = await axios.post(url, formData, {
-  //           headers: {
-  //             "Content-Type": "multipart/form-data",
-  //           },
-  //         });
-  //         console.log(response.data.image)
-  //        // const imageData = `http://127.0.0.1:8000${response.data.image}`;
-  //         const imageData = response.data.image
-  //         console.log("Response from server:", imageData);
-
-  //         const request_id = 1;
-  //         chatSocket.send(
-  //           JSON.stringify({
-  //             message: "",
-  //             images: imageData,
-  //             action: "create_message",
-  //             request_id: request_id,
-  //           })
-  //         );
-
-  //         setSendImage("");
-  //         setImagePrew("");
-  //         setModel(false);
-  //       }
-  //     } else if (message && sendImage) {
-  //       console.log("Отправка текста и изображения");
-  //       if (isWebSocketOpen && chatSocket) {
-  //          const url = `http://127.0.0.1:8000/chat/room/${id}/user/${autUsr}/message/`;
-  //         //const url = `http://127.0.0.1:8000/chat/photo-upload`;
-  //         const formData = new FormData();
-  //         formData.append("image", sendImage);
-  //         formData.append("text", message);
-
-  //         const response = await axios.post(url, formData, {
-  //           headers: {
-  //             "Content-Type": "multipart/form-data",
-  //           },
-  //         });
-
-  //         const imageData = response.data.image;
-  //         console.log("Response from server:", response.data);
-
-  //         const request_id = 1;
-  //         chatSocket.send(
-  //           JSON.stringify({
-  //             message: message,
-  //             image: imageData,
-  //             action: "create_message",
-  //             request_id: request_id,
-  //           })
-  //         );
-
-
-  //       } else {
-  //         console.log("WebSocket не открыт.");
-  //       }
-  //     }
-  //     setMessage("");
-  //     setSendImage("")
-  //     setImagePrew("");
-
-  //   } catch (error) {
-  //     console.error("Error sending message:", error);
-  //   }
-  //   finally{
-  //     setModel(false);
-  //     setIsSending(false);
-  //     console.log(modal);
-  //   }
-  // }
-
-//2
-  // async function sendMess() {
-  //   if (isSending) return;
-  //   setIsSending(true);
-  //   console.log(modal)
-  //   try {
-  //     if (message && !sendImage) {
-  //       console.log("Отправка только текста");
-  //       if (isWebSocketOpen && chatSocket) {
-  //         const request_id = 1;
-  //         chatSocket.send(
-  //           JSON.stringify({
-  //             message: message,
-  //             action: "create_message",
-  //             images: [],
-  //             request_id: request_id,
-  //           })
-  //         );
-  //         console.log(message);
-  //         setMessage("");
-  //       } else {
-  //         console.log("WebSocket не открыт. Сообщение не отправлено.");
-  //         return;
-  //       }
-  //     } else if (sendImage && !message) {
-  //       // Отправка только изображения
-  //       console.log("Отправка только изображения");
-  //       if (isWebSocketOpen && chatSocket) {
-  //         const url = `http://127.0.0.1:8000/chat/photo-upload/`;
-  //         const formData = new FormData();
-  //         formData.append("image", sendImage);
-  //         const response = await axios.post(url, formData, {
-  //           headers: {
-  //             "Content-Type": "multipart/form-data",
-  //           },
-  //         });
-  //         console.log(response.data)
-  //        // const imageData = `http://127.0.0.1:8000${response.data.image}`;
-  //         // const imageData = response.data.image
-  //         // console.log("Response from server:", imageData);
-  //         const imageData = response.data.id;
-  //         const request_id = 1;
-  //         chatSocket.send(
-  //           JSON.stringify({
-  //             message: "",
-  //             images: imageData ? [imageData] : [],
-  //             action: "create_message",
-  //             request_id: request_id,
-  //           })
-  //         );
-
-  //         setSendImage("");
-  //         setImagePrew("");
-  //         setModel(false);
-  //       }
-  //     } else if (message && sendImage) {
-  //       console.log("Отправка текста и изображения");
-  //       if (isWebSocketOpen && chatSocket) {
-  //         //  const url = `http://127.0.0.1:8000/chat/room/${id}/user/${autUsr}/message/`;
-  //         const url = `http://127.0.0.1:8000/chat/photo-upload/`;
-  //         const formData = new FormData();
-  //         formData.append("image", sendImage);
-  //         formData.append("text", message);
-
-  //         const response = await axios.post(url, formData, {
-  //           headers: {
-  //             "Content-Type": "multipart/form-data",
-  //           },
-  //         });
-
-  //         const imageData = response.data.id;
-  //         console.log("Response from server:", imageData);
-
-  //         const request_id = 1;
-  //         chatSocket.send(
-  //           JSON.stringify({
-  //             message: message || "",
-  //             action: "create_message",
-  //             images: imageData ? [imageData] : [],
-  //             request_id: request_id,
-  //           })
-  //         );
-
-
-  //       } else {
-  //         console.log("WebSocket не открыт.");
-  //       }
-  //     }
-  //     setMessage("");
-  //     setSendImage("")
-  //     setImagePrew("");
-
-  //   } catch (error) {
-  //     console.error("Error sending message:", error);
-  //   }
-  //   finally{
-  //     setModel(false);
-  //     setIsSending(false);
-  //     console.log(modal);
-  //   }
-  // }
-
-//   async function sendMess() {
-//     if (isSending) return;
-//     setIsSending(true);
-//     console.log(sendImage)
-//     try {
-//       let imageData = [];
-
-//       if (sendImage) {
-//         if(Array.isArray(sendImage) && sendImage> 1){
-//           sendImage.map((img,index)=>{
-//             console.log("Отправка изображения");
-//             const formData = new FormData();
-//             formData.append("image", img);
-
-//             const url = 'http://127.0.0.1:8000/chat/photo-upload/';
-//             const response = await axios.post(url, formData, {
-//               headers: {
-//                 "Content-Type": "multipart/form-data",
-//               },
-//             });
-
-//             imageData = response.data.id;
-//           })
-//         }
-
-//         console.log("Response from server:", imageData);
-//       }
-
-//       // Проверка на открытость WebSocket соединения
-//       if (!isWebSocketOpen || !chatSocket) {
-//         console.log("WebSocket не открыт. Сообщение не отправлено.");
-//         return;
-//       }
-
-//       // Формируем данные для отправки
-//       const request_id = 1;
-//       const messageData = {
-//         message: message || "",
-//         images: imageData ? [imageData] : [],// Текст сообщения, если есть
-//  // Данные изображения, если есть
-//         action: "create_message",
-//         request_id: request_id,
-//       };
-
-//       // Отправляем сообщение через WebSocket
-//       chatSocket.send(JSON.stringify(messageData));
-
-//       // Очищаем состояние формы
-//       setMessage("");
-//       setSendImage("");
-//       setImagePrew("");
-//       setModel(false);
-
-//     } catch (error) {
-//       console.error("Error sending message:", error);
-//     } finally {
-//       setIsSending(false);
-//     }
-//   }
 
 
 async function sendMess() {
@@ -484,12 +224,12 @@ async function sendMess() {
                       },
                   });
                     console.log(response.data)
+                    setSendingPhoto(response.data)
                   return response.data.id; // Возвращаем id изображения с сервера
               });
 
               // Дожидаемся всех завершенных запросов
               imageData = await Promise.all(uploadPromises);
-              console.log(imageData.image)
           }
       }
 
@@ -504,8 +244,8 @@ async function sendMess() {
       // Формируем данные для отправки
       const request_id = 1;
       const messageData = {
-          message: message || "", // Текст сообщения, если есть
-          images: imageData || [], // Все загруженные изображения
+          message: message || "",
+          images: imageData || [],
           action: "create_message",
           request_id: request_id,
       };
@@ -539,15 +279,15 @@ async function sendMess() {
       console.log(error);
     }
   }
+
+
   const modalPh = (photoData)=>{
     console.log('click')
     console.log(`Data  = ${photoData.src} `)
     setModalPhoto(photoData.src)
     setPhotoModal(true)
   }
-function click(){
-  console.log('click');
-}
+
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
   return (
@@ -600,14 +340,9 @@ function click(){
                       : msg.images.image
                       ? `http://127.0.0.1:8000${msg.image}`
                       : null;
-                  console.log(msg.images)
-                  const imgArr = []
+                  console.log(sendingPhoto)
                     const imgs = msg.images.map(imageses=>imageses.image)
-                    {/* console.log(typeof(imgs)) */}
-
-
-
-                      const photoData = { id: msg.id, src: image, text: msg.text, time: newText };
+                    const photoData = { id: msg.id, src: imgs, text: msg.text, time: newText };
                   return (
                     <div key={index}>
                       {isNewDay && (
@@ -628,7 +363,7 @@ function click(){
                         <Message
                           text={msg.text}
                           time={newText}
-                          photos={image}
+                          photos={imgs}
                           avatar={otherUserAvatar}
                           modalPhoto={modalPh}
                           photoData = {photoData}

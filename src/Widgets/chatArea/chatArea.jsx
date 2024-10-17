@@ -26,7 +26,7 @@ function ChatArea(props) {
           />
           <label for="photo">
             <Icon className={styles.icon}>
-              <MdAddPhotoAlternate color="gray" size="30" />
+              <MdAddPhotoAlternate color="black" size="30" />
             </Icon>
           </label>
         </div>
@@ -40,7 +40,7 @@ function ChatArea(props) {
         <Icon>
           <IoSend
             onClick={props.sendmessage}
-            color="rgb(116, 116, 116)"
+            color="black"
             size="25"
           />
         </Icon>

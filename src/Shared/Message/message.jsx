@@ -17,20 +17,6 @@ export default function Message({
     if (photos === null || (Array.isArray(photos) && photos.length === 0)) {
       return null; // Возвращаем null, если photos null или пустой массив
     }
-
-    if (!Array.isArray(photos)) {
-      return (
-        <div className={styles.wrapPhoto}>
-          <img
-            className={styles.photoMessage}
-            src={photos}
-            alt={`message photo `}
-            onClick={() => modalPhoto(photoData)}
-          />
-
-        </div>
-      );
-    } else {
       if (photos.length === 1) {
         return (
           <>
@@ -38,7 +24,7 @@ export default function Message({
               {photos.map((photo, index) => (
                 <img
                   key={index}
-                  className={styles.photoMessageOne}
+                  className={styles.photoMessage}
                   src={photo}
                   alt={`message photo ${index}`}
                 />
@@ -46,47 +32,44 @@ export default function Message({
             </div>
           </>
         );
-      } else if (photos.length === 3) {
+      } else if (photos.length %2 === 0) {
         return (
           <>
-            <div className={styles.wrapPhoto}>
+            <div className={styles.wrapPhotoEven}>
               {photos.map((photo, index) => (
                 // eslint-disable-next-line jsx-a11y/img-redundant-alt
                 <img
                   key={index}
-                  className={styles.photoMessage3}
                   src={photo}
+                  className={styles.photoMessageEven}
                   alt={`message photo ${index + 1}`}
                 />
               ))}
-              <button onClick={modalPhoto}>fff</button>
             </div>
           </>
         );
-      } else if (photos.length > 0) {
+      } else if (photos.length % 2 !== 0 ) {
         return (
           <>
-            <div className={styles.wrapPhoto}  >
+            <div className={styles.wrapPhotoOdd}  >
               {photos.map((photo, index) => (
                 // eslint-disable-next-line jsx-a11y/img-redundant-alt
                 <img
                   key={index}
-                  className={styles.photoMessage}
+                  className={styles.photoMessageOdd}
                   src={photo}
                   alt={`message photo ${index + 1}`}
 
                 />
-
               ))}
 
-              <button onClick={modalPhoto}>fff</button>
             </div>
           </>
         );
       }else {
         return null;
       }
-    }
+
   }
   const photoRender = showPhoto();
   return (
@@ -95,7 +78,7 @@ export default function Message({
     >
       <img className={styles.messageAvatar} src={avatar} alt={"avatar user"} />
 
-     {text && !photos && (
+     {text && Array.isArray(photos) && photos.length === 0 && (
       <div className={styles.messageBubbleText}>
         <div className={styles.bubbleNameWrap}>
           <span className={styles.bubbleNameText}>{username}</span>
@@ -117,8 +100,21 @@ export default function Message({
       </div>
     )}
 
+    {text && Array.isArray(photos) && photos.length === 1 && (
+      <div className={styles.messageBubbleAll}>
+        <div className={styles.bubbleNameWrap}>
+          <span className={styles.bubbleNameText}>{username}</span>
+        </div>
+        {photoRender}
+        <div className={styles.bubbleTextOne}>{text}
+        <div className={styles.bubbleTimeWrap}>
+          <span className={styles.bubbleTimeText}>{time}</span>
+        </div>
+        </div>
+      </div>
+    )}
 
-    {text && photos && (
+    {text && Array.isArray(photos) && photos.length >1 && (
       <div className={styles.messageBubbleAll}>
         <div className={styles.bubbleNameWrap}>
           <span className={styles.bubbleNameText}>{username}</span>

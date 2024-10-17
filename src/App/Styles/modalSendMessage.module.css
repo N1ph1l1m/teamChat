@@ -55,18 +55,28 @@
 
 .wrapContentModal {
   position: relative;
-  margin: 0px auto;
+  /* margin: 0px auto; */
   display: flex;
-  justify-content: center;
+
   align-items: center;
   flex-direction: column;
   padding: 1px;
 }
-.wrapContentModal > img {
+
+.wrapPhoto{
+  width: 100%;
+  display: flex;
+  flex-flow: wrap row;
+  justify-content: flex-start;
+}
+.wrapPhoto > img {
+  padding-top: 5px;
   width: 100px;
   height: 100px;
-  object-fit: contain;
-  margin-bottom: 3px;
+  object-fit: cover;
+  margin-bottom: 5px;
+  margin-left: 5px;
+  cursor: pointer;
 }
 
 .inputWrap {
