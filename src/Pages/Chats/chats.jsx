@@ -22,12 +22,12 @@ function Chats() {
   const [imagePrew, setImagePrew] = useState({});
   const [otherUserAvatar, setOtherUserAvatar] = useState(null);
   const [authUser, setAuthUser] = useState([]);
-  const [sendingPhoto,setSendingPhoto] = useState([]);
+  const [sendingPhoto, setSendingPhoto] = useState([]);
   const [modal, setModel] = useState(false);
-  const [photoModal,setPhotoModal] = useState(false);
+  const [photoModal, setPhotoModal] = useState(false);
   const autUsr = localStorage.getItem("username");
-  const [modalPhoto, setModalPhoto] = useState('');
-    const [isSending, setIsSending] = useState(false);
+  const [modalPhoto, setModalPhoto] = useState("");
+  const [isSending, setIsSending] = useState(false);
 
   useEffect(() => {
     async function getRoomData() {
@@ -104,8 +104,8 @@ function Chats() {
               const messageExists = prevMessages.some(
                 (msg) => msg.id === data.data.id
               );
-              console.log(data.data.images)
-              getMessageData()
+              console.log(data.data.images);
+              getMessageData();
               if (!messageExists) {
                 return [...prevMessages, data.data];
               }
@@ -148,8 +148,6 @@ function Chats() {
     console.log(message);
   };
 
-
-
   const handleInputFileChange = (e) => {
     try {
       if (e.target.files.length > 0) {
@@ -158,18 +156,18 @@ function Chats() {
         setSendImage(files);
         console.log("Выбранный файл изображения:", files);
 
-        const prewImages = []
-        files.forEach((file)=>{
+        const prewImages = [];
+        files.forEach((file) => {
           const reader = new FileReader();
-          reader.onloadend = () =>{
+          reader.onloadend = () => {
             prewImages.push(reader.result);
-            setImagePrew((prev)=>({
+            setImagePrew((prev) => ({
               ...prev,
               preview: [...(prev.preview || []), reader.result],
             }));
           };
-          reader.readAsDataURL(file)
-        })
+          reader.readAsDataURL(file);
+        });
 
         if (imagePrew && imagePrew.preview) {
           console.log("Предпросмотр изображений:", imagePrew.previews);
@@ -184,61 +182,60 @@ function Chats() {
 
   function handleCancelAddPhoto() {
     setModel(false);
-    setImagePrew("")
+    setImagePrew("");
   }
 
   function handleCancelPhoto() {
     setPhotoModal(false);
   }
 
+  async function sendMess() {
+    if (isSending) return;
+    setIsSending(true);
+    // console.log(sendImage);
 
-async function sendMess() {
-  if (isSending) return;
-  setIsSending(true);
-  // console.log(sendImage);
-
-  try {
+    try {
       let imageData = [];
 
       if (sendImage) {
-          if (Array.isArray(sendImage) && sendImage.length > 0) {
-              // Отправляем все изображения и ждем завершения всех запросов
-              const uploadPromises = Array.from(sendImage).map(async (img) => {
-                  console.log("Отправка изображения");
-                  const formData = new FormData();
-                  formData.append("image", img);
+        if (Array.isArray(sendImage) && sendImage.length > 0) {
+          // Отправляем все изображения и ждем завершения всех запросов
+          const uploadPromises = Array.from(sendImage).map(async (img) => {
+            console.log("Отправка изображения");
+            const formData = new FormData();
+            formData.append("image", img);
 
-                  const url = 'http://127.0.0.1:8000/chat/photo-upload/';
-                  const response = await axios.post(url, formData, {
-                      headers: {
-                          "Content-Type": "multipart/form-data",
-                      },
-                  });
-                    console.log(response.data)
-                    setSendingPhoto(response.data)
-                  return response.data.id; // Возвращаем id изображения с сервера
-              });
+            const url = "http://127.0.0.1:8000/chat/photo-upload/";
+            const response = await axios.post(url, formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            });
+            console.log(response.data);
+            setSendingPhoto(response.data);
+            return response.data.id; // Возвращаем id изображения с сервера
+          });
 
-              // Дожидаемся всех завершенных запросов
-              imageData = await Promise.all(uploadPromises);
-          }
+          // Дожидаемся всех завершенных запросов
+          imageData = await Promise.all(uploadPromises);
+        }
       }
 
       console.log("Response from server (images):", imageData);
 
       // Проверка на открытость WebSocket соединения
       if (!isWebSocketOpen || !chatSocket) {
-          console.log("WebSocket не открыт. Сообщение не отправлено.");
-          return;
+        console.log("WebSocket не открыт. Сообщение не отправлено.");
+        return;
       }
 
       // Формируем данные для отправки
       const request_id = 1;
       const messageData = {
-          message: message || "",
-          images: imageData || [],
-          action: "create_message",
-          request_id: request_id,
+        message: message || "",
+        images: imageData || [],
+        action: "create_message",
+        request_id: request_id,
       };
 
       // Отправляем сообщение через WebSocket
@@ -249,14 +246,12 @@ async function sendMess() {
       setSendImage("");
       setImagePrew("");
       setModel(false);
-
-  } catch (error) {
+    } catch (error) {
       console.error("Error sending message:", error);
-  } finally {
+    } finally {
       setIsSending(false);
+    }
   }
-}
-
 
   function formatRoomName(roomName) {
     try {
@@ -271,13 +266,12 @@ async function sendMess() {
     }
   }
 
-
-  const modalPh = (photoData)=>{
-    console.log('click')
-    console.log(`Data  = ${photoData.src} `)
-    setModalPhoto(photoData.src)
-    setPhotoModal(true)
-  }
+  const modalPh = (photoData) => {
+    console.log("click");
+    console.log(`Data  = ${photoData.src} `);
+    setModalPhoto(photoData.src);
+    setPhotoModal(true);
+  };
 
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
@@ -293,7 +287,7 @@ async function sendMess() {
         isOpen={modal}
       />
       <ModalPhoto
-        image ={modalPhoto}
+        image={modalPhoto}
         isOpen={photoModal}
         onCancel={handleCancelPhoto}
       />
@@ -325,15 +319,16 @@ async function sendMess() {
                     : null;
                   const isNewDay = previousDate !== messageDate;
 
-                  const image =
-                    msg.image && msg.image.startsWith("http://127.0.0.1:8000")
-                      ? msg.images.image
-                      : msg.images.image
-                      ? `http://127.0.0.1:8000${msg.image}`
-                      : null;
-                  console.log(sendingPhoto)
-                    const imgs = msg.images.map(imageses=>imageses.image)
-                    const photoData = { id: msg.id, src: imgs, text: msg.text, time: newText };
+                  console.log(msg.text);
+                  const imgs = msg.images.map(
+                    (imageses, indes) => imageses.image
+                  );
+                  const photoData = {
+                    id: msg.id,
+                    src: imgs,
+                    text: msg.text,
+                    time: newText,
+                  };
                   return (
                     <div key={index}>
                       {isNewDay && (
@@ -342,13 +337,13 @@ async function sendMess() {
                       {msg.user.username ===
                       localStorage.getItem("username") ? (
                         <Message
-                          text={msg.text}
-                          photos={imgs}
-                          time={newText}
                           sent
+                          text={msg.text}
+                          time={newText}
+                          photos={imgs}
                           avatar={authenticatedUser.photo}
                           modalPhoto={modalPh}
-                          photoData = {photoData}
+                          photoData={photoData}
                         />
                       ) : (
                         <Message
@@ -357,7 +352,7 @@ async function sendMess() {
                           photos={imgs}
                           avatar={otherUserAvatar}
                           modalPhoto={modalPh}
-                          photoData = {photoData}
+                          photoData={photoData}
                         />
                       )}
                     </div>
