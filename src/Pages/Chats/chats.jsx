@@ -105,7 +105,7 @@ function Chats() {
                 (msg) => msg.id === data.data.id
               );
               console.log(data.data.images)
-
+              getMessageData()
               if (!messageExists) {
                 return [...prevMessages, data.data];
               }
@@ -148,16 +148,7 @@ function Chats() {
     console.log(message);
   };
 
-  // const handleInputFileChange = (e) => {
-  //   if (e.target.files.length > 0) {
-  //     const file = e.target.files[0].name;
-  //     setImage(file);
-  //     console.log("image =  " + image);
-  //     console.log(e.target.files[0]);
-  //   } else {
-  //     console.log("No file selected");
-  //   }
-  // };
+
 
   const handleInputFileChange = (e) => {
     try {
