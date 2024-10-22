@@ -9,7 +9,7 @@ import { IoSend } from "react-icons/io5";
 import { IoIosClose } from "react-icons/io";
 
 const ModalPhoto = ({
-   title,
+  title,
   isOpen,
   onCancel,
   onSubmit,
@@ -24,18 +24,18 @@ const ModalPhoto = ({
       {isOpen && (
         <Portal>
           <div className={styles.modalOverlay}>
-          <Icon>
-                <IoIosClose
-                  className={styles.closeModel}
-                  onClick={onCancel}
-                  color="rgb(116, 116, 116)"
-                  size="50"
-                />
-              </Icon>
+            <Icon>
+              <IoIosClose
+                className={styles.closeModel}
+                onClick={onCancel}
+                color="rgb(116, 116, 116)"
+                size="50"
+              />
+            </Icon>
             <div className={styles.modalWrap}>
-            <button onClick={()=> nextPhoto()}>+</button>
-              <img  className={styles.modalPhoto} src={image} alt="img" />
-              <button onClick={()=> prevPhoto()}>-</button>
+              <button onClick={() => nextPhoto()}>+</button>
+              <img className={styles.modalPhoto} src={image} alt="img" />
+              <button onClick={() => prevPhoto()}>-</button>
             </div>
           </div>
         </Portal>

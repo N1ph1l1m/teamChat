@@ -29,6 +29,7 @@ function Chats() {
   const autUsr = localStorage.getItem("username");
   const [modalPhoto, setModalPhoto] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const [currentPhotoId, setCurrentPhotoId] = useState(0);
 
   useEffect(() => {
     async function getRoomData() {
@@ -266,22 +267,35 @@ function Chats() {
     }
   }
 
-  const modalPh = (photoData)=>{
-    console.log('click')
-    console.log(photoData)
+  const modalPh = (photoData) => {
+    // console.log(photoData);
+    // console.log(`${photoData.images.id}`);
+    setCurrentPhotoId(photoData.id);
+    console.log(photoData.id);
+    setModalPhoto(photoData.src);
 
-    console.log(`${photoData.id} `)
-    setModalPhoto(photoData.src)
-    setPhotoModal(true)
-  }
+    setPhotoModal(true);
+  };
 
-  const nextImg=()=>{
-    console.log("next")
-  }
+  const nextImg = (photoData) => {
+    const currentIndex = photoData.images.findIndex(
+      (img) => img.id === currentPhotoId
+    );
+    const nextIndex = (currentIndex + 1) % photoData.images.length; // зацикливание
+    setModalPhoto(photoData.images[nextIndex].src);
+    setCurrentPhotoId(photoData.images[nextIndex].id);
+  };
 
-  const prevImg=()=>{
-    console.log("prev")
-  }
+  const prevImg = (photoData) => {
+    console.log("prev");
+    const currentIndex = photoData.images.findIndex(
+      (img) => img.id === currentPhotoId
+    );
+    const prevIndex =
+      (currentIndex - 1 + photoData.images.length) % photoData.images.length; // зацикливание
+    setModalPhoto(photoData.images[prevIndex].src);
+    setCurrentPhotoId(photoData.images[prevIndex].id);
+  };
 
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
@@ -330,10 +344,14 @@ function Chats() {
                     ? previousMessage.created_at.substring(0, 10)
                     : null;
                   const isNewDay = previousDate !== messageDate;
-                  const igm = msg.images.map(image=>image)
-                  {/* const photoData = {id : msg.id, image : igm}; */}
-                  const photoData = igm.id;
+                  const igm = msg.images.map((image) => image);
 
+                  const photoData = {
+                    images: msg.images.map((image) => ({
+                      id: image.id,
+                      src: image.image,
+                    })),
+                  };
 
                   return (
                     <div key={index}>
@@ -346,7 +364,7 @@ function Chats() {
                           sent
                           text={msg.text}
                           time={newText}
-                          photos={msg.images.map(image=>image.image)}
+                          photos={msg.images.map((image) => image.image)}
                           avatar={authenticatedUser.photo}
                           modalPhoto={modalPh}
                           photoData={photoData}
@@ -355,7 +373,7 @@ function Chats() {
                         <Message
                           text={msg.text}
                           time={newText}
-                          photos={msg.images.map(image=>image.image)}
+                          photos={msg.images.map((image) => image.image)}
                           avatar={otherUserAvatar}
                           modalPhoto={modalPh}
                           photoData={photoData}
