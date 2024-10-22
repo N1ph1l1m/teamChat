@@ -11,6 +11,7 @@ import ModalWindow from "../../Widgets/modalCreateGroup/modalCreateGroup";
 import ModalPhoto from "../../Widgets/modalPhoto/modalPhoto";
 import ModalSendMessage from "../../Widgets/modalSendMessage/modalSendMessage";
 import { IoSend } from "react-icons/io5";
+import { type } from "@testing-library/user-event/dist/type";
 function Chats() {
   const { id } = useParams();
   const [messages, setMessages] = useState([]);
@@ -229,7 +230,6 @@ function Chats() {
         return;
       }
 
-      // Формируем данные для отправки
       const request_id = 1;
       const messageData = {
         message: message || "",
@@ -266,12 +266,22 @@ function Chats() {
     }
   }
 
-  const modalPh = (photoData) => {
-    console.log("click");
-    console.log(`Data  = ${photoData.src} `);
-    setModalPhoto(photoData.src);
-    setPhotoModal(true);
-  };
+  const modalPh = (photoData)=>{
+    console.log('click')
+    console.log(photoData)
+
+    console.log(`${photoData.id} `)
+    setModalPhoto(photoData.src)
+    setPhotoModal(true)
+  }
+
+  const nextImg=()=>{
+    console.log("next")
+  }
+
+  const prevImg=()=>{
+    console.log("prev")
+  }
 
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
@@ -290,6 +300,8 @@ function Chats() {
         image={modalPhoto}
         isOpen={photoModal}
         onCancel={handleCancelPhoto}
+        nextPhoto={nextImg}
+        prevPhoto={prevImg}
       />
       <ChatArea
         title={roomList ? formatRoomName(roomList.name) : ""}
@@ -318,17 +330,11 @@ function Chats() {
                     ? previousMessage.created_at.substring(0, 10)
                     : null;
                   const isNewDay = previousDate !== messageDate;
+                  const igm = msg.images.map(image=>image)
+                  {/* const photoData = {id : msg.id, image : igm}; */}
+                  const photoData = igm.id;
 
-                  console.log(msg.text);
-                  const imgs = msg.images.map(
-                    (imageses, indes) => imageses.image
-                  );
-                  const photoData = {
-                    id: msg.id,
-                    src: imgs,
-                    text: msg.text,
-                    time: newText,
-                  };
+
                   return (
                     <div key={index}>
                       {isNewDay && (
@@ -340,7 +346,7 @@ function Chats() {
                           sent
                           text={msg.text}
                           time={newText}
-                          photos={imgs}
+                          photos={msg.images.map(image=>image.image)}
                           avatar={authenticatedUser.photo}
                           modalPhoto={modalPh}
                           photoData={photoData}
@@ -349,7 +355,7 @@ function Chats() {
                         <Message
                           text={msg.text}
                           time={newText}
-                          photos={imgs}
+                          photos={msg.images.map(image=>image.image)}
                           avatar={otherUserAvatar}
                           modalPhoto={modalPh}
                           photoData={photoData}

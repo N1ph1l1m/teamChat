@@ -16,6 +16,8 @@ const ModalPhoto = ({
   image,
   input,
   inputValue,
+  nextPhoto,
+  prevPhoto,
 }) => {
   return (
     <>
@@ -31,7 +33,9 @@ const ModalPhoto = ({
                 />
               </Icon>
             <div className={styles.modalWrap}>
+            <button onClick={()=> nextPhoto()}>+</button>
               <img  className={styles.modalPhoto} src={image} alt="img" />
+              <button onClick={()=> prevPhoto()}>-</button>
             </div>
           </div>
         </Portal>

@@ -12,6 +12,7 @@ export default function Message({
   photos,
   modalPhoto,
   photoData,
+
 }) {
   function showPhoto() {
     if (photos === null || (Array.isArray(photos) && photos.length === 0)) {
@@ -22,13 +23,18 @@ export default function Message({
         <>
           <div className={styles.wrapPhoto}>
             {photos.map((photo, index) => (
+              // eslint-disable-next-line jsx-a11y/img-redundant-alt
               <img
                 key={index}
                 className={styles.photoMessage}
                 src={photo}
                 alt={`message photo ${index}`}
+                // onClick={() => modalPhoto({ id: index, src: photo })}
+                onClick={() => modalPhoto(photoData)}
+
               />
             ))}
+
           </div>
         </>
       );
@@ -43,8 +49,11 @@ export default function Message({
                 src={photo}
                 className={styles.photoMessageTwoPhoto}
                 alt={`message photo ${index + 1}`}
+                onClick={() => modalPhoto({ id: index, src: photo })}
+                // onClick={() => modalPhoto(photoData)}
               />
             ))}
+
           </div>
         </>
       );
@@ -59,6 +68,7 @@ export default function Message({
                 src={photo}
                 className={styles.photoMessageEven}
                 alt={`message photo ${index + 1}`}
+                onClick={() => modalPhoto({ id: index, src: photo })}
               />
             ))}
           </div>
@@ -75,6 +85,7 @@ export default function Message({
                 className={styles.photoMessageOdd}
                 src={photo}
                 alt={`message photo ${index + 1}`}
+                onClick={() => modalPhoto({ id: index, src: photo })}
               />
             ))}
           </div>

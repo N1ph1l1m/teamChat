@@ -24,7 +24,6 @@
   border-radius: 20px;
   text-align: justify;
   overflow: hidden;
-
 }
 
 .sent .messageBubbleText {
@@ -45,9 +44,9 @@
   margin-bottom: 3px;
 }
 .bubbleNameText {
-    font-size: 16px;
-    font-weight: 700;
-  }
+  font-size: 16px;
+  font-weight: 700;
+}
 
 .bubbleTimeText {
   font-size: 12px;
@@ -67,13 +66,13 @@
   align-items: start;
 }
 .bubbleTimeTextPhoto {
-    color: white;
-    background-color: rgba(0, 0, 0, 0.486);
-    border-radius: 5px;
-    font-size: 12px;
-    padding: 3px;
-    font-weight: 600;
-  }
+  color: white;
+  background-color: rgba(0, 0, 0, 0.486);
+  border-radius: 5px;
+  font-size: 12px;
+  padding: 3px;
+  font-weight: 600;
+}
 
 .sent .received {
   display: flex;
@@ -93,116 +92,107 @@
   max-height: 100%;
 
   border-radius: 20px;
-  background-color:transparent;
+  background-color: transparent;
   object-fit: cover;
 }
 .bubbleTimeWrapPhoto {
-    position: absolute;
-    bottom: 8px;
-    right: 15px;
-    display: none;
-  }
+  position: absolute;
+  bottom: 8px;
+  right: 15px;
+  display: none;
+}
 .messageBublePhoto:hover > .bubbleTimeWrapPhoto {
-    display: block; 
-  }
+  display: block;
+}
 
-.wrapPhotoTwo{
-    position: relative;
-    width: 410px;
-    display: flex;
-    flex-direction: row;
+.wrapPhotoTwo {
+  position: relative;
+  width: 410px;
+  display: flex;
+  flex-direction: row;
 }
-.photoMessageTwoPhoto{
-    cursor: pointer;
-    width:200px;
-    height: 200px;
-    margin-right: 5px;
-    object-fit: cover;
+.photoMessageTwoPhoto {
+  cursor: pointer;
+  width: 200px;
+  height: 200px;
+  margin-right: 5px;
+  object-fit: cover;
 }
-.photoMessageTwoPhoto:first-child{
-    border-radius:10px 0px 0px 10px;
+.photoMessageTwoPhoto:first-child {
+  border-radius: 10px 0px 0px 10px;
 }
-.photoMessageTwoPhoto:nth-child(2){
-    border-radius:0px 10px 10px 0px;
-
+.photoMessageTwoPhoto:nth-child(2) {
+  border-radius: 0px 10px 10px 0px;
 }
 .wrapPhotoEven {
-    position: relative;
-    width: 410px;
-    display: flex;
-    justify-content:center;
-    flex-wrap: wrap;
-    flex-direction: row;
-    padding: 0px;
-  }
-  .photoMessageEven{
-    cursor: pointer;
-    width:200px;
-    height: 200px;
-    margin-right: 2px;
-    margin-bottom: 2px;
-    object-fit: cover;
-  }
-  .photoMessageEven:first-child {
-    border-radius: 10px 0px 0px 0px;
-  
-  }
-  .photoMessageEven:nth-child(2) {
-    border-radius: 0px 10px 0px 0px;
-  }
-  
-  .photoMessageEven:nth-last-child(2) {
-    border-radius: 0px 0px 0px 10px;
-  
-  }
-  .photoMessageEven:last-child{
-    border-radius:0px 0px 10px 0px;
-  
-  }
-  
+  position: relative;
+  width: 410px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+  padding: 0px;
+}
+.photoMessageEven {
+  cursor: pointer;
+  width: 200px;
+  height: 200px;
+  margin-right: 2px;
+  margin-bottom: 2px;
+  object-fit: cover;
+}
+.photoMessageEven:first-child {
+  border-radius: 10px 0px 0px 0px;
+}
+.photoMessageEven:nth-child(2) {
+  border-radius: 0px 10px 0px 0px;
+}
+
+.photoMessageEven:nth-last-child(2) {
+  border-radius: 0px 0px 0px 10px;
+}
+.photoMessageEven:last-child {
+  border-radius: 0px 0px 10px 0px;
+}
+
 .wrapPhotoOdd {
-    position: relative;
-    width: 410px;
-    display: flex;
-    justify-content:center;
-    flex-wrap: wrap;
-    flex-direction: row;
-    box-sizing:border-box;
-  }
-  
-  .photoMessageOdd{
-    cursor: pointer;
-    width:200px;
-    height: 200px;
-    margin-right: 2px;
-    margin-bottom: 2px;
-    object-fit: cover;
-  }
-  .photoMessageOdd:first-child{
-    border-radius:10px 10px 0px 0px ;
-    width: 405px;
-    height: 400px;
-    margin-bottom: 3px;
-  
-  }
-  .photoMessageOdd:nth-last-child(2) {
-    border-radius: 0px 0px 0px 10px;
-  }
-  .photoMessageOdd:last-child{
-    border-radius:0px 0px 10px 0px;
-  
-  }
+  position: relative;
+  width: 410px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+  box-sizing: border-box;
+}
 
-
+.photoMessageOdd {
+  cursor: pointer;
+  width: 202px;
+  height: 200px;
+  margin-right: 2px;
+  margin-bottom: 2px;
+  object-fit: cover;
+}
+.photoMessageOdd:first-child {
+  border-radius: 10px 10px 0px 0px;
+  width: 405px;
+  height: 400px;
+  margin-bottom: 3px;
+}
+.photoMessageOdd:nth-last-child(2) {
+  border-radius: 0px 0px 0px 10px;
+}
+.photoMessageOdd:last-child {
+  border-radius: 0px 0px 10px 0px;
+}
 .messageBubbleAll {
-    position: relative;
-    display: inline-block;
-    width: 420px;
-    min-width: 60px;
-    text-align: justify;
-    overflow: hidden;
-
-  }
+  position: relative;
+  display: inline-block;
+  width: 420px;
+  min-width: 60px;
+  text-align: justify;
+  overflow: hidden;
+}
 
 .sent .messageBubbleAll > .bubbleTextOne {
   width: 300px;
@@ -214,75 +204,69 @@
 }
 
 .received .messageBubbleAll > .bubbleTextOne {
-    width: 300px;
-    background-color: #d3cdcd;
-    color: black;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 10px;
-    padding: 5px;
-  }
-
-.messageBubbleAll > .wrapPhoto > img{
-  border-radius:10px 10px 0px 0px;
+  width: 300px;
+  background-color: #d3cdcd;
+  color: black;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 10px;
+  padding: 5px;
 }
 
-.sent  > .messageBubbleAll > .bubbleText {
-    width: 405px;
-    background-color: #390cce;
-    color: #ffffff;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 10px;
-    padding: 5px;
-    margin-top: -2px;
+.messageBubbleAll > .wrapPhoto > img {
+  border-radius: 10px 10px 0px 0px;
 }
-.received  > .messageBubbleAll > .bubbleText {
-    width: 405px;
-    background-color: #d3cdcd;
-    color: black;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 10px;
-    padding: 5px;
-    margin-top: -2px;
-  }
-  
-.messageBubbleAll >  .wrapPhotoTwo  > img:first-child{
-    border-radius:10px 0px 0px 0px;
+
+.sent > .messageBubbleAll > .bubbleText {
+  width: 405px;
+  background-color: #390cce;
+  color: #ffffff;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 10px;
+  padding: 5px;
+  margin-top: -2px;
 }
-.messageBubbleAll >  .wrapPhotoTwo  >  img:nth-child(2){
-    border-radius:0px 10px 0px 0px;
-    
-  }
+.received > .messageBubbleAll > .bubbleText {
+  width: 405px;
+  background-color: #d3cdcd;
+  color: black;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 10px;
+  padding: 5px;
+  margin-top: -2px;
+}
 
+.messageBubbleAll > .wrapPhotoTwo > img:first-child {
+  border-radius: 10px 0px 0px 0px;
+}
+.messageBubbleAll > .wrapPhotoTwo > img:nth-child(2) {
+  border-radius: 0px 10px 0px 0px;
+}
 
-  .messageBubbleAll > .wrapPhotoEven > img{
+/* .messageBubbleAll > .wrapPhotoEven > img{
     margin-right: 5px;
-  }
+  } */
 
-  .messageBubbleAll > .wrapPhotoOdd > img{
-    margin-right: 5px;
-  }
-  .messageBubbleAll > .wrapPhotoEven > img:first-child{
-    border-radius:10px 0px 0px 0px;
-    margin-bottom: 5px;
-  }
-  .messageBubbleAll > .wrapPhotoEven > img:nth-child(2){
-    border-radius:0px 10px 0px 0px;
-  }
-  .messageBubbleAll > .wrapPhotoEven > img:last-child{
-    border-radius:0px;
-  }
-  .messageBubbleAll > .wrapPhotoEven > img:nth-last-child(2){
-    border-radius:0px;
-  }
-  
-
-.messageBubbleAll > .wrapPhotoOdd > img:nth-last-child(2){
-  border-radius:0px;
+/* .messageBubbleAll > .wrapPhotoOdd > img{
+    margin-right: 2px;
+  } */
+.messageBubbleAll > .wrapPhotoEven > img:first-child {
+  border-radius: 10px 0px 0px 0px;
+  margin-bottom: 5px;
+}
+.messageBubbleAll > .wrapPhotoEven > img:nth-child(2) {
+  border-radius: 0px 10px 0px 0px;
+}
+.messageBubbleAll > .wrapPhotoEven > img:last-child {
+  border-radius: 0px;
+}
+.messageBubbleAll > .wrapPhotoEven > img:nth-last-child(2) {
+  border-radius: 0px;
 }
 
-.messageBubbleAll > .wrapPhotoOdd > img:last-child{
-    border-radius:0px;
-  }
-  
+.messageBubbleAll > .wrapPhotoOdd > img:nth-last-child(2) {
+  border-radius: 0px;
+}
 
-
+.messageBubbleAll > .wrapPhotoOdd > img:last-child {
+  border-radius: 0px;
+}
