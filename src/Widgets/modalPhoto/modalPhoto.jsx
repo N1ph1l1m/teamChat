@@ -7,41 +7,82 @@ import Icon from "../../Shared/icon/icon";
 import Button from "../../Shared/button/button";
 import { IoSend } from "react-icons/io5";
 import { IoIosClose } from "react-icons/io";
+import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 
 const ModalPhoto = ({
-  title,
+  sizeGalary,
   isOpen,
   onCancel,
-  onSubmit,
   image,
-  input,
-  inputValue,
   nextPhoto,
   prevPhoto,
 }) => {
-  return (
-    <>
-      {isOpen && (
-        <Portal>
-          <div className={styles.modalOverlay}>
-            <Icon>
-              <IoIosClose
-                className={styles.closeModel}
-                onClick={onCancel}
-                color="rgb(116, 116, 116)"
-                size="50"
-              />
-            </Icon>
-            <div className={styles.modalWrap}>
-              <button onClick={() => nextPhoto()}>+</button>
-              <img className={styles.modalPhoto} src={image} alt="img" />
-              <button onClick={() => prevPhoto()}>-</button>
-            </div>
-          </div>
-        </Portal>
-      )}
-    </>
-  );
+  function renderPhoto() {
+    if (sizeGalary && sizeGalary.length > 1) {
+      return (
+        <>
+          {isOpen && (
+            <Portal>
+              <div className={styles.modalOverlay}>
+                <Icon>
+                  <IoIosClose
+                    className={styles.closeModel}
+                    onClick={onCancel}
+                    color="rgb(199, 198, 198)"
+                    size="50"
+                  />
+                </Icon>
+                <Icon>
+                  <IoIosArrowBack
+                    size="50"
+                    className={styles.arrowBack}
+                    color="rgb(199, 198, 198)"
+                    onClick={() => prevPhoto()}
+                  />
+                </Icon>
+                <div className={styles.modalWrap}>
+                  <img className={styles.modalPhoto} src={image} alt="img" />
+                </div>
+                <Icon>
+                  <IoIosArrowForward
+                    size="50"
+                    color="rgb(199, 198, 198)"
+                    className={styles.arrowForwad}
+                    onClick={() => nextPhoto()}
+
+                  />
+                </Icon>
+              </div>
+            </Portal>
+          )}
+        </>
+      );
+    } else {
+      return (
+        <>
+          {isOpen && (
+            <Portal>
+              <div className={styles.modalOverlay}>
+                <Icon>
+                  <IoIosClose
+                    className={styles.closeModel}
+                    onClick={onCancel}
+                    color="rgb(199, 198, 198)"
+                    size="50"
+                  />
+                </Icon>
+                <div className={styles.modalWrap}>
+                  <img className={styles.modalPhoto} src={image} alt="img" />
+                </div>
+              </div>
+            </Portal>
+          )}
+        </>
+      );
+    }
+  }
+  const showPhoto = renderPhoto();
+  return <>{showPhoto}</>;
 };
 
 ModalPhoto.propTypes = {

@@ -2,6 +2,7 @@ import React from "react";
 import styles from "../../App/Styles/message.module.css";
 import Icon from "../icon/icon";
 import { FaRunning } from "react-icons/fa";
+import Picker from 'emoji-picker-react';
 
 export default function Message({
   text,
@@ -12,10 +13,12 @@ export default function Message({
   photos,
   modalPhoto,
   photoData,
+  reactionMessage,
+  isOpenReactions,
 }) {
   function showPhoto() {
     if (photos === null || (Array.isArray(photos) && photos.length === 0)) {
-      return null; // Возвращаем null, если photos null или пустой массив
+      return null;
     }
     if (photos.length === 1) {
       return (
@@ -28,10 +31,8 @@ export default function Message({
                 className={styles.photoMessage}
                 src={photo}
                 alt={`message photo ${index}`}
-                // onClick={() => modalPhoto({ id: index, src: photo })}
-                // onClick={() => modalPhoto(photoData)}
                 onClick={() =>
-                  modalPhoto({ id: photoData.images[index].id, src: photo })
+                  modalPhoto({photoData:photoData, id:index})
                 }
               />
             ))}
@@ -49,8 +50,8 @@ export default function Message({
                 src={photo}
                 className={styles.photoMessageTwoPhoto}
                 alt={`message photo ${index + 1}`}
-                onClick={() =>
-                  modalPhoto({ id: photoData.images[index].id, src: photo })
+                  onClick={() =>
+                  modalPhoto({photoData:photoData, id:index})
                 }
               />
             ))}
@@ -69,7 +70,7 @@ export default function Message({
                 className={styles.photoMessageEven}
                 alt={`message photo ${index + 1}`}
                 onClick={() =>
-                  modalPhoto({ id: photoData.images[index].id, src: photo })
+                  modalPhoto({photoData:photoData, id:index})
                 }
               />
             ))}
@@ -88,7 +89,7 @@ export default function Message({
                 src={photo}
                 alt={`message photo ${index + 1}`}
                 onClick={() =>
-                  modalPhoto({ id: photoData.images[index].id, src: photo })
+                  modalPhoto({photoData:photoData, id:index})
                 }
               />
             ))}
@@ -103,11 +104,15 @@ export default function Message({
   return (
     <div
       className={`${styles.message} ${sent ? styles.sent : styles.received}`}
+      onClick={reactionMessage}
     >
       <img className={styles.messageAvatar} src={avatar} alt={"avatar user"} />
 
       {text && Array.isArray(photos) && photos.length === 0 && (
-        <div className={styles.messageBubbleText}>
+        <div
+        className={styles.messageBubbleText}
+
+        >
           <div className={styles.bubbleNameWrap}>
             <span className={styles.bubbleNameText}>{username}</span>
           </div>
@@ -156,6 +161,8 @@ export default function Message({
           </div>
         </div>
       )}
+      <Picker open={isOpenReactions} reactionsDefaultOpen={true}
+      />
     </div>
   );
 }

@@ -128,7 +128,7 @@
   position: relative;
   width: 410px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
   flex-direction: row;
   padding: 0px;
@@ -137,8 +137,8 @@
   cursor: pointer;
   width: 200px;
   height: 200px;
-  margin-right: 2px;
-  margin-bottom: 2px;
+  margin-right: 3px;
+  margin-bottom: 3px;
   object-fit: cover;
 }
 .photoMessageEven:first-child {
@@ -159,7 +159,7 @@
   position: relative;
   width: 410px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
   flex-direction: row;
   box-sizing: border-box;
@@ -167,20 +167,22 @@
 
 .photoMessageOdd {
   cursor: pointer;
-  width: 202px;
+  margin-bottom: 3px;
+  width: 200px;
   height: 200px;
-  margin-right: 2px;
-  margin-bottom: 2px;
+  margin-right: 3px;
+  margin-bottom: 3px;
   object-fit: cover;
 }
 .photoMessageOdd:first-child {
   border-radius: 10px 10px 0px 0px;
   width: 405px;
   height: 400px;
-  margin-bottom: 3px;
+
 }
 .photoMessageOdd:nth-last-child(2) {
   border-radius: 0px 0px 0px 10px;
+
 }
 .photoMessageOdd:last-child {
   border-radius: 0px 0px 10px 0px;
@@ -217,7 +219,7 @@
 }
 
 .sent > .messageBubbleAll > .bubbleText {
-  width: 405px;
+  width: 403px;
   background-color: #390cce;
   color: #ffffff;
   border-bottom-left-radius: 0;
@@ -226,7 +228,7 @@
   margin-top: -2px;
 }
 .received > .messageBubbleAll > .bubbleText {
-  width: 405px;
+  width: 403px;
   background-color: #d3cdcd;
   color: black;
   border-bottom-left-radius: 0;
@@ -241,14 +243,6 @@
 .messageBubbleAll > .wrapPhotoTwo > img:nth-child(2) {
   border-radius: 0px 10px 0px 0px;
 }
-
-/* .messageBubbleAll > .wrapPhotoEven > img{
-    margin-right: 5px;
-  } */
-
-/* .messageBubbleAll > .wrapPhotoOdd > img{
-    margin-right: 2px;
-  } */
 .messageBubbleAll > .wrapPhotoEven > img:first-child {
   border-radius: 10px 0px 0px 0px;
   margin-bottom: 5px;

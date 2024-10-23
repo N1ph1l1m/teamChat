@@ -12,6 +12,7 @@ import ModalPhoto from "../../Widgets/modalPhoto/modalPhoto";
 import ModalSendMessage from "../../Widgets/modalSendMessage/modalSendMessage";
 import { IoSend } from "react-icons/io5";
 import { type } from "@testing-library/user-event/dist/type";
+import EmojiPicker from 'emoji-picker-react';
 function Chats() {
   const { id } = useParams();
   const [messages, setMessages] = useState([]);
@@ -30,6 +31,9 @@ function Chats() {
   const [modalPhoto, setModalPhoto] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [currentPhotoId, setCurrentPhotoId] = useState(0);
+  const [isOpenEmoji,setEmoji] = useState(false)
+  const [isOpenModelEmoji,setModelEmoji] = useState(false)
+  const [isOpenReactions,setReactions] = useState(false)
 
   useEffect(() => {
     async function getRoomData() {
@@ -268,35 +272,48 @@ function Chats() {
   }
 
   const modalPh = (photoData) => {
-    // console.log(photoData);
-    // console.log(`${photoData.images.id}`);
     setCurrentPhotoId(photoData.id);
-    console.log(photoData.id);
-    setModalPhoto(photoData.src);
-
+    console.log(photoData);
+    setModalPhoto(photoData)
     setPhotoModal(true);
   };
 
-  const nextImg = (photoData) => {
-    const currentIndex = photoData.images.findIndex(
-      (img) => img.id === currentPhotoId
-    );
-    const nextIndex = (currentIndex + 1) % photoData.images.length; // зацикливание
-    setModalPhoto(photoData.images[nextIndex].src);
-    setCurrentPhotoId(photoData.images[nextIndex].id);
+  const nextImg = () => {
+  console.log('next')
+  if(currentPhotoId < modalPhoto.photoData.length - 1) {
+    setCurrentPhotoId(currentPhotoId + 1);
+  }
   };
 
-  const prevImg = (photoData) => {
+  const prevImg = () => {
     console.log("prev");
-    const currentIndex = photoData.images.findIndex(
-      (img) => img.id === currentPhotoId
-    );
-    const prevIndex =
-      (currentIndex - 1 + photoData.images.length) % photoData.images.length; // зацикливание
-    setModalPhoto(photoData.images[prevIndex].src);
-    setCurrentPhotoId(photoData.images[prevIndex].id);
+    if(!currentPhotoId  > 0 ) return
+      setCurrentPhotoId(currentPhotoId - 1);
   };
 
+
+  function openEmoji(){
+    setEmoji(true)
+  }
+  function closeEmoji(){
+    setEmoji(false)
+  }
+
+
+  function openModelEmoji(){
+    setModelEmoji(true)
+  }
+  function closeModelEmoji(){
+    setModelEmoji(false)
+  }
+
+  function openReactions(){
+    setReactions(!isOpenReactions)
+  }
+
+  function inputEmoji(emojiObject){
+    setMessage(prevInput=> prevInput + emojiObject.emoji)
+  }
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
   return (
@@ -309,13 +326,23 @@ function Chats() {
         input={handleInputTextChange}
         inputValue={message}
         isOpen={modal}
+        openEmoji={openModelEmoji}
+        closeEmoji={closeModelEmoji}
+        isOpenEmoji={isOpenModelEmoji}
+        emojiEvent={inputEmoji}
       />
       <ModalPhoto
-        image={modalPhoto}
+              sizeGalary={modalPhoto.photoData}
+              image={
+                  modalPhoto && modalPhoto.photoData && modalPhoto.photoData[currentPhotoId]
+                    ? modalPhoto.photoData[currentPhotoId].image
+                    : null}
         isOpen={photoModal}
         onCancel={handleCancelPhoto}
         nextPhoto={nextImg}
         prevPhoto={prevImg}
+
+
       />
       <ChatArea
         title={roomList ? formatRoomName(roomList.name) : ""}
@@ -323,6 +350,10 @@ function Chats() {
         input={handleInputTextChange}
         file={handleInputFileChange}
         sendmessage={sendMess}
+        openEmoji={openEmoji}
+        closeEmoji={closeEmoji}
+        isOpenEmoji={isOpenEmoji}
+        emojiEvent={inputEmoji}
         content={
           <>
             {messages.filter((msg) => msg.room && msg.room.id === parseInt(id))
@@ -346,12 +377,14 @@ function Chats() {
                   const isNewDay = previousDate !== messageDate;
                   const igm = msg.images.map((image) => image);
 
-                  const photoData = {
+                  {/* const photoData = {
                     images: msg.images.map((image) => ({
                       id: image.id,
                       src: image.image,
                     })),
-                  };
+                  }; */}
+
+                  const photoData = msg.images.map(image=>image);
 
                   return (
                     <div key={index}>
@@ -368,6 +401,11 @@ function Chats() {
                           avatar={authenticatedUser.photo}
                           modalPhoto={modalPh}
                           photoData={photoData}
+                          // reactionMessage={openReactions}
+                          // isOpenReactions={isOpenReactions}
+
+
+
                         />
                       ) : (
                         <Message
@@ -377,6 +415,7 @@ function Chats() {
                           avatar={otherUserAvatar}
                           modalPhoto={modalPh}
                           photoData={photoData}
+
                         />
                       )}
                     </div>

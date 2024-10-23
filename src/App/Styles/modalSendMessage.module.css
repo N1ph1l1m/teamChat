@@ -18,7 +18,7 @@
   justify-content: space-between;
   border-radius: 10px;
   box-sizing: content-box;
-  overflow: hidden;
+  /* overflow: hidden; */
   width: 500px;
 }
 
@@ -33,6 +33,8 @@
   padding-right: 10px;
 
 }
+
+
 .modalTitle{
   font-size: 16px;
   color:rgb(116, 116, 116);
@@ -48,10 +50,21 @@
 .modalBody {
   flex-grow: 1;
   overflow-y: auto;
+  position: relative;
 }
 .modalBody::-webkit-scrollbar {
   display: none;
 }
+
+.emojiWrap{
+  width: 305px;
+  position: absolute;
+  overflow: auto;
+  bottom:45px;
+  right: 5px;
+  z-index: 2;
+}
+
 
 .wrapContentModal {
   position: relative;
@@ -86,6 +99,9 @@
   justify-content: space-between;
   padding: 0px 10px;
   padding-top: 5px;
+}
+.inputWrap i:nth-child(2){
+  margin-right: 10px;
 }
 
 .inputWrap > textarea {

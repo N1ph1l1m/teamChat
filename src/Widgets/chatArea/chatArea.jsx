@@ -5,14 +5,40 @@ import { IoSend } from "react-icons/io5";
 import styles from "../../App/Styles/chatArea.module.css";
 import { MdAddPhotoAlternate } from "react-icons/md";
 import Icon from "../../Shared/icon/icon";
-function ChatArea(props) {
+import { MdOutlineEmojiEmotions } from "react-icons/md";
+import EmojiPicker from 'emoji-picker-react';
+function ChatArea({
+  title,
+  content,
+  file,
+  inputValue,
+  input,
+  sendmessage,
+  isOpenEmoji,
+openEmoji,
+closeEmoji,
+  emojiEvent
+}) {
   return (
     <div className={styles.chatAreaWrap}>
       <div className={styles.chatHeader}>
         <div className={styles.chatHeaderItem}>
-          <p>{props.title}</p>
+          <p>{title}</p>
         </div>
-        <div className={styles.messages}>{props.content}</div>
+        <div className={styles.messages}>{content}
+        <div className={styles.emojiWrap}
+           onMouseOver={openEmoji}
+           onMouseLeave={closeEmoji}>
+        <EmojiPicker open={isOpenEmoji}
+          width={350}
+          height={350}
+          searchDisabled={true}
+          onEmojiClick={emojiEvent}
+          skinTonesDisabled={true}
+          />
+        </div>
+
+        </div>
       </div>
       <div className={styles.messageInput}>
         <div className={styles.inputFileWrap}>
@@ -21,27 +47,40 @@ function ChatArea(props) {
             id="photo"
             name="photo"
             accept="image/png, image/jpeg"
-            onChange={props.file}
+            onChange={file}
             multiple
           />
           <label for="photo">
             <Icon className={styles.icon}>
-              <MdAddPhotoAlternate color="black" size="30" />
+              <MdAddPhotoAlternate
+              color="rgb(131, 130, 130)"
+              size="30" />
             </Icon>
           </label>
         </div>
-
+        <div className={styles.wrapTextInput}>
         <textarea
           placeholder="Type your message"
-          value={props.inputValue}
-          onChange={props.input}
+          value={inputValue}
+          onChange={input}
         />
+
+          <Icon>
+            <MdOutlineEmojiEmotions
+              color="rgb(131, 130, 130)"
+              size="30"
+              onMouseOver={openEmoji}
+              onMouseLeave={closeEmoji}
+            />
+
+          </Icon>
+        </div>
 
         <Icon>
           <IoSend
-            onClick={props.sendmessage}
-            color="black"
-            size="25"
+            onClick={sendmessage}
+            color="#390cce"
+            size="30"
           />
         </Icon>
       </div>
