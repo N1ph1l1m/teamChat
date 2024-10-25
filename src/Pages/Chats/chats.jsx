@@ -12,8 +12,9 @@ import ModalPhoto from "../../Widgets/modalPhoto/modalPhoto";
 import ModalSendMessage from "../../Widgets/modalSendMessage/modalSendMessage";
 import { IoSend } from "react-icons/io5";
 import { type } from "@testing-library/user-event/dist/type";
-import EmojiPicker from 'emoji-picker-react';
+import EmojiPicker from "emoji-picker-react";
 function Chats() {
+  const autUsr = localStorage.getItem("username");
   const { id } = useParams();
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
@@ -27,13 +28,12 @@ function Chats() {
   const [sendingPhoto, setSendingPhoto] = useState([]);
   const [modal, setModel] = useState(false);
   const [photoModal, setPhotoModal] = useState(false);
-  const autUsr = localStorage.getItem("username");
   const [modalPhoto, setModalPhoto] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [currentPhotoId, setCurrentPhotoId] = useState(0);
-  const [isOpenEmoji,setEmoji] = useState(false)
-  const [isOpenModelEmoji,setModelEmoji] = useState(false)
-  const [isOpenReactions,setReactions] = useState(false)
+  const [isOpenEmoji, setEmoji] = useState(false);
+  const [isOpenModelEmoji, setModelEmoji] = useState(false);
+  const [isOpenReactions, setReactions] = useState(false);
 
   useEffect(() => {
     async function getRoomData() {
@@ -117,7 +117,6 @@ function Chats() {
               }
               return prevMessages;
             });
-
             break;
           default:
             break;
@@ -126,7 +125,9 @@ function Chats() {
 
       setChatSocket(socket);
     }
-    function showMessageAvatar(roomList) {
+
+
+  function showMessageAvatar(roomList) {
       console.log("avatar");
       if (roomList.data) {
         const otherUser = roomList.data.current_users.find(
@@ -153,6 +154,10 @@ function Chats() {
     setMessage(e.target.value);
     console.log(message);
   };
+
+  function inputEmoji(emojiObject) {
+    setMessage((prevInput) => prevInput + emojiObject.emoji);
+  }
 
   const handleInputFileChange = (e) => {
     try {
@@ -219,7 +224,7 @@ function Chats() {
             });
             console.log(response.data);
             setSendingPhoto(response.data);
-            return response.data.id; // Возвращаем id изображения с сервера
+            return response.data.id;
           });
 
           // Дожидаемся всех завершенных запросов
@@ -274,46 +279,42 @@ function Chats() {
   const modalPh = (photoData) => {
     setCurrentPhotoId(photoData.id);
     console.log(photoData);
-    setModalPhoto(photoData)
+    setModalPhoto(photoData);
     setPhotoModal(true);
   };
 
   const nextImg = () => {
-  console.log('next')
-  if(currentPhotoId < modalPhoto.photoData.length - 1) {
-    setCurrentPhotoId(currentPhotoId + 1);
-  }
+    console.log("next");
+    if (currentPhotoId < modalPhoto.photoData.length - 1) {
+      setCurrentPhotoId(currentPhotoId + 1);
+    }
   };
 
   const prevImg = () => {
     console.log("prev");
-    if(!currentPhotoId  > 0 ) return
-      setCurrentPhotoId(currentPhotoId - 1);
+    if (!currentPhotoId > 0) return;
+    setCurrentPhotoId(currentPhotoId - 1);
   };
 
-
-  function openEmoji(){
-    setEmoji(true)
+  function openEmoji() {
+    setEmoji(true);
   }
-  function closeEmoji(){
-    setEmoji(false)
-  }
-
-
-  function openModelEmoji(){
-    setModelEmoji(true)
-  }
-  function closeModelEmoji(){
-    setModelEmoji(false)
+  function closeEmoji() {
+    setEmoji(false);
   }
 
-  function openReactions(){
-    setReactions(!isOpenReactions)
+  function openModelEmoji() {
+    setModelEmoji(true);
+  }
+  function closeModelEmoji() {
+    setModelEmoji(false);
   }
 
-  function inputEmoji(emojiObject){
-    setMessage(prevInput=> prevInput + emojiObject.emoji)
+  function openReactions() {
+    setReactions(!isOpenReactions);
   }
+
+
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
   return (
@@ -332,17 +333,18 @@ function Chats() {
         emojiEvent={inputEmoji}
       />
       <ModalPhoto
-              sizeGalary={modalPhoto.photoData}
-              image={
-                  modalPhoto && modalPhoto.photoData && modalPhoto.photoData[currentPhotoId]
-                    ? modalPhoto.photoData[currentPhotoId].image
-                    : null}
+        sizeGalary={modalPhoto.photoData}
+        image={
+          modalPhoto &&
+          modalPhoto.photoData &&
+          modalPhoto.photoData[currentPhotoId]
+            ? modalPhoto.photoData[currentPhotoId].image
+            : null
+        }
         isOpen={photoModal}
         onCancel={handleCancelPhoto}
         nextPhoto={nextImg}
         prevPhoto={prevImg}
-
-
       />
       <ChatArea
         title={roomList ? formatRoomName(roomList.name) : ""}
@@ -375,16 +377,10 @@ function Chats() {
                     ? previousMessage.created_at.substring(0, 10)
                     : null;
                   const isNewDay = previousDate !== messageDate;
-                  const igm = msg.images.map((image) => image);
 
-                  {/* const photoData = {
-                    images: msg.images.map((image) => ({
-                      id: image.id,
-                      src: image.image,
-                    })),
-                  }; */}
 
-                  const photoData = msg.images.map(image=>image);
+
+                  const photoData = msg.images.map((image) => image);
 
                   return (
                     <div key={index}>
@@ -395,17 +391,14 @@ function Chats() {
                       localStorage.getItem("username") ? (
                         <Message
                           sent
-                          text={msg.text}
-                          time={newText}
-                          photos={msg.images.map((image) => image.image)}
                           avatar={authenticatedUser.photo}
+                          text={msg.text}
+                          photos={msg.images.map((image) => image.image)}
+                          time={newText}
                           modalPhoto={modalPh}
                           photoData={photoData}
                           // reactionMessage={openReactions}
                           // isOpenReactions={isOpenReactions}
-
-
-
                         />
                       ) : (
                         <Message
@@ -415,7 +408,6 @@ function Chats() {
                           avatar={otherUserAvatar}
                           modalPhoto={modalPh}
                           photoData={photoData}
-
                         />
                       )}
                     </div>

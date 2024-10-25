@@ -17,6 +17,7 @@ import ModalCreateGroup from "../../Widgets/modalCreateGroup/modalCreateGroup.js
 import joinroom from "../../Entities/api/joinroom";
 import Badge from "../../Shared/badge/badge.jsx";
 import styles from "../../App/Styles/mainLayout.module.css";
+import userLogo from "../../App/images/userAvatar.png"
 
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
@@ -26,13 +27,6 @@ function MainLayout() {
   const [groupName, setGroupName] = useState();
   const [selectedUsers, setSelectedUsers] = useState([]);
   const authUser = localStorage.getItem("username");
-
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // useEffect(() => {
-  //   getData("users/", setUserList)
-
-  //   },
-  // )
 
   function UserList() {
     return (
@@ -77,7 +71,7 @@ function MainLayout() {
             const otherUser = room.current_users.find(
               (user) => user.username !== authUser
             );
-            const avatar = otherUser ? otherUser.photo : null;
+            const avatar = otherUser ? otherUser.photo : userLogo;
             return (
               <Link key={room.pk} to={`chats/${room.pk}`}>
                 <NaviItem
