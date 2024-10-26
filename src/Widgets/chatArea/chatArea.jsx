@@ -37,7 +37,6 @@ closeEmoji,
           skinTonesDisabled={true}
           />
         </div>
-
         </div>
       </div>
       <div className={styles.messageInput}>

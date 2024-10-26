@@ -11,7 +11,7 @@
 
 .chatHeader{
  color:#FFFFFF;
- height: 94%;
+ height: 90%;
  text-align: center;
  display: flex;
  flex-direction: column;
@@ -41,7 +41,7 @@
     border: 3px solid rgb(206, 206, 205);
 }
 .messageInput{
-    height: 10%;
+    height: 60px;
     background-color:white;
     padding: 10px;
     border-top:2px solid #cfcfcf ;
@@ -49,6 +49,7 @@
     justify-content: flex-start;
     align-items: center;
     border-bottom-right-radius:10px;
+
 
 }
 .messageInput> i{
@@ -59,11 +60,10 @@
     width: 100%;
     display: flex;
     align-items:center;
-    padding-right: 15px;
+    padding-right: 13px
 }
 .wrapTextInput >  textarea{
 width: 90%;
-height: 25px;
 flex:1;
 align-items: center;
 border:none;
@@ -72,6 +72,7 @@ resize: none;
 outline: none;
 font-family: Arial, Helvetica, sans-serif;
 font-size: 16px;
+padding-top: 10px;
 }
 
 .emojiWrap{

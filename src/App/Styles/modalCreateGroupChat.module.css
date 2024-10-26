@@ -49,3 +49,7 @@
 .modalFooter button:last-child {
   margin-left: 10px;
 }
+.modalButton{
+  background-color: #390cce;
+  padding: 10px;
+}

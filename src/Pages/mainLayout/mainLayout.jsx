@@ -17,13 +17,12 @@ import ModalCreateGroup from "../../Widgets/modalCreateGroup/modalCreateGroup.js
 import joinroom from "../../Entities/api/joinroom";
 import Badge from "../../Shared/badge/badge.jsx";
 import styles from "../../App/Styles/mainLayout.module.css";
-import userLogo from "../../App/images/userAvatar.png"
+import userLogo from "../../App/images/userAvatar.png";
 
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
   const [roomList, setRoomList] = useState([]);
-  const [isOpen, setOpen] = useState(false);
-  const [group, setGroup] = useState([]);
+  const [isOpenModalCreateGroup, setModalCreateGroup] = useState(false);
   const [groupName, setGroupName] = useState();
   const [selectedUsers, setSelectedUsers] = useState([]);
   const authUser = localStorage.getItem("username");
@@ -114,13 +113,13 @@ function MainLayout() {
   }
 
   function handleCancel() {
-    setOpen(false);
+    setModalCreateGroup(false);
     setSelectedUsers([]);
     setGroupName("");
   }
   function showModalGroupChat() {
     console.log("click");
-    setOpen(true);
+    setModalCreateGroup(true);
     return <></>;
   }
 
@@ -212,7 +211,7 @@ function MainLayout() {
     <>
       <div className={styles.mainWrap}>
         <ModalCreateGroup
-          isOpen={isOpen}
+          isOpen={isOpenModalCreateGroup}
           onCancel={handleCancel}
           onSubmit={() => {
             CreateGroupRoom(groupName, selectedUsers);
