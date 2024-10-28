@@ -28,21 +28,16 @@ function ChatArea({
     if (selectTypeFile) {
       return (
         <div className={styles.selectTypeFileWrap}>
-          <div
-            className={styles.selectTypeFiles}
-            onMouseLeave={() => {
-              setSelectTypeFile(false);
-            }}
-          >
+          <div className={styles.selectTypeFiles}>
             <input
               type="file"
               id="documents"
               name="documents"
-             accept=".txt, .pdf, .doc, .docx, .odt, .rtf, .xls, .xlsx, .ppt, .pptx , .zip, .exe, "
+              accept=".txt, .pdf, .doc, .docx, .odt, .rtf, .xls, .xlsx, .ppt, .pptx , .zip, .exe, "
               onChange={documents}
               multiple
             />
-            <label for="documents">
+            <label htmlFor="documents">
               <Icon className={styles.icon}>
                 <FaFile color="rgb(131, 130, 130)" size="30" />
               </Icon>
@@ -56,7 +51,7 @@ function ChatArea({
               onChange={images}
               multiple
             />
-            <label for="photo">
+            <label htmlFor="photo">
               <Icon className={styles.icon}>
                 <FaFileImage color="rgb(131, 130, 130)" size="30" />
               </Icon>
@@ -96,16 +91,11 @@ function ChatArea({
         </div>
       </div>
       <div className={styles.messageInput}>
+        {showSelectTypeFile}
         <div
           className={styles.inputFileWrap}
-          onMouseEnter={() => {
-            setSelectTypeFile(true);
-          }}
-          onMouseLeave={() => {
-            setSelectTypeFile(false);
-          }}
+          onClick={() => setSelectTypeFile(!selectTypeFile)}
         >
-          {showSelectTypeFile}
           <Icon className={styles.icon}>
             <FaPaperclip color="rgb(131, 130, 130)" size="30" />
           </Icon>

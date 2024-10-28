@@ -127,8 +127,7 @@ function Chats() {
       setChatSocket(socket);
     }
 
-
-  function showMessageAvatar(roomList) {
+    function showMessageAvatar(roomList) {
       console.log("avatar");
       if (roomList.data) {
         const otherUser = roomList.data.current_users.find(
@@ -166,7 +165,7 @@ function Chats() {
         setModel(true);
         const files = Array.from(e.target.files);
         const fileType = e.target.files;
-        console.log(fileType)
+        console.log(fileType);
         setSendImage(files);
         console.log("Выбранный файл изображения:", files);
 
@@ -193,7 +192,6 @@ function Chats() {
       console.error(error);
     }
   };
-
 
   const handleInputDocuments = (e) => {
     try {
@@ -227,8 +225,6 @@ function Chats() {
     }
   };
 
-
-
   function handleCancelAddPhoto() {
     setModel(false);
     setImagePrew("");
@@ -248,14 +244,14 @@ function Chats() {
       let documentsData = [];
 
       if (sendImage) {
-        console.log(sendImage)
+        console.log(sendImage);
         if (Array.isArray(sendImage) && sendImage.length > 0) {
           // Отправляем все изображения и ждем завершения всех запросов
           const uploadPromises = Array.from(sendImage).map(async (img) => {
             console.log("Отправка изображения");
             const formData = new FormData();
             formData.append("image", img);
-            console.log(formData)
+            console.log(formData);
             const url = "http://127.0.0.1:8000/chat/photo-upload/";
             const response = await axios.post(url, formData, {
               headers: {
@@ -273,32 +269,32 @@ function Chats() {
       }
 
       if (sendDocument) {
-        console.log(sendDocument)
+        console.log(sendDocument);
         if (Array.isArray(sendDocument) && sendDocument.length > 0) {
           // Отправляем все изображения и ждем завершения всех запросов
-          const uploadPromises = Array.from(sendDocument).map(async (documents) => {
-            console.log("Отправка документов");
-            const formData = new FormData();
-            formData.append("document", documents);
-            console.log(formData)
+          const uploadPromises = Array.from(sendDocument).map(
+            async (documents) => {
+              console.log("Отправка документов");
+              const formData = new FormData();
+              formData.append("document", documents);
+              console.log(formData);
 
-            const url = "http://127.0.0.1:8000/chat/documents-upload/";
-            const response = await axios.post(url, formData, {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            });
-            console.log(response.data);
-            setSendDocument(response.data);
-            return response.data.id;
-          });
+              const url = "http://127.0.0.1:8000/chat/documents-upload/";
+              const response = await axios.post(url, formData, {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+              });
+              console.log(response.data);
+              setSendDocument(response.data);
+              return response.data.id;
+            }
+          );
 
           // Дожидаемся всех завершенных запросов
           documentsData = await Promise.all(uploadPromises);
         }
       }
-
-
 
       // console.log("Response from server (images):", imageData);
 
@@ -312,7 +308,7 @@ function Chats() {
       const messageData = {
         message: message || "",
         images: imageData || [],
-        documents:documentsData || [],
+        documents: documentsData || [],
         action: "create_message",
         request_id: request_id,
       };
@@ -322,6 +318,7 @@ function Chats() {
 
       // Очищаем состояние формы
       setMessage("");
+      setSendDocument("");
       setSendImage("");
       setImagePrew("");
       setModel(false);
@@ -383,7 +380,6 @@ function Chats() {
     setReactions(!isOpenReactions);
   }
 
-
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
   return (
@@ -392,8 +388,7 @@ function Chats() {
         title="Отправить сообщение "
         onCancel={handleCancelAddPhoto}
         onSubmit={sendMess}
-        // image={imagePrew.preview}
-        image={imagePrew}
+        image={imagePrew.preview}
         input={handleInputTextChange}
         inputValue={message}
         isOpen={modal}
@@ -448,10 +443,10 @@ function Chats() {
                     ? previousMessage.created_at.substring(0, 10)
                     : null;
                   const isNewDay = previousDate !== messageDate;
-                  console.log(msg.documents)
-
-
                   const photoData = msg.images.map((image) => image);
+                  const docs = msg.documents.map((doc) =>
+                    doc.document.substring(43)
+                  );
 
                   return (
                     <div key={index}>
@@ -465,7 +460,7 @@ function Chats() {
                           avatar={authenticatedUser.photo}
                           text={msg.text}
                           photos={msg.images.map((image) => image.image)}
-                          documents={msg.documents.map((doc)=> doc.document.substring(43))}
+                          documents={docs ? docs : null}
                           time={newText}
                           modalPhoto={modalPh}
                           photoData={photoData}
@@ -477,7 +472,9 @@ function Chats() {
                           text={msg.text}
                           time={newText}
                           photos={msg.images.map((image) => image.image)}
-                          documents={msg.documents.map((document)=> document.document)}
+                          documents={msg.documents.map(
+                            (document) => document.document
+                          )}
                           avatar={otherUserAvatar}
                           modalPhoto={modalPh}
                           photoData={photoData}

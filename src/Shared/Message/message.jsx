@@ -2,7 +2,9 @@ import React from "react";
 import styles from "../../App/Styles/message.module.css";
 import Icon from "../icon/icon";
 import { FaRunning } from "react-icons/fa";
-import Picker from 'emoji-picker-react';
+import Picker from "emoji-picker-react";
+import styled from "styled-components";
+import { FaFileDownload } from "react-icons/fa";
 
 export default function Message({
   text,
@@ -32,9 +34,7 @@ export default function Message({
                 className={styles.photoMessage}
                 src={photo}
                 alt={`message photo ${index}`}
-                onClick={() =>
-                  modalPhoto({photoData:photoData, id:index})
-                }
+                onClick={() => modalPhoto({ photoData: photoData, id: index })}
               />
             ))}
           </div>
@@ -51,9 +51,7 @@ export default function Message({
                 src={photo}
                 className={styles.photoMessageTwoPhoto}
                 alt={`message photo ${index + 1}`}
-                  onClick={() =>
-                  modalPhoto({photoData:photoData, id:index})
-                }
+                onClick={() => modalPhoto({ photoData: photoData, id: index })}
               />
             ))}
           </div>
@@ -70,9 +68,7 @@ export default function Message({
                 src={photo}
                 className={styles.photoMessageEven}
                 alt={`message photo ${index + 1}`}
-                onClick={() =>
-                  modalPhoto({photoData:photoData, id:index})
-                }
+                onClick={() => modalPhoto({ photoData: photoData, id: index })}
               />
             ))}
           </div>
@@ -89,9 +85,7 @@ export default function Message({
                 className={styles.photoMessageOdd}
                 src={photo}
                 alt={`message photo ${index + 1}`}
-                onClick={() =>
-                  modalPhoto({photoData:photoData, id:index})
-                }
+                onClick={() => modalPhoto({ photoData: photoData, id: index })}
               />
             ))}
           </div>
@@ -110,10 +104,7 @@ export default function Message({
       <img className={styles.messageAvatar} src={avatar} alt={"avatar user"} />
 
       {text && Array.isArray(photos) && photos.length === 0 && (
-        <div
-        className={styles.messageBubbleText}
-
-        >
+        <div className={styles.messageBubbleText}>
           <div className={styles.bubbleNameWrap}>
             <span className={styles.bubbleNameText}>{username}</span>
           </div>
@@ -124,35 +115,30 @@ export default function Message({
         </div>
       )}
 
-      {text &&  Array.isArray(photos) && photos.length === 0 &&  (
-        <div
-        className={styles.messageBubbleText}
+      {!text &&
+        Array.isArray(photos) &&
+        photos.length === 0 &&
+        Array.isArray(documents) &&
+        documents.length >= 0 && (
+          <div className={styles.messageBubbleDocuments}>
+            <div className={styles.bubbleNameWrap}>
+              <span className={styles.bubbleNameText}>{username}</span>
+            </div>
 
-        >
-          <div className={styles.bubbleNameWrap}>
-            <span className={styles.bubbleNameText}>{username}</span>
-          </div>
-          <span>{text}</span>
-          <span>{documents}</span>
-          <div className={styles.bubbleTimeWrap}>
-            <span className={styles.bubbleTimeText}>{time}</span>
-          </div>
-        </div>
-      )}
+            {documents.map((document, index) => (
+              // eslint-disable-next-line jsx-a11y/img-redundant-alt
 
-      {!text &&  Array.isArray(photos) && photos.length === 0 &&   Array.isArray(documents) && documents.length >= 0 &&   (
-        <div
-        className={styles.messageBubleDocument}
-        >
-          <div className={styles.bubbleNameWrap}>
-            <span className={styles.bubbleNameText}>{username}</span>
+              <ul className={styles.documentTitleWrap} key={index}>
+                <FaFileDownload color="white" size="25" />
+                <li className={styles.documentTitle}>{document}</li>
+              </ul>
+            ))}
+
+            <div className={styles.bubbleTimeWrap}>
+              <span className={styles.bubbleTimeText}>{time}</span>
+            </div>
           </div>
-          <span>{documents}</span>
-          <div className={styles.bubbleTimeWrap}>
-            <span className={styles.bubbleTimeText}>{time}</span>
-          </div>
-        </div>
-      )}
+        )}
 
       {!text && photos && (
         <div className={styles.messageBublePhoto}>
@@ -161,9 +147,7 @@ export default function Message({
             <span className={styles.bubbleTimeTextPhoto}>{time}</span>
           </div>
         </div>
-
       )}
-
 
       {text && Array.isArray(photos) && photos.length === 1 && (
         <div className={styles.messageBubbleAll}>
@@ -194,8 +178,7 @@ export default function Message({
           </div>
         </div>
       )}
-      <Picker open={isOpenReactions} reactionsDefaultOpen={true}
-      />
+      <Picker open={isOpenReactions} reactionsDefaultOpen={true} />
     </div>
   );
 }

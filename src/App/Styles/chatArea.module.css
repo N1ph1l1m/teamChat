@@ -101,10 +101,7 @@
 
 .selectTypeFileWrap {
     position: absolute;
-    width: 100px;
-    bottom: 30px;
-    height: 150px;
-    left: -10px;
+    bottom: 70px;
 }
 .selectTypeFiles {
     margin-top: 25px;
