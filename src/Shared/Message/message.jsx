@@ -11,6 +11,7 @@ export default function Message({
   time,
   username,
   photos,
+  documents,
   modalPhoto,
   photoData,
   reactionMessage,
@@ -123,6 +124,36 @@ export default function Message({
         </div>
       )}
 
+      {text &&  Array.isArray(photos) && photos.length === 0 &&  (
+        <div
+        className={styles.messageBubbleText}
+
+        >
+          <div className={styles.bubbleNameWrap}>
+            <span className={styles.bubbleNameText}>{username}</span>
+          </div>
+          <span>{text}</span>
+          <span>{documents}</span>
+          <div className={styles.bubbleTimeWrap}>
+            <span className={styles.bubbleTimeText}>{time}</span>
+          </div>
+        </div>
+      )}
+
+      {!text &&  Array.isArray(photos) && photos.length === 0 &&   Array.isArray(documents) && documents.length >= 0 &&   (
+        <div
+        className={styles.messageBubleDocument}
+        >
+          <div className={styles.bubbleNameWrap}>
+            <span className={styles.bubbleNameText}>{username}</span>
+          </div>
+          <span>{documents}</span>
+          <div className={styles.bubbleTimeWrap}>
+            <span className={styles.bubbleTimeText}>{time}</span>
+          </div>
+        </div>
+      )}
+
       {!text && photos && (
         <div className={styles.messageBublePhoto}>
           {photoRender}
@@ -130,7 +161,9 @@ export default function Message({
             <span className={styles.bubbleTimeTextPhoto}>{time}</span>
           </div>
         </div>
+
       )}
+
 
       {text && Array.isArray(photos) && photos.length === 1 && (
         <div className={styles.messageBubbleAll}>

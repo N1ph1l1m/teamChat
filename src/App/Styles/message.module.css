@@ -265,3 +265,16 @@
 .messageBubbleAll > .wrapPhotoOdd > img:last-child {
   border-radius: 0px;
 }
+
+.messageBubleDocument {
+  border: 1px solid green;
+    position: relative;
+    display: inline-block;
+    max-width: 350px;
+    min-width: 60px;
+    padding: 10px;
+    border-radius: 20px;
+    text-align: justify;
+    overflow: hidden;
+    color:black
+}

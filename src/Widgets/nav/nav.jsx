@@ -4,7 +4,7 @@ import { getData } from "../../Entities/api/getUserList";
 import { useEffect, useState } from "react";
 import UserItem from "../../Shared/userItem/userItem";
 import styles from "../../App/Styles/nav.module.css"
-
+import avatar from "../../App/images/userAvatar.png"
 
 function Nav(props) {
   const [authUser, setAuthUser] = useState([]);
@@ -18,7 +18,7 @@ function Nav(props) {
 ;
   const userAuth = localStorage.getItem("username");
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
-
+  const avatarUser =   authenticatedUser ? authenticatedUser.photo : avatar;
   return (
     <div className={styles.navWrap}>
       <div className={styles.headerNav}>
@@ -28,7 +28,7 @@ function Nav(props) {
       <div className={styles.footerWrap}>
         {authenticatedUser && (
           <UserItem tittle={authenticatedUser.username}
-           icon={<img src = {authenticatedUser.photo} alt ={authenticatedUser.username} />} />
+           icon={<img src = {avatarUser} alt ={authenticatedUser.username} />} />
         )}
       </div>
     </div>

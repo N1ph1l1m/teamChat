@@ -19,6 +19,7 @@ function Chats() {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [sendImage, setSendImage] = useState("");
+  const [sendDocument, setSendDocument] = useState("");
   const [isWebSocketOpen, setIsWebSocketOpen] = useState(false);
   const [chatSocket, setChatSocket] = useState(null);
   const [roomList, setRoomList] = useState(null);
@@ -159,11 +160,13 @@ function Chats() {
     setMessage((prevInput) => prevInput + emojiObject.emoji);
   }
 
-  const handleInputFileChange = (e) => {
+  const handleInputImages = (e) => {
     try {
       if (e.target.files.length > 0) {
         setModel(true);
         const files = Array.from(e.target.files);
+        const fileType = e.target.files;
+        console.log(fileType)
         setSendImage(files);
         console.log("Выбранный файл изображения:", files);
 
@@ -191,6 +194,41 @@ function Chats() {
     }
   };
 
+
+  const handleInputDocuments = (e) => {
+    try {
+      if (e.target.files.length > 0) {
+        setModel(true);
+        const files = Array.from(e.target.files);
+        setSendDocument(files);
+        console.log("Выбранный документ:", files);
+
+        const prewImages = [];
+        files.forEach((file) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            prewImages.push(reader.result);
+            setImagePrew((prev) => ({
+              ...prev,
+              preview: [...(prev.preview || []), reader.result],
+            }));
+          };
+          reader.readAsDataURL(file);
+        });
+
+        if (imagePrew && imagePrew.preview) {
+          console.log("Предпросмотр изображений:", imagePrew.previews);
+        }
+      } else {
+        console.log("Файл не выбран");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
+
   function handleCancelAddPhoto() {
     setModel(false);
     setImagePrew("");
@@ -207,15 +245,17 @@ function Chats() {
 
     try {
       let imageData = [];
+      let documentsData = [];
 
       if (sendImage) {
+        console.log(sendImage)
         if (Array.isArray(sendImage) && sendImage.length > 0) {
           // Отправляем все изображения и ждем завершения всех запросов
           const uploadPromises = Array.from(sendImage).map(async (img) => {
             console.log("Отправка изображения");
             const formData = new FormData();
             formData.append("image", img);
-
+            console.log(formData)
             const url = "http://127.0.0.1:8000/chat/photo-upload/";
             const response = await axios.post(url, formData, {
               headers: {
@@ -232,7 +272,35 @@ function Chats() {
         }
       }
 
-      console.log("Response from server (images):", imageData);
+      if (sendDocument) {
+        console.log(sendDocument)
+        if (Array.isArray(sendDocument) && sendDocument.length > 0) {
+          // Отправляем все изображения и ждем завершения всех запросов
+          const uploadPromises = Array.from(sendDocument).map(async (documents) => {
+            console.log("Отправка документов");
+            const formData = new FormData();
+            formData.append("document", documents);
+            console.log(formData)
+
+            const url = "http://127.0.0.1:8000/chat/documents-upload/";
+            const response = await axios.post(url, formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            });
+            console.log(response.data);
+            setSendDocument(response.data);
+            return response.data.id;
+          });
+
+          // Дожидаемся всех завершенных запросов
+          documentsData = await Promise.all(uploadPromises);
+        }
+      }
+
+
+
+      // console.log("Response from server (images):", imageData);
 
       // Проверка на открытость WebSocket соединения
       if (!isWebSocketOpen || !chatSocket) {
@@ -244,6 +312,7 @@ function Chats() {
       const messageData = {
         message: message || "",
         images: imageData || [],
+        documents:documentsData || [],
         action: "create_message",
         request_id: request_id,
       };
@@ -323,7 +392,8 @@ function Chats() {
         title="Отправить сообщение "
         onCancel={handleCancelAddPhoto}
         onSubmit={sendMess}
-        image={imagePrew.preview}
+        // image={imagePrew.preview}
+        image={imagePrew}
         input={handleInputTextChange}
         inputValue={message}
         isOpen={modal}
@@ -350,7 +420,8 @@ function Chats() {
         title={roomList ? formatRoomName(roomList.name) : ""}
         inputValue={message}
         input={handleInputTextChange}
-        file={handleInputFileChange}
+        documents={handleInputDocuments}
+        images={handleInputImages}
         sendmessage={sendMess}
         openEmoji={openEmoji}
         closeEmoji={closeEmoji}
@@ -377,7 +448,7 @@ function Chats() {
                     ? previousMessage.created_at.substring(0, 10)
                     : null;
                   const isNewDay = previousDate !== messageDate;
-
+                  console.log(msg.documents)
 
 
                   const photoData = msg.images.map((image) => image);
@@ -394,6 +465,7 @@ function Chats() {
                           avatar={authenticatedUser.photo}
                           text={msg.text}
                           photos={msg.images.map((image) => image.image)}
+                          documents={msg.documents.map((doc)=> doc.document.substring(43))}
                           time={newText}
                           modalPhoto={modalPh}
                           photoData={photoData}
@@ -405,6 +477,7 @@ function Chats() {
                           text={msg.text}
                           time={newText}
                           photos={msg.images.map((image) => image.image)}
+                          documents={msg.documents.map((document)=> document.document)}
                           avatar={otherUserAvatar}
                           modalPhoto={modalPh}
                           photoData={photoData}
