@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 import { getData } from "../../Entities/api/getUserList";
 import { useEffect, useState } from "react";
 import UserItem from "../../Shared/userItem/userItem";

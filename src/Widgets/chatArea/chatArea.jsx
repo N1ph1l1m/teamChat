@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React  from "react";
 //import Message from "../../Shared/Message/message";
 //import MessageInput from "../../Shared/inputMessage/messageInput";
 import { IoSend } from "react-icons/io5";
 import styles from "../../App/Styles/chatArea.module.css";
-import { MdAddPhotoAlternate } from "react-icons/md";
 import Icon from "../../Shared/icon/icon";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
 import EmojiPicker from "emoji-picker-react";
@@ -20,11 +19,12 @@ function ChatArea({
   openEmoji,
   closeEmoji,
   emojiEvent,
+  selectTypeFile,
+  setSelect,
 }) {
-  const [selectTypeFile, setSelectTypeFile] = useState(false);
+
 
   function renderSelectTypeFile() {
-    console.log("ff");
     if (selectTypeFile) {
       return (
         <div className={styles.selectTypeFileWrap}>
@@ -94,7 +94,7 @@ function ChatArea({
         {showSelectTypeFile}
         <div
           className={styles.inputFileWrap}
-          onClick={() => setSelectTypeFile(!selectTypeFile)}
+          onClick={setSelect}
         >
           <Icon className={styles.icon}>
             <FaPaperclip color="rgb(131, 130, 130)" size="30" />

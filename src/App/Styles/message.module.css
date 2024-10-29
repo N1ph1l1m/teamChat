@@ -42,41 +42,52 @@
   position: relative;
   display: inline-block;
   width: 240px;
-  padding: 10px;
+  padding: 5px;
   border-radius: 20px;
   text-align: justify;
-  border:1px solid red;
+
 }
-
-
-.documentTitleWrap{
-  list-style-type: none; 
+.messageBubbleDocuments>  .bubbleTimeWrap > .bubbleTimeText{
+  margin-right: 5px;
+}
+.documentHeaderWrap{
+  list-style-type: none;
   padding: 0;
-  margin: 0; 
+  margin: 0;
   width: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   align-items:center;
-  position: relative; margin-bottom: 20px;
-  cursor: pointer;
+  position: relative;
+  margin-bottom: 10px;
+
+}
+
+.documentTitleUpload{
+  margin-left: 5px;
+  width: 80%;
+
+  display: flex;
+  flex-direction: column;
 }
 .documentTitle{
-border: 1px solid red;
-font-size:14px;   
-width: 150px;
+font-size:14px;
+width: 100%;
 overflow: hidden;
-margin-left: 5px;
-
+cursor: pointer;
 }
-
+.documentUpload:hover{
+  cursor: pointer;
+  color:red;
+}
 .sent .messageBubbleDocuments {
   background-color: #390cce;
   color: #ffffff;
   border-bottom-left-radius: 0;
 }
-.received .documentTitleWrap  {
+.received .messageBubbleDocuments{
   background-color: #d3cdcd;
   border-bottom-left-radius: 0;
   color: black;

@@ -7,12 +7,9 @@ import Icon from "../../Shared/icon/icon";
 import { BiMessageAltX } from "react-icons/bi";
 import { getData } from "../../Entities/api/getUserList";
 import styles from "../../App/Styles/chats.module.css";
-import ModalWindow from "../../Widgets/modalCreateGroup/modalCreateGroup";
 import ModalPhoto from "../../Widgets/modalPhoto/modalPhoto";
 import ModalSendMessage from "../../Widgets/modalSendMessage/modalSendMessage";
-import { IoSend } from "react-icons/io5";
-import { type } from "@testing-library/user-event/dist/type";
-import EmojiPicker from "emoji-picker-react";
+// import EmojiPicker from "emoji-picker-react";
 function Chats() {
   const autUsr = localStorage.getItem("username");
   const { id } = useParams();
@@ -34,7 +31,8 @@ function Chats() {
   const [currentPhotoId, setCurrentPhotoId] = useState(0);
   const [isOpenEmoji, setEmoji] = useState(false);
   const [isOpenModelEmoji, setModelEmoji] = useState(false);
-  const [isOpenReactions, setReactions] = useState(false);
+  // const [isOpenReactions, setReactions] = useState(false);
+  const [selectTypeFile, setSelectTypeFile] = useState(false);
 
   useEffect(() => {
     async function getRoomData() {
@@ -282,7 +280,7 @@ function Chats() {
               const url = "http://127.0.0.1:8000/chat/documents-upload/";
               const response = await axios.post(url, formData, {
                 headers: {
-                  "Content-Type": "multipart/form-data",
+                  "Content-Type": "multipart/form-data; charset=utf-8",
                 },
               });
               console.log(response.data);
@@ -316,18 +314,26 @@ function Chats() {
       // Отправляем сообщение через WebSocket
       chatSocket.send(JSON.stringify(messageData));
 
-      // Очищаем состояние формы
-      setMessage("");
-      setSendDocument("");
-      setSendImage("");
-      setImagePrew("");
-      setModel(false);
+
     } catch (error) {
       console.error("Error sending message:", error);
     } finally {
       setIsSending(false);
+
+      setIsSending(false);
+      setMessage("");
+      setSendDocument([]);
+      setSendImage([]);
+      setImagePrew({});
+      setModel(false);
+      setSelectTypeFile(false);
     }
   }
+
+
+
+
+
 
   function formatRoomName(roomName) {
     try {
@@ -376,9 +382,9 @@ function Chats() {
     setModelEmoji(false);
   }
 
-  function openReactions() {
-    setReactions(!isOpenReactions);
-  }
+  // function openReactions() {
+  //   setReactions(!isOpenReactions);
+  // }
 
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
@@ -422,6 +428,8 @@ function Chats() {
         closeEmoji={closeEmoji}
         isOpenEmoji={isOpenEmoji}
         emojiEvent={inputEmoji}
+        selectTypeFile={selectTypeFile}
+        setSelect={()=>setSelectTypeFile(!selectTypeFile)}
         content={
           <>
             {messages.filter((msg) => msg.room && msg.room.id === parseInt(id))
@@ -472,9 +480,7 @@ function Chats() {
                           text={msg.text}
                           time={newText}
                           photos={msg.images.map((image) => image.image)}
-                          documents={msg.documents.map(
-                            (document) => document.document
-                          )}
+                          documents={docs ? docs : null}
                           avatar={otherUserAvatar}
                           modalPhoto={modalPh}
                           photoData={photoData}

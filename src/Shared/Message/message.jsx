@@ -1,11 +1,8 @@
 import React from "react";
 import styles from "../../App/Styles/message.module.css";
-import Icon from "../icon/icon";
-import { FaRunning } from "react-icons/fa";
 import Picker from "emoji-picker-react";
-import styled from "styled-components";
-import { FaFileDownload } from "react-icons/fa";
-
+import { FaArrowCircleDown } from "react-icons/fa";
+import Icon from "../icon/icon";
 export default function Message({
   text,
   avatar,
@@ -128,10 +125,17 @@ export default function Message({
             {documents.map((document, index) => (
               // eslint-disable-next-line jsx-a11y/img-redundant-alt
 
-              <ul className={styles.documentTitleWrap} key={index}>
-                <FaFileDownload color="white" size="25" />
-                <li className={styles.documentTitle}>{document}</li>
-              </ul>
+              <div className={styles.documentHeaderWrap}>
+                <Icon>
+                <FaArrowCircleDown color="white" size="35" style={{marginTop:"5px"}} />
+                </Icon>
+
+                <div className={styles.documentTitleUpload}>
+                <a key={index}  href={document.document} download className={styles.documentTitle}>{document}</a>
+                <span className={styles.documentUpload}>Загрузить</span>
+                </div>
+
+              </div>
             ))}
 
             <div className={styles.bubbleTimeWrap}>

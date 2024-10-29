@@ -1,10 +1,8 @@
 import React from "react";
 import Portal from "../modalCreateGroup/portal";
 import PropTypes from "prop-types";
-import { useState } from "react";
 import styles from "../../App/Styles/modalSendMessage.module.css";
 import Icon from "../../Shared/icon/icon";
-import Button from "../../Shared/button/button";
 import { IoSend } from "react-icons/io5";
 import { IoIosClose } from "react-icons/io";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
@@ -60,6 +58,7 @@ const ModalSendMessage = ({
                   <div className={styles.wrapPhoto}>
                     {Array.isArray(image) && image.length > 0 ? (
                       image.map((img, index) => (
+                        // eslint-disable-next-line jsx-a11y/img-redundant-alt
                         <img key={index} src={img} alt={`image-${index}`} />
                       ))
                     ) : (
