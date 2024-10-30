@@ -20,7 +20,8 @@ function Chats() {
   const [isWebSocketOpen, setIsWebSocketOpen] = useState(false);
   const [chatSocket, setChatSocket] = useState(null);
   const [roomList, setRoomList] = useState(null);
-  const [imagePrew, setImagePrew] = useState({});
+  // const [imagePrew, setImagePrew] = useState({});
+  const [imagePrew, setImagePrew] = useState({ preview: [] });
   const [otherUserAvatar, setOtherUserAvatar] = useState(null);
   const [authUser, setAuthUser] = useState([]);
   const [sendingPhoto, setSendingPhoto] = useState([]);
@@ -159,37 +160,44 @@ function Chats() {
 
   const handleInputImages = (e) => {
     try {
-      if (e.target.files.length > 0) {
-        setModel(true);
-        const files = Array.from(e.target.files);
-        const fileType = e.target.files;
-        console.log(fileType);
-        setSendImage(files);
-        console.log("Выбранный файл изображения:", files);
+        if (e.target.files.length > 0) {
+            setModel(true);
+            const files = Array.from(e.target.files);
+            setSendImage(files);
 
-        const prewImages = [];
-        files.forEach((file) => {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            prewImages.push(reader.result);
-            setImagePrew((prev) => ({
-              ...prev,
-              preview: [...(prev.preview || []), reader.result],
-            }));
-          };
-          reader.readAsDataURL(file);
-        });
-
-        if (imagePrew && imagePrew.preview) {
-          console.log("Предпросмотр изображений:", imagePrew.previews);
+            files.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onloadstart = () => updateProgress(index, 0);
+                reader.onprogress = (event) => {
+                    if (event.lengthComputable) {
+                        const progress = Math.round((event.loaded / event.total) * 100);
+                        updateProgress(index, progress);
+                    }
+                };
+                reader.onloadend = () => {
+                    setImagePrew((prev) => ({
+                        ...prev,
+                        preview: [...(prev.preview || []), reader.result],
+                    }));
+                };
+                reader.readAsDataURL(file);
+            });
+        } else {
+            console.log("Файл не выбран");
         }
-      } else {
-        console.log("Файл не выбран");
-      }
     } catch (error) {
-      console.error(error);
+        console.error(error);
     }
-  };
+};
+
+// Функция для обновления прогресса для каждого файла
+const updateProgress = (index, value) => {
+    setImagePrew((prev) => {
+        const updatedPreviews = [...prev.preview];
+        updatedPreviews[index] = { ...updatedPreviews[index], progress: value };
+        return { ...prev, preview: updatedPreviews };
+    });
+};
 
   const handleInputDocuments = (e) => {
     try {
@@ -202,18 +210,26 @@ function Chats() {
         const prewImages = [];
         files.forEach((file) => {
           const reader = new FileReader();
+
           reader.onloadend = () => {
-            prewImages.push(reader.result);
+            prewImages.push({
+              content: reader.result,
+              type: file.type, // добавляем тип файла
+            });
+
             setImagePrew((prev) => ({
               ...prev,
-              preview: [...(prev.preview || []), reader.result],
+              preview: [
+                ...(prev.preview || []),
+                { content: reader.result, fileType: file.type }, // сохраняем и контент, и тип
+              ],
             }));
           };
           reader.readAsDataURL(file);
         });
 
         if (imagePrew && imagePrew.preview) {
-          console.log("Предпросмотр изображений:", imagePrew.previews);
+          console.log("Предпросмотр изображений с типами:", imagePrew.preview);
         }
       } else {
         console.log("Файл не выбран");
@@ -222,6 +238,7 @@ function Chats() {
       console.error(error);
     }
   };
+
 
   function handleCancelAddPhoto() {
     setModel(false);
@@ -260,7 +277,6 @@ function Chats() {
             setSendingPhoto(response.data);
             return response.data.id;
           });
-
           // Дожидаемся всех завершенных запросов
           imageData = await Promise.all(uploadPromises);
         }
@@ -318,6 +334,8 @@ function Chats() {
     } catch (error) {
       console.error("Error sending message:", error);
     } finally {
+      console.log(imagePrew)
+      console.log(imagePrew.preview)
       setIsSending(false);
 
       setIsSending(false);
@@ -326,7 +344,7 @@ function Chats() {
       setSendImage([]);
       setImagePrew({});
       setModel(false);
-      setSelectTypeFile(false);
+      // setSelectTypeFile(false);
     }
   }
 
@@ -394,7 +412,7 @@ function Chats() {
         title="Отправить сообщение "
         onCancel={handleCancelAddPhoto}
         onSubmit={sendMess}
-        image={imagePrew.preview}
+        image={imagePrew ? imagePrew.preview : null}
         input={handleInputTextChange}
         inputValue={message}
         isOpen={modal}

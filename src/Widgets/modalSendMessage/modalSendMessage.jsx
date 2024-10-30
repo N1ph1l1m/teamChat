@@ -6,7 +6,9 @@ import Icon from "../../Shared/icon/icon";
 import { IoSend } from "react-icons/io5";
 import { IoIosClose } from "react-icons/io";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
+import ProgressBar from "../../Shared/progressBar/progressBar";
 import EmojiPicker from "emoji-picker-react";
+import { FaRegTrashAlt } from "react-icons/fa";
 
 const ModalSendMessage = ({
   title,
@@ -55,16 +57,17 @@ const ModalSendMessage = ({
 
               <div className={styles.modalBody}>
                 <div className={styles.wrapContentModal}>
-                  <div className={styles.wrapPhoto}>
-                    {Array.isArray(image) && image.length > 0 ? (
-                      image.map((img, index) => (
-                        // eslint-disable-next-line jsx-a11y/img-redundant-alt
-                        <img key={index} src={img} alt={`image-${index}`} />
-                      ))
-                    ) : (
-                      <img src={image} alt="img" />
-                    )}
-                  </div>
+                <div className={styles.wrapPhoto}>
+    {Array.isArray(image) && image.length > 0 ? (
+        image.map((img, index) => (
+            <div key={index} className={styles.imageContainer}>
+                <img src={img.src} alt={`image-${index}`} />
+                <ProgressBar value={img.progress || 0} />
+                <FaRegTrashAlt size="30" color="black" style={{ marginLeft: "10px" }} />
+            </div>
+        ))
+    ) : null}
+</div>
 
                   <div className={styles.inputWrap}>
                     <textarea
