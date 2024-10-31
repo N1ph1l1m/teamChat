@@ -20,11 +20,9 @@ function Chats() {
   const [isWebSocketOpen, setIsWebSocketOpen] = useState(false);
   const [chatSocket, setChatSocket] = useState(null);
   const [roomList, setRoomList] = useState(null);
-  // const [imagePrew, setImagePrew] = useState({});
-  const [imagePrew, setImagePrew] = useState({ preview: [] });
+  const [imagePrew, setImagePrew] = useState({});
   const [otherUserAvatar, setOtherUserAvatar] = useState(null);
   const [authUser, setAuthUser] = useState([]);
-  const [sendingPhoto, setSendingPhoto] = useState([]);
   const [modal, setModel] = useState(false);
   const [photoModal, setPhotoModal] = useState(false);
   const [modalPhoto, setModalPhoto] = useState("");
@@ -32,6 +30,7 @@ function Chats() {
   const [currentPhotoId, setCurrentPhotoId] = useState(0);
   const [isOpenEmoji, setEmoji] = useState(false);
   const [isOpenModelEmoji, setModelEmoji] = useState(false);
+  const [progressBar, setProgressBar] = useState(0)
   // const [isOpenReactions, setReactions] = useState(false);
   const [selectTypeFile, setSelectTypeFile] = useState(false);
 
@@ -112,6 +111,7 @@ function Chats() {
               );
               console.log(data.data.images);
               getMessageData();
+
               if (!messageExists) {
                 return [...prevMessages, data.data];
               }
@@ -122,7 +122,6 @@ function Chats() {
             break;
         }
       };
-
       setChatSocket(socket);
     }
 
@@ -160,44 +159,38 @@ function Chats() {
 
   const handleInputImages = (e) => {
     try {
-        if (e.target.files.length > 0) {
-            setModel(true);
-            const files = Array.from(e.target.files);
-            setSendImage(files);
+      if (e.target.files.length > 0) {
+        setModel(true);
+        const files = Array.from(e.target.files);
+        console.log(files)
+        const fileType = e.target.files;
+        console.log(fileType);
+        setSendImage(files);
+        console.log("Выбранный файл изображения:", files);
 
-            files.forEach((file, index) => {
-                const reader = new FileReader();
-                reader.onloadstart = () => updateProgress(index, 0);
-                reader.onprogress = (event) => {
-                    if (event.lengthComputable) {
-                        const progress = Math.round((event.loaded / event.total) * 100);
-                        updateProgress(index, progress);
-                    }
-                };
-                reader.onloadend = () => {
-                    setImagePrew((prev) => ({
-                        ...prev,
-                        preview: [...(prev.preview || []), reader.result],
-                    }));
-                };
-                reader.readAsDataURL(file);
-            });
-        } else {
-            console.log("Файл не выбран");
+        const prewImages = [];
+        files.forEach((file) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            prewImages.push(reader.result);
+            setImagePrew((prev) => ({
+              ...prev,
+              preview: [...(prev.preview || []), reader.result],
+            }));
+          };
+          reader.readAsDataURL(file);
+        });
+
+        if (imagePrew && imagePrew.preview) {
+          console.log("Предпросмотр изображений:", imagePrew.previews);
         }
+      } else {
+        console.log("Файл не выбран");
+      }
     } catch (error) {
-        console.error(error);
+      console.error(error);
     }
-};
-
-// Функция для обновления прогресса для каждого файла
-const updateProgress = (index, value) => {
-    setImagePrew((prev) => {
-        const updatedPreviews = [...prev.preview];
-        updatedPreviews[index] = { ...updatedPreviews[index], progress: value };
-        return { ...prev, preview: updatedPreviews };
-    });
-};
+  };
 
   const handleInputDocuments = (e) => {
     try {
@@ -214,7 +207,7 @@ const updateProgress = (index, value) => {
           reader.onloadend = () => {
             prewImages.push({
               content: reader.result,
-              type: file.type, // добавляем тип файла
+              type: file.type,
             });
 
             setImagePrew((prev) => ({
@@ -243,15 +236,31 @@ const updateProgress = (index, value) => {
   function handleCancelAddPhoto() {
     setModel(false);
     setImagePrew("");
+    setProgressBar(0)
+    setMessage("");
   }
 
   function handleCancelPhoto() {
     setPhotoModal(false);
   }
 
+
+  const BYTES_IN_MB = 1048576
+  function updateProgress(loaded, total) {
+    const loadedMb = (loaded/BYTES_IN_MB).toFixed(1)
+    const totalSizeMb = (total/BYTES_IN_MB).toFixed(1)
+    const percentLoaded = Math.round((loaded / total) * 100)
+
+    setProgressBar(percentLoaded)
+    // console.log(`${loadedMb} из ${totalSizeMb} МБ`)
+    // console.log( `Загружено ${percentLoaded}% `)
+    return percentLoaded;
+  }
+
   async function sendMess() {
+    // setProgressBar(0)
     if (isSending) return;
-    setIsSending(true);
+    // setImagePrew({});
     // console.log(sendImage);
 
     try {
@@ -266,15 +275,16 @@ const updateProgress = (index, value) => {
             console.log("Отправка изображения");
             const formData = new FormData();
             formData.append("image", img);
-            console.log(formData);
             const url = "http://127.0.0.1:8000/chat/photo-upload/";
             const response = await axios.post(url, formData, {
               headers: {
                 "Content-Type": "multipart/form-data",
               },
+
+              onUploadProgress:(progressEvent )=>{
+            updateProgress (progressEvent.loaded, progressEvent.total)
+                         }
             });
-            console.log(response.data);
-            setSendingPhoto(response.data);
             return response.data.id;
           });
           // Дожидаемся всех завершенных запросов
@@ -285,7 +295,6 @@ const updateProgress = (index, value) => {
       if (sendDocument) {
         console.log(sendDocument);
         if (Array.isArray(sendDocument) && sendDocument.length > 0) {
-          // Отправляем все изображения и ждем завершения всех запросов
           const uploadPromises = Array.from(sendDocument).map(
             async (documents) => {
               console.log("Отправка документов");
@@ -298,7 +307,12 @@ const updateProgress = (index, value) => {
                 headers: {
                   "Content-Type": "multipart/form-data; charset=utf-8",
                 },
+                onUploadProgress:(progressEvent )=>{
+                  const percentCompleted =  updateProgress (progressEvent.loaded, progressEvent.total)
+                  console.log(`Загрузка изображения: ${percentCompleted}% завершено`);
+                }
               });
+
               console.log(response.data);
               setSendDocument(response.data);
               return response.data.id;
@@ -317,7 +331,7 @@ const updateProgress = (index, value) => {
         console.log("WebSocket не открыт. Сообщение не отправлено.");
         return;
       }
-
+        console.log(imageData)
       const request_id = 1;
       const messageData = {
         message: message || "",
@@ -330,28 +344,19 @@ const updateProgress = (index, value) => {
       // Отправляем сообщение через WebSocket
       chatSocket.send(JSON.stringify(messageData));
 
-
     } catch (error) {
       console.error("Error sending message:", error);
     } finally {
-      console.log(imagePrew)
-      console.log(imagePrew.preview)
-      setIsSending(false);
-
       setIsSending(false);
       setMessage("");
-      setSendDocument([]);
+      // setSendDocument([]);
       setSendImage([]);
-      setImagePrew({});
+      setProgressBar(0)
+      setImagePrew([]);
       setModel(false);
       // setSelectTypeFile(false);
     }
   }
-
-
-
-
-
 
   function formatRoomName(roomName) {
     try {
@@ -412,7 +417,7 @@ const updateProgress = (index, value) => {
         title="Отправить сообщение "
         onCancel={handleCancelAddPhoto}
         onSubmit={sendMess}
-        image={imagePrew ? imagePrew.preview : null}
+        image={imagePrew.preview}
         input={handleInputTextChange}
         inputValue={message}
         isOpen={modal}
@@ -420,6 +425,7 @@ const updateProgress = (index, value) => {
         closeEmoji={closeModelEmoji}
         isOpenEmoji={isOpenModelEmoji}
         emojiEvent={inputEmoji}
+        progressBar={progressBar}
       />
       <ModalPhoto
         sizeGalary={modalPhoto.photoData}
@@ -460,6 +466,7 @@ const updateProgress = (index, value) => {
               </div>
             ) : (
               messages
+
                 .filter((msg) => msg.room && msg.room.id === parseInt(id))
                 .map((msg, index, arr) => {
                   const newText = msg.created_at.substring(11, 16);

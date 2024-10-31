@@ -22,6 +22,7 @@ const ModalSendMessage = ({
   openEmoji,
   closeEmoji,
   emojiEvent,
+  progressBar,
 }) => {
   return (
     <>
@@ -60,9 +61,9 @@ const ModalSendMessage = ({
                 <div className={styles.wrapPhoto}>
     {Array.isArray(image) && image.length > 0 ? (
         image.map((img, index) => (
-            <div key={index} className={styles.imageContainer}>
-                <img src={img.src} alt={`image-${index}`} />
-                <ProgressBar value={img.progress || 0} />
+            <div key={index} className={styles.inputWrap }>
+                <img src={img}   alt={`image-${index}`} />
+                <ProgressBar value={progressBar} />
                 <FaRegTrashAlt size="30" color="black" style={{ marginLeft: "10px" }} />
             </div>
         ))

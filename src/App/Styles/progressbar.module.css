@@ -7,6 +7,13 @@ background-color:white;
 border:1px solid black;
 }
 
+.sizeFile{
+    text-align: center;
+    display: block;
+    /* margin: auto; */
+    font-size: 12px;
+    margin-bottom: 5px;
+}
 .progressBarWrap .progressBar span{
     position: absolute;
     top: 0;
