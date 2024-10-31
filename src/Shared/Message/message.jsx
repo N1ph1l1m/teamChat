@@ -27,7 +27,7 @@ export default function Message({
             {photos.map((photo, index) => (
               // eslint-disable-next-line jsx-a11y/img-redundant-alt
               <img
-                key={index}
+                  key={`photo-${index}-${photo}`}
                 className={styles.photoMessage}
                 src={photo}
                 alt={`message photo ${index}`}
@@ -44,7 +44,7 @@ export default function Message({
             {photos.map((photo, index) => (
               // eslint-disable-next-line jsx-a11y/img-redundant-alt
               <img
-                key={index}
+                  key={`photo-${index}-${photo}`}
                 src={photo}
                 className={styles.photoMessageTwoPhoto}
                 alt={`message photo ${index + 1}`}
@@ -61,7 +61,7 @@ export default function Message({
             {photos.map((photo, index) => (
               // eslint-disable-next-line jsx-a11y/img-redundant-alt
               <img
-                key={index}
+                  key={`photo-${index}-${photo}`}
                 src={photo}
                 className={styles.photoMessageEven}
                 alt={`message photo ${index + 1}`}
@@ -78,7 +78,7 @@ export default function Message({
             {photos.map((photo, index) => (
               // eslint-disable-next-line jsx-a11y/img-redundant-alt
               <img
-                key={index}
+                   key={`photo-${index}-${photo}`}
                 className={styles.photoMessageOdd}
                 src={photo}
                 alt={`message photo ${index + 1}`}
@@ -125,7 +125,7 @@ export default function Message({
             {documents.map((document, index) => (
               // eslint-disable-next-line jsx-a11y/img-redundant-alt
 
-              <div className={styles.documentHeaderWrap}>
+              <div className={styles.documentHeaderWrap}  key={`doc-${index}-${document.document}`}>
                 <Icon>
                 <FaArrowCircleDown color="white" size="35" style={{marginTop:"5px"}} />
                 </Icon>

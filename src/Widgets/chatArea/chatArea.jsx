@@ -91,39 +91,8 @@ function ChatArea({
         </div>
       </div>
       <div className={styles.messageInput}>
-        {/* {showSelectTypeFile} */}
-        <div className={styles.selectTypeFileWrap}>
-          <div className={styles.selectTypeFiles}>
-            <input
-              type="file"
-              id="documents"
-              name="documents"
-              accept=".txt, .pdf, .doc, .docx, .odt, .rtf, .xls, .xlsx, .ppt, .pptx , .zip, .exe, "
-              onChange={documents}
-              multiple
-            />
-            <label htmlFor="documents">
-              <Icon className={styles.icon}>
-                <FaFile color="rgb(131, 130, 130)" size="30" />
-              </Icon>
-              <span>Документ</span>
-            </label>
-            <input
-              type="file"
-              id="photo"
-              name="photo"
-              accept="image/*"
-              onChange={images}
-              multiple
-            />
-            <label htmlFor="photo">
-              <Icon className={styles.icon}>
-                <FaFileImage color="rgb(131, 130, 130)" size="30" />
-              </Icon>
-              <span>Фото</span>
-            </label>
-          </div>
-        </div>
+        {showSelectTypeFile}
+
         <div
           className={styles.inputFileWrap}
           onClick={setSelect}
