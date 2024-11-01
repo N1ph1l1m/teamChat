@@ -257,45 +257,54 @@ function Chats() {
     return percentLoaded;
   }
 
-  async function sendMess2() {
-    // setProgressBar(0)
+
+  async function sendMess() {
     if (isSending) return;
     setIsSending(true);
-    // setImagePrew({});
     // console.log(sendImage);
 
     try {
       let imageData = [];
       let documentsData = [];
-
-      if (sendImage) {
-        console.log(sendImage);
+      if (sendImage || message ) {
         if (Array.isArray(sendImage) && sendImage.length > 0) {
+          // Отправляем все изображения и ждем завершения всех запросов
           const uploadPromises = Array.from(sendImage).map(async (img) => {
             console.log("Отправка изображения");
             const formData = new FormData();
             formData.append("image", img);
 
             const url = "http://127.0.0.1:8000/chat/photo-upload/";
-
             const response = await axios.post(url, formData, {
               headers: {
                 "Content-Type": "multipart/form-data",
               },
-
-              onUploadProgress:(progressEvent )=>{
-            updateProgress (progressEvent.loaded, progressEvent.total)
-                         }
             });
+            console.log(response.data);
             setSendingPhoto(response.data);
-            return response.data.id;
+            return response.data.id; // Возвращаем id изображения с сервера
           });
+
           // Дожидаемся всех завершенных запросов
           imageData = await Promise.all(uploadPromises);
         }
-      }
+        if (!isWebSocketOpen || !chatSocket) {
+          console.log("WebSocket не открыт. Сообщение не отправлено.");
+          return;
+        }
 
-      if (sendDocument) {
+        const request_id = 1;
+        const messageData = {
+          message: message || "",
+          images: imageData || [],
+          action: "create_message",
+          request_id: request_id,
+        };
+
+        // Отправляем сообщение через WebSocket
+        chatSocket.send(JSON.stringify(messageData));
+      }
+      if (sendDocument || message) {
         console.log(sendDocument);
         if (Array.isArray(sendDocument) && sendDocument.length > 0) {
           const uploadPromises = Array.from(sendDocument).map(
@@ -325,92 +334,42 @@ function Chats() {
           // Дожидаемся всех завершенных запросов
           documentsData = await Promise.all(uploadPromises);
         }
+        if (!isWebSocketOpen || !chatSocket) {
+          console.log("WebSocket не открыт. Сообщение не отправлено.");
+          return;
+        }
+
+        const request_id = 1;
+        const messageData = {
+          message: message || "",
+          documents: documentsData || [],
+          action: "create_message",
+          request_id: request_id,
+        };
+
+        // Отправляем сообщение через WebSocket
+        chatSocket.send(JSON.stringify(messageData));
       }
 
       // console.log("Response from server (images):", imageData);
 
-      // Проверка на открытость WebSocket соединения
-      if (!isWebSocketOpen || !chatSocket) {
-        console.log("WebSocket не открыт. Сообщение не отправлено.");
-        return;
-      }
-        console.log(imageData)
-      const request_id = 1;
-      const messageData = {
-        message: message || "",
-        images: imageData || [],
-        documents: documentsData || [],
-        action: "create_message",
-        request_id: request_id,
-      };
-      chatSocket.send(JSON.stringify(messageData));
-      // Отправляем сообщение через WebSocket
-      setIsSending(false);
-      setMessage("");
-      setSendDocument([]);
-      setSendImage([]);
-      setProgressBar(0)
-      setImagePrew([]);
-      setModel(false);
+      // // Проверка на открытость WebSocket соединения
+      // if (!isWebSocketOpen || !chatSocket) {
+      //   console.log("WebSocket не открыт. Сообщение не отправлено.");
+      //   return;
+      // }
 
-    } catch (error) {
-      console.error("Error sending message:", error);
-    } finally {
+      // const request_id = 1;
+      // const messageData = {
+      //   message: message || "",
+      //   images: imageData || [],
+      //   documents: documentsData || [],
+      //   action: "create_message",
+      //   request_id: request_id,
+      // };
 
-      setSelectTypeFile(false);
-    }
-  }
-
-  async function sendMess() {
-    if (isSending) return;
-    setIsSending(true);
-    // console.log(sendImage);
-
-    try {
-      let imageData = [];
-
-      if (sendImage) {
-        if (Array.isArray(sendImage) && sendImage.length > 0) {
-          // Отправляем все изображения и ждем завершения всех запросов
-          const uploadPromises = Array.from(sendImage).map(async (img) => {
-            console.log("Отправка изображения");
-            const formData = new FormData();
-            formData.append("image", img);
-
-            const url = "http://127.0.0.1:8000/chat/photo-upload/";
-            const response = await axios.post(url, formData, {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            });
-            console.log(response.data);
-            setSendingPhoto(response.data);
-            return response.data.id; // Возвращаем id изображения с сервера
-          });
-
-          // Дожидаемся всех завершенных запросов
-          imageData = await Promise.all(uploadPromises);
-        }
-      }
-
-      console.log("Response from server (images):", imageData);
-
-      // Проверка на открытость WebSocket соединения
-      if (!isWebSocketOpen || !chatSocket) {
-        console.log("WebSocket не открыт. Сообщение не отправлено.");
-        return;
-      }
-
-      const request_id = 1;
-      const messageData = {
-        message: message || "",
-        images: imageData || [],
-        action: "create_message",
-        request_id: request_id,
-      };
-
-      // Отправляем сообщение через WebSocket
-      chatSocket.send(JSON.stringify(messageData));
+      // // Отправляем сообщение через WebSocket
+      // chatSocket.send(JSON.stringify(messageData));
 
       // Очищаем состояние формы
       setMessage("");
@@ -460,22 +419,16 @@ function Chats() {
   };
 
   function openEmoji() {
-    setEmoji(true);
-  }
-  function closeEmoji() {
-    setEmoji(false);
+    setEmoji(!isOpenEmoji);
   }
 
   function openModelEmoji() {
-    setModelEmoji(true);
+    setModelEmoji(!isOpenModelEmoji);
   }
-  function closeModelEmoji() {
-    setModelEmoji(false);
+  function removeElementModal(imagePrew){
+    console.log("remove " + imagePrew)
   }
 
-  // function openReactions() {
-  //   setReactions(!isOpenReactions);
-  // }
 
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
@@ -490,10 +443,10 @@ function Chats() {
         inputValue={message}
         isOpen={modal}
         openEmoji={openModelEmoji}
-        closeEmoji={closeModelEmoji}
         isOpenEmoji={isOpenModelEmoji}
         emojiEvent={inputEmoji}
         progressBar={progressBar}
+        removeElement={removeElementModal}
       />
       <ModalPhoto
         sizeGalary={modalPhoto.photoData}
@@ -517,7 +470,6 @@ function Chats() {
         images={handleInputImages}
         sendmessage={sendMess}
         openEmoji={openEmoji}
-        closeEmoji={closeEmoji}
         isOpenEmoji={isOpenEmoji}
         emojiEvent={inputEmoji}
         selectTypeFile={selectTypeFile}

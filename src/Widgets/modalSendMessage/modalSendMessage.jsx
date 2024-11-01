@@ -20,9 +20,9 @@ const ModalSendMessage = ({
   inputValue,
   isOpenEmoji,
   openEmoji,
-  closeEmoji,
   emojiEvent,
   progressBar,
+  removeElement,
 }) => {
   return (
     <>
@@ -30,11 +30,7 @@ const ModalSendMessage = ({
         <Portal>
           <div className={styles.modalOverlay}>
             <div className={styles.modalWrap}>
-              <div
-                className={styles.emojiWrap}
-                onMouseOver={openEmoji}
-                onMouseLeave={closeEmoji}
-              >
+              <div className={styles.emojiWrap} onClick={openEmoji}>
                 <EmojiPicker
                   open={isOpenEmoji}
                   width={300}
@@ -56,20 +52,24 @@ const ModalSendMessage = ({
                 </Icon>
               </div>
 
-              <div className={styles.modalBody}>
+              <div className={styles.modalBody}>s
                 <div className={styles.wrapContentModal}>
-                <div className={styles.wrapPhoto}>
-    {Array.isArray(image) && image.length > 0 ? (
-        image.map((img, index) => (
-            <div key={index} className={styles.inputWrap }>
-                <img src={img}   alt={`image-${index}`} />
-                <ProgressBar value={progressBar} />
-                <FaRegTrashAlt size="30" color="black" style={{ marginLeft: "10px" }} />
-            </div>
-        ))
-    ) : null}
-</div>
-
+                  <div className={styles.wrapPhoto}>
+                    {Array.isArray(image) && image.length > 0
+                      ? image.map((img, index) => (
+                          <div key={index} className={styles.inputWrap}>
+                            <img src={img} alt={`image-${index}`} />
+                            <ProgressBar value={progressBar} />
+                            <FaRegTrashAlt
+                              size="30"
+                              color="black"
+                              style={{ marginLeft: "10px" }}
+                              onClick={()=>(removeElement(index))}
+                            />
+                          </div>
+                        ))
+                      : null}
+                  </div>
                   <div className={styles.inputWrap}>
                     <textarea
                       placeholder="Подпись"
@@ -80,8 +80,7 @@ const ModalSendMessage = ({
                       <MdOutlineEmojiEmotions
                         color="rgb(131, 130, 130)"
                         size="25"
-                        onMouseOver={openEmoji}
-                        onMouseLeave={closeEmoji}
+                        onClick={openEmoji}
                       />
                     </Icon>
                     <Icon>

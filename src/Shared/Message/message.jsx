@@ -27,7 +27,7 @@ export default function Message({
             {photos.map((photo, index) => (
               // eslint-disable-next-line jsx-a11y/img-redundant-alt
               <img
-                  key={`photo-${index}-${photo}`}
+                key={`photo-${index}-${photo}`}
                 className={styles.photoMessage}
                 src={photo}
                 alt={`message photo ${index}`}

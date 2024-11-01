@@ -112,8 +112,8 @@ function ChatArea({
             <MdOutlineEmojiEmotions
               color="rgb(131, 130, 130)"
               size="30"
-              onMouseOver={openEmoji}
-              onMouseLeave={closeEmoji}
+              onClick={openEmoji}
+              // onMouseLeave={closeEmoji}
             />
           </Icon>
         </div>
