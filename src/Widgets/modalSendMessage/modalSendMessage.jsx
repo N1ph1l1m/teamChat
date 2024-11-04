@@ -9,6 +9,7 @@ import { MdOutlineEmojiEmotions } from "react-icons/md";
 import ProgressBar from "../../Shared/progressBar/progressBar";
 import EmojiPicker from "emoji-picker-react";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { FaFile } from "react-icons/fa";
 
 const ModalSendMessage = ({
   title,
@@ -23,6 +24,7 @@ const ModalSendMessage = ({
   emojiEvent,
   progressBar,
   removeElement,
+  type,
 }) => {
   return (
     <>
@@ -52,24 +54,41 @@ const ModalSendMessage = ({
                 </Icon>
               </div>
 
-              <div className={styles.modalBody}>s
+              <div className={styles.modalBody}>
                 <div className={styles.wrapContentModal}>
                   <div className={styles.wrapPhoto}>
                     {Array.isArray(image) && image.length > 0
-                      ? image.map((img, index) => (
-                          <div key={index} className={styles.inputWrap}>
-                            <img src={img} alt={`image-${index}`} />
-                            <ProgressBar value={progressBar} />
-                            <FaRegTrashAlt
-                              size="30"
-                              color="black"
-                              style={{ marginLeft: "10px" }}
-                              onClick={()=>(removeElement(index))}
-                            />
-                          </div>
-                        ))
+                      ? image.map((img, index) =>
+                          img.type.startsWith("image/") ? (
+                            <div key={index} className={styles.inputWrap}>
+                              <img src={img.content} alt={`image-${index}`} />
+                              <ProgressBar value={progressBar} />
+                              <FaRegTrashAlt
+                                size="30"
+                                color="black"
+                                style={{ marginLeft: "10px" }}
+                                onClick={() => removeElement(index)}
+                              />
+                            </div>
+                          ) : (
+                            <div key={index} className={styles.inputWrap}>
+                              <Icon>
+                                <FaFile color="rgb(131, 130, 130)" size="50" />
+                              </Icon>
+
+                              <ProgressBar value={progressBar} />
+                              <FaRegTrashAlt
+                                size="30"
+                                color="black"
+                                style={{ marginLeft: "10px" }}
+                                onClick={() => removeElement(index)}
+                              />
+                            </div>
+                          )
+                        )
                       : null}
                   </div>
+
                   <div className={styles.inputWrap}>
                     <textarea
                       placeholder="Подпись"

@@ -31,7 +31,7 @@ function Chats() {
   const [currentPhotoId, setCurrentPhotoId] = useState(0);
   const [isOpenEmoji, setEmoji] = useState(false);
   const [isOpenModelEmoji, setModelEmoji] = useState(false);
-  const [progressBar, setProgressBar] = useState(0)
+  const [progressBar, setProgressBar] = useState(0);
   // const [isOpenReactions, setReactions] = useState(false);
   const [selectTypeFile, setSelectTypeFile] = useState(false);
 
@@ -163,7 +163,7 @@ function Chats() {
       if (e.target.files.length > 0) {
         setModel(true);
         const files = Array.from(e.target.files);
-        console.log(files)
+        console.log(files);
         const fileType = e.target.files;
         console.log(fileType);
         setSendImage(files);
@@ -172,13 +172,27 @@ function Chats() {
         const prewImages = [];
         files.forEach((file) => {
           const reader = new FileReader();
+          // reader.onloadend = () => {
+          //   prewImages.push(reader);
+          //   setImagePrew((prev) => ({
+          //     ...prev,
+          //     preview: [...(prev.preview || []), reader],
+          //   }));
+          // };
+
           reader.onloadend = () => {
-            prewImages.push(reader.result);
+            const previewData = {
+              content: reader.result,
+              type: file.type,
+            };
+            prewImages.push(previewData);
+
             setImagePrew((prev) => ({
               ...prev,
-              preview: [...(prev.preview || []), reader.result],
+              preview: [...(prev.preview || []), previewData],
             }));
           };
+
           reader.readAsDataURL(file);
         });
 
@@ -192,38 +206,35 @@ function Chats() {
       console.error(error);
     }
   };
-
   const handleInputDocuments = (e) => {
     try {
       if (e.target.files.length > 0) {
         setModel(true);
         const files = Array.from(e.target.files);
         setSendDocument(files);
-        console.log("Выбранный документ:", files);
 
         const prewImages = [];
         files.forEach((file) => {
           const reader = new FileReader();
 
           reader.onloadend = () => {
-            prewImages.push({
+            const previewData = {
               content: reader.result,
               type: file.type,
-            });
+            };
+            prewImages.push(previewData);
 
             setImagePrew((prev) => ({
               ...prev,
-              preview: [
-                ...(prev.preview || []),
-                { content: reader.result, fileType: file.type }, // сохраняем и контент, и тип
-              ],
+              preview: [...(prev.preview || []), previewData],
             }));
           };
+
           reader.readAsDataURL(file);
         });
 
-        if (imagePrew && imagePrew.preview) {
-          console.log("Предпросмотр изображений с типами:", imagePrew.preview);
+        if (prewImages.length > 0) {
+          console.log("Предпросмотр изображений с типами:", prewImages);
         }
       } else {
         console.log("Файл не выбран");
@@ -233,30 +244,27 @@ function Chats() {
     }
   };
 
-
   function handleCancelAddPhoto() {
     setModel(false);
     setImagePrew("");
-    setProgressBar(0)
+    setProgressBar(0);
   }
 
   function handleCancelPhoto() {
     setPhotoModal(false);
   }
 
-
-  const BYTES_IN_MB = 1048576
+  const BYTES_IN_MB = 1048576;
   function updateProgress(loaded, total) {
-    const loadedMb = (loaded/BYTES_IN_MB).toFixed(1)
-    const totalSizeMb = (total/BYTES_IN_MB).toFixed(1)
-    const percentLoaded = Math.round((loaded / total) * 100)
+    const loadedMb = (loaded / BYTES_IN_MB).toFixed(1);
+    const totalSizeMb = (total / BYTES_IN_MB).toFixed(1);
+    const percentLoaded = Math.round((loaded / total) * 100);
 
-    setProgressBar(percentLoaded)
+    setProgressBar(percentLoaded);
     // console.log(`${loadedMb} из ${totalSizeMb} МБ`)
     // console.log( `Загружено ${percentLoaded}% `)
     return percentLoaded;
   }
-
 
   async function sendMess() {
     if (isSending) return;
@@ -266,7 +274,7 @@ function Chats() {
     try {
       let imageData = [];
       let documentsData = [];
-      if (sendImage || message ) {
+      if (sendImage || message) {
         if (Array.isArray(sendImage) && sendImage.length > 0) {
           // Отправляем все изображения и ждем завершения всех запросов
           const uploadPromises = Array.from(sendImage).map(async (img) => {
@@ -317,12 +325,17 @@ function Chats() {
               const url = "http://127.0.0.1:8000/chat/documents-upload/";
               const response = await axios.post(url, formData, {
                 headers: {
-                  "Content-Type": "multipart/form-data; charset=utf-8",
+                  "Content-Type": "multipart/form-data",
                 },
-                onUploadProgress:(progressEvent )=>{
-                  const percentCompleted =  updateProgress (progressEvent.loaded, progressEvent.total)
-                  console.log(`Загрузка изображения: ${percentCompleted}% завершено`);
-                }
+                onUploadProgress: (progressEvent) => {
+                  const percentCompleted = updateProgress(
+                    progressEvent.loaded,
+                    progressEvent.total
+                  );
+                  console.log(
+                    `Загрузка изображения: ${percentCompleted}% завершено`
+                  );
+                },
               });
 
               console.log(response.data);
@@ -350,28 +363,6 @@ function Chats() {
         // Отправляем сообщение через WebSocket
         chatSocket.send(JSON.stringify(messageData));
       }
-
-      // console.log("Response from server (images):", imageData);
-
-      // // Проверка на открытость WebSocket соединения
-      // if (!isWebSocketOpen || !chatSocket) {
-      //   console.log("WebSocket не открыт. Сообщение не отправлено.");
-      //   return;
-      // }
-
-      // const request_id = 1;
-      // const messageData = {
-      //   message: message || "",
-      //   images: imageData || [],
-      //   documents: documentsData || [],
-      //   action: "create_message",
-      //   request_id: request_id,
-      // };
-
-      // // Отправляем сообщение через WebSocket
-      // chatSocket.send(JSON.stringify(messageData));
-
-      // Очищаем состояние формы
       setMessage("");
       setSendImage("");
       setImagePrew("");
@@ -382,8 +373,6 @@ function Chats() {
       setIsSending(false);
     }
   }
-
-
 
   function formatRoomName(roomName) {
     try {
@@ -425,10 +414,9 @@ function Chats() {
   function openModelEmoji() {
     setModelEmoji(!isOpenModelEmoji);
   }
-  function removeElementModal(imagePrew){
-    console.log("remove " + imagePrew)
+  function removeElementModal(imagePrew) {
+    console.log("remove " + imagePrew);
   }
-
 
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
@@ -473,7 +461,7 @@ function Chats() {
         isOpenEmoji={isOpenEmoji}
         emojiEvent={inputEmoji}
         selectTypeFile={selectTypeFile}
-        setSelect={()=>setSelectTypeFile(!selectTypeFile)}
+        setSelect={() => setSelectTypeFile(!selectTypeFile)}
         content={
           <>
             {messages.filter((msg) => msg.room && msg.room.id === parseInt(id))
@@ -497,8 +485,9 @@ function Chats() {
                     : null;
                   const isNewDay = previousDate !== messageDate;
                   const photoData = msg.images.map((image) => image);
+
                   const docs = msg.documents.map((doc) =>
-                    doc.document.substring(43)
+                    decodeURIComponent(doc.document.substring(43))
                   );
 
                   return (
