@@ -21,6 +21,7 @@ function ChatArea({
   emojiEvent,
   selectTypeFile,
   setSelect,
+  keyDownSend,
 }) {
 
 
@@ -72,7 +73,9 @@ function ChatArea({
         <div className={styles.chatHeaderItem}>
           <p>{title}</p>
         </div>
-        <div className={styles.messages}>
+        <div
+
+          className={styles.messages}>
           {content}
           <div
             className={styles.emojiWrap}
@@ -106,6 +109,7 @@ function ChatArea({
             placeholder="Type your message"
             value={inputValue}
             onChange={input}
+            onKeyDownCapture={keyDownSend}
           />
 
           <Icon>
@@ -113,7 +117,6 @@ function ChatArea({
               color="rgb(131, 130, 130)"
               size="30"
               onClick={openEmoji}
-              // onMouseLeave={closeEmoji}
             />
           </Icon>
         </div>

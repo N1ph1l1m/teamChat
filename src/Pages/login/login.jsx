@@ -86,6 +86,12 @@ function Login(props){
       }
   }
 
+  const keyDown = (e) =>{
+    if (e.code === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      loginSubmit();
+    }
+  }
 
     return(
         <div className={styles.wrapContainer}>
@@ -113,6 +119,7 @@ function Login(props){
             id="password"
             placeholder="Password"
             value={password}
+            onKeyDownCapture={keyDown}
             onChange={(e) => handleInputChange(e, "password")}
           />
              <Button type="submit"

@@ -35,6 +35,7 @@ function Chats() {
   // const [isOpenReactions, setReactions] = useState(false);
   const [selectTypeFile, setSelectTypeFile] = useState(false);
 
+
   useEffect(() => {
     async function getRoomData() {
       try {
@@ -110,7 +111,6 @@ function Chats() {
               const messageExists = prevMessages.some(
                 (msg) => msg.id === data.data.id
               );
-              console.log(data.data.images);
               getMessageData();
               if (!messageExists) {
                 return [...prevMessages, data.data];
@@ -149,9 +149,11 @@ function Chats() {
     go();
   }, [id]);
 
+
+
   const handleInputTextChange = (e) => {
+    e.preventDefault()
     setMessage(e.target.value);
-    console.log(message);
   };
 
   function inputEmoji(emojiObject) {
@@ -418,6 +420,16 @@ function Chats() {
     console.log("remove " + imagePrew);
   }
 
+  const keyDownEvent = (e) =>{
+    if (e.code === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMess()
+
+    }
+  }
+
+
+
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
   return (
@@ -429,6 +441,7 @@ function Chats() {
         image={imagePrew.preview}
         input={handleInputTextChange}
         inputValue={message}
+        keyDownSend={keyDownEvent}
         isOpen={modal}
         openEmoji={openModelEmoji}
         isOpenEmoji={isOpenModelEmoji}
@@ -460,6 +473,7 @@ function Chats() {
         openEmoji={openEmoji}
         isOpenEmoji={isOpenEmoji}
         emojiEvent={inputEmoji}
+        keyDownSend={keyDownEvent}
         selectTypeFile={selectTypeFile}
         setSelect={() => setSelectTypeFile(!selectTypeFile)}
         content={
@@ -497,6 +511,7 @@ function Chats() {
                       )}
                       {msg.user.username ===
                       localStorage.getItem("username") ? (
+                        <>
                         <Message
                           sent
                           avatar={authenticatedUser.photo}
@@ -509,6 +524,7 @@ function Chats() {
                           // reactionMessage={openReactions}
                           // isOpenReactions={isOpenReactions}
                         />
+                        </>
                       ) : (
                         <Message
                           text={msg.text}
@@ -520,8 +536,10 @@ function Chats() {
                           photoData={photoData}
                         />
                       )}
+
                     </div>
                   );
+
                 })
             )}
           </>

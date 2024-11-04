@@ -19,6 +19,7 @@ const ModalSendMessage = ({
   image,
   input,
   inputValue,
+  keyDownSend,
   isOpenEmoji,
   openEmoji,
   emojiEvent,
@@ -94,6 +95,7 @@ const ModalSendMessage = ({
                       placeholder="Подпись"
                       value={inputValue}
                       onChange={input}
+                      onKeyDownCapture={keyDownSend}
                     />{" "}
                     <Icon>
                       <MdOutlineEmojiEmotions
