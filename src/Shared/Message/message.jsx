@@ -61,7 +61,7 @@ export default function Message({
             {photos.map((photo, index) => (
               // eslint-disable-next-line jsx-a11y/img-redundant-alt
               <img
-                  key={`photo-${index}-${photo}`}
+                key={`photo-${index}-${photo}`}
                 src={photo}
                 className={styles.photoMessageEven}
                 alt={`message photo ${index + 1}`}
@@ -100,7 +100,7 @@ export default function Message({
     >
       <img className={styles.messageAvatar} src={avatar} alt={"avatar user"} />
 
-      {text && Array.isArray(photos) && photos.length === 0 && (
+      {text && Array.isArray(photos) && photos.length === 0 &&   Array.isArray(documents) === 0 && (
         <div className={styles.messageBubbleText}>
           <div className={styles.bubbleNameWrap}>
             <span className={styles.bubbleNameText}>{username}</span>
@@ -112,11 +112,7 @@ export default function Message({
         </div>
       )}
 
-      {!text &&
-        Array.isArray(photos) &&
-        photos.length === 0 &&
-        Array.isArray(documents) &&
-        documents.length >= 0 && (
+      {!text && Array.isArray(photos) && photos.length === 0 && Array.isArray(documents) && documents.length >= 0 && (
           <div className={styles.messageBubbleDocuments}>
             <div className={styles.bubbleNameWrap}>
               <span className={styles.bubbleNameText}>{username}</span>
@@ -138,6 +134,33 @@ export default function Message({
               </div>
             ))}
 
+            <div className={styles.bubbleTimeWrap}>
+              <span className={styles.bubbleTimeText}>{time}</span>
+            </div>
+          </div>
+        )}
+
+        {text && Array.isArray(photos) && photos.length === 0 && Array.isArray(documents) && documents.length >= 0 && (
+          <div className={styles.messageBubbleDocuments}>
+            <div className={styles.bubbleNameWrap}>
+              <span className={styles.bubbleNameText}>{username}</span>
+            </div>
+
+            {documents.map((document, index) => (
+              // eslint-disable-next-line jsx-a11y/img-redundant-alt
+
+              <div className={styles.documentHeaderWrap}  key={`doc-${index}-${document.document}`}>
+                <Icon>
+                <FaArrowCircleDown color="white" size="35" style={{marginTop:"5px"}} />
+                </Icon>
+
+                <div className={styles.documentTitleUpload}>
+                <a key={index}  href={document.document} download className={styles.documentTitle}>{document}</a>
+                <span className={styles.documentUpload}>Загрузить</span>
+                </div>
+              </div>
+            ))}
+                 <span> {text}</span>
             <div className={styles.bubbleTimeWrap}>
               <span className={styles.bubbleTimeText}>{time}</span>
             </div>

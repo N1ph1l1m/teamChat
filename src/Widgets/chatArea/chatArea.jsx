@@ -7,6 +7,7 @@ import Icon from "../../Shared/icon/icon";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
 import EmojiPicker from "emoji-picker-react";
 import { FaFile, FaFileImage, FaPaperclip } from "react-icons/fa";
+
 function ChatArea({
   title,
   content,
@@ -34,7 +35,7 @@ function ChatArea({
               type="file"
               id="documents"
               name="documents"
-              accept=".txt, .pdf, .doc, .docx, .odt, .rtf, .xls, .xlsx, .ppt, .pptx , .zip, .exe, "
+              accept=".txt, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx , .zip, .exe, "
               onChange={documents}
               multiple
             />

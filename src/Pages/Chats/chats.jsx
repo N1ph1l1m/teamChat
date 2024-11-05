@@ -225,6 +225,7 @@ function Chats() {
               type: file.type,
             };
             prewImages.push(previewData);
+            console.log(previewData);
 
             setImagePrew((prev) => ({
               ...prev,
@@ -263,8 +264,7 @@ function Chats() {
     const percentLoaded = Math.round((loaded / total) * 100);
 
     setProgressBar(percentLoaded);
-    // console.log(`${loadedMb} из ${totalSizeMb} МБ`)
-    // console.log( `Загружено ${percentLoaded}% `)
+
     return percentLoaded;
   }
 
@@ -319,6 +319,15 @@ function Chats() {
         if (Array.isArray(sendDocument) && sendDocument.length > 0) {
           const uploadPromises = Array.from(sendDocument).map(
             async (documents) => {
+              if(!documents  || documents.size  === 0 ){
+                alert( ` Пустой  "${documents.name}" не может быть отправлен`);
+                setMessage("");
+                setSendImage("");
+                setImagePrew("");
+                setModel(false);
+                return null;
+              }
+
               console.log("Отправка документов");
               const formData = new FormData();
               formData.append("document", documents);
@@ -335,7 +344,7 @@ function Chats() {
                     progressEvent.total
                   );
                   console.log(
-                    `Загрузка изображения: ${percentCompleted}% завершено`
+                    `Документа: ${percentCompleted}% завершено`
                   );
                 },
               });
@@ -345,8 +354,6 @@ function Chats() {
               return response.data.id;
             }
           );
-
-          // Дожидаемся всех завершенных запросов
           documentsData = await Promise.all(uploadPromises);
         }
         if (!isWebSocketOpen || !chatSocket) {
@@ -371,6 +378,16 @@ function Chats() {
       setModel(false);
     } catch (error) {
       console.error("Error sending message:", error);
+
+
+      if (error.response) {
+        console.log('Error data:', error.response.data); // Данные об ошибке от сервера
+        console.log('Error status:', error.response.status); // Статус ошибки
+        console.log('Error headers:', error.response.headers); // Заголовки ошибки
+      } else {
+        console.log('Error message:', error.message);
+      }
+
     } finally {
       setIsSending(false);
     }
