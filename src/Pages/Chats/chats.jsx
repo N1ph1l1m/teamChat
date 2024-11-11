@@ -276,7 +276,7 @@ function Chats() {
     try {
       let imageData = [];
       let documentsData = [];
-      if (sendImage || message) {
+      if (sendImage) {   // sendImage && message || sendImage
         if (Array.isArray(sendImage) && sendImage.length > 0) {
           // Отправляем все изображения и ждем завершения всех запросов
           const uploadPromises = Array.from(sendImage).map(async (img) => {
@@ -313,8 +313,7 @@ function Chats() {
 
         // Отправляем сообщение через WebSocket
         chatSocket.send(JSON.stringify(messageData));
-      }
-      if (sendDocument || message) {
+      }else if (sendDocument) {
         console.log(sendDocument);
         if (Array.isArray(sendDocument) && sendDocument.length > 0) {
           const uploadPromises = Array.from(sendDocument).map(
@@ -363,7 +362,7 @@ function Chats() {
 
         const request_id = 1;
         const messageData = {
-          message: message || "",
+           message: message  || "" ,
           documents: documentsData || [],
           action: "create_message",
           request_id: request_id,
@@ -371,14 +370,29 @@ function Chats() {
 
         // Отправляем сообщение через WebSocket
         chatSocket.send(JSON.stringify(messageData));
+      }else{
+        if (!isWebSocketOpen || !chatSocket) {
+          console.log("WebSocket не открыт. Сообщение не отправлено.");
+          return;
+        }
+
+        const request_id = 1;
+        const messageData = {
+           message: message,
+          action: "create_message",
+          request_id: request_id,
+        };
+
+        // Отправляем сообщение через WebSocket
+        chatSocket.send(JSON.stringify(messageData));
       }
+
       setMessage("");
       setSendImage("");
       setImagePrew("");
       setModel(false);
     } catch (error) {
       console.error("Error sending message:", error);
-
 
       if (error.response) {
         console.log('Error data:', error.response.data); // Данные об ошибке от сервера
@@ -518,7 +532,7 @@ function Chats() {
                   const photoData = msg.images.map((image) => image);
 
                   const docs = msg.documents.map((doc) =>
-                    decodeURIComponent(doc.document.substring(43))
+                    decodeURIComponent(doc.name)
                   );
 
                   return (

@@ -100,7 +100,7 @@ export default function Message({
     >
       <img className={styles.messageAvatar} src={avatar} alt={"avatar user"} />
 
-      {text && Array.isArray(photos) && photos.length === 0 &&   Array.isArray(documents) === 0 && (
+      {text && Array.isArray(photos) && photos.length === 0 &&   Array.isArray(documents) && documents.length === 0  && (
         <div className={styles.messageBubbleText}>
           <div className={styles.bubbleNameWrap}>
             <span className={styles.bubbleNameText}>{username}</span>
@@ -112,7 +112,7 @@ export default function Message({
         </div>
       )}
 
-      {!text && Array.isArray(photos) && photos.length === 0 && Array.isArray(documents) && documents.length >= 0 && (
+      {!text && Array.isArray(photos) && photos.length === 0 && Array.isArray(documents) && documents.length > 0 && (
           <div className={styles.messageBubbleDocuments}>
             <div className={styles.bubbleNameWrap}>
               <span className={styles.bubbleNameText}>{username}</span>
@@ -140,7 +140,7 @@ export default function Message({
           </div>
         )}
 
-        {text && Array.isArray(photos) && photos.length === 0 && Array.isArray(documents) && documents.length >= 0 && (
+        {text && Array.isArray(photos) && photos.length === 0 && Array.isArray(documents) && documents.length > 0 && (
           <div className={styles.messageBubbleDocuments}>
             <div className={styles.bubbleNameWrap}>
               <span className={styles.bubbleNameText}>{username}</span>
