@@ -258,23 +258,6 @@ cursor: pointer;
   overflow: hidden;
 }
 
-.sent .messageBubbleAll > .bubbleTextOne {
-  width: 300px;
-  background-color: #390cce;
-  color: #ffffff;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 10px;
-  padding: 5px;
-}
-
-.received .messageBubbleAll > .bubbleTextOne {
-  width: 300px;
-  background-color: #d3cdcd;
-  color: black;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 10px;
-  padding: 5px;
-}
 
 .messageBubbleAll > .wrapPhoto > img {
   border-radius: 10px 10px 0px 0px;
