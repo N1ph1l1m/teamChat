@@ -174,21 +174,13 @@ function Chats() {
         const prewImages = [];
         files.forEach((file) => {
           const reader = new FileReader();
-          // reader.onloadend = () => {
-          //   prewImages.push(reader);
-          //   setImagePrew((prev) => ({
-          //     ...prev,
-          //     preview: [...(prev.preview || []), reader],
-          //   }));
-          // };
-
           reader.onloadend = () => {
             const previewData = {
               content: reader.result,
               type: file.type,
             };
             prewImages.push(previewData);
-
+              console.log(previewData)
             setImagePrew((prev) => ({
               ...prev,
               preview: [...(prev.preview || []), previewData],

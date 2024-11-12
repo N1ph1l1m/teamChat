@@ -8,12 +8,8 @@ import { IoIosClose } from "react-icons/io";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
 import ProgressBar from "../../Shared/progressBar/progressBar";
 import EmojiPicker from "emoji-picker-react";
-import { FaRegTrashAlt, FaFilePdf, FaFileWord , FaFileExcel  } from "react-icons/fa";
-import { SiMicrosoftword , SiMicrosoftexcel , SiMicrosoftpowerpoint } from "react-icons/si";
-import { FaFile } from "react-icons/fa";
-import { BiSolidFileTxt } from "react-icons/bi";
-import { GrDocumentZip  ,  GrDocumentRtf} from "react-icons/gr";
-import { BsFiletypeExe } from "react-icons/bs";
+import { FaRegTrashAlt } from "react-icons/fa";
+import InputFileTypeIcons from "../../Shared/FileTypeIcons/inputFileTypeIcons";
 
 
 const ModalSendMessage = ({
@@ -30,121 +26,7 @@ const ModalSendMessage = ({
   emojiEvent,
   progressBar,
   removeElement,
-  type,
 }) => {
-  function rendeerFiles(img, index) {
-    switch (img.type) {
-      case "image/png":
-        // eslint-disable-next-line no-lone-blocks
-        {
-          return <img src={img.content} alt={`image-${index}`} />;
-        }
-        break;
-      case "text/plain":
-        // eslint-disable-next-line no-lone-blocks
-        {
-          return (
-            <Icon>
-              <BiSolidFileTxt color="black" size="40" />
-            </Icon>
-          );
-        }
-        break;
-      case "application/x-zip-compressed": //zip
-        // eslint-disable-next-line no-lone-blocks
-        {
-          return (
-            <Icon>
-              <GrDocumentZip color="black" size="40" />
-            </Icon>
-          );
-        }
-        break;
-      case "application/pdf": //pdf
-        // eslint-disable-next-line no-lone-blocks
-        {
-          return (
-            <Icon>
-              <FaFilePdf color="black" size="40" />
-            </Icon>
-          );
-        }
-        break;
-        case 'application/msword': //doc
-        // eslint-disable-next-line no-lone-blocks
-        {
-          return (
-            <Icon>
-              <SiMicrosoftword color="black" size="40" />
-            </Icon>
-          );
-        }
-        break;
-      case "application/vnd.openxmlformats-officedocument.wordprocessingml.document" : //docx
-        // eslint-disable-next-line no-lone-blocks
-        {
-          return (
-            <Icon>
-              <SiMicrosoftword color="black" size="40" />
-            </Icon>
-          );
-        }
-        break;
-        case "application/vnd.ms-excel": //xls
-        // eslint-disable-next-line no-lone-blocks
-        {
-          return (
-            <Icon>
-              <SiMicrosoftexcel color="black" size="40" />
-            </Icon>
-          );
-        }
-        case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": //xlsx
-        // eslint-disable-next-line no-lone-blocks
-        {
-          return (
-            <Icon>
-              <SiMicrosoftexcel color="black" size="40" />
-            </Icon>
-          );
-        }
-
-
-        break;
-        case "application/vnd.ms-powerpoint": //ppt
-        // eslint-disable-next-line no-lone-blocks
-        {
-          return (
-            <Icon>
-              <SiMicrosoftpowerpoint color="black" size="40" />
-            </Icon>
-          );
-        }
-        break;
-        case "application/vnd.openxmlformats-officedocument.presentationml.presentation": //pptx
-        // eslint-disable-next-line no-lone-blocks
-        {
-          return (
-            <Icon>
-              <SiMicrosoftpowerpoint color="black" size="40" />
-            </Icon>
-          );
-        }
-        break;
-        case "application/x-msdownload":
-          {
-            return (
-              <Icon>
-                <BsFiletypeExe color="black" size="40" />
-              </Icon>
-            );
-          }
-
-      default:
-
-    }
-    let a  = ".zip, .exe, ";
-  }
 
   return (
     <>
@@ -180,7 +62,7 @@ const ModalSendMessage = ({
                     {Array.isArray(image) && image.length > 0
                       ? image.map((img, index) => (
                           <div key={index} className={styles.inputWrapFiles}>
-                            {rendeerFiles(img, index)}
+                            {InputFileTypeIcons(img, index)}
                             <ProgressBar value={progressBar} />
                             <FaRegTrashAlt
                               size="30"

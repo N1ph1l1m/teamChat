@@ -42,7 +42,7 @@
 .messageBubbleDocuments {
   position: relative;
   display: inline-block;
-  width: 240px;
+  width: 280px;
   padding: 5px;
   border-radius: 20px;
   text-align: justify;
@@ -63,6 +63,7 @@
   align-items:center;
   position: relative;
   margin-bottom: 10px;
+  border:1px solid red;
 
 }
 

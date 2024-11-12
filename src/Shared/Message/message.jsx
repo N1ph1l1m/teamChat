@@ -3,6 +3,7 @@ import styles from "../../App/Styles/message.module.css";
 import Picker from "emoji-picker-react";
 import { FaArrowCircleDown } from "react-icons/fa";
 import Icon from "../icon/icon";
+import DownloadFileTypeIcons from "../FileTypeIcons/downloadFileTypeIcons";
 
 const HeaderName = ({username}) => (
   <div className={styles.bubbleNameWrap}>
@@ -57,13 +58,7 @@ const ShowDocuments = ({documents})=> {
           className={styles.documentHeaderWrap}
           key={`doc-${index}-${document.document}`}
         >
-          <Icon>
-            <FaArrowCircleDown
-              color="white"
-              size="35"
-              style={{ marginTop: "5px" }}
-            />
-          </Icon>
+          {DownloadFileTypeIcons(document)}
           <div className={styles.documentTitleUpload}>
             <a
               key={index}
