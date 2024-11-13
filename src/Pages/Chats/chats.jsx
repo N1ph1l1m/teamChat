@@ -35,7 +35,6 @@ function Chats() {
   // const [isOpenReactions, setReactions] = useState(false);
   const [selectTypeFile, setSelectTypeFile] = useState(false);
 
-
   useEffect(() => {
     async function getRoomData() {
       try {
@@ -149,10 +148,8 @@ function Chats() {
     go();
   }, [id]);
 
-
-
   const handleInputTextChange = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     setMessage(e.target.value);
   };
 
@@ -180,7 +177,7 @@ function Chats() {
               type: file.type,
             };
             prewImages.push(previewData);
-              console.log(previewData)
+            console.log(previewData);
             setImagePrew((prev) => ({
               ...prev,
               preview: [...(prev.preview || []), previewData],
@@ -268,7 +265,8 @@ function Chats() {
     try {
       let imageData = [];
       let documentsData = [];
-      if (sendImage) {   // sendImage && message || sendImage
+      if (sendImage) {
+        // sendImage && message || sendImage
         if (Array.isArray(sendImage) && sendImage.length > 0) {
           // Отправляем все изображения и ждем завершения всех запросов
           const uploadPromises = Array.from(sendImage).map(async (img) => {
@@ -305,13 +303,13 @@ function Chats() {
 
         // Отправляем сообщение через WebSocket
         chatSocket.send(JSON.stringify(messageData));
-      }else if (sendDocument) {
+      } else if (sendDocument) {
         console.log(sendDocument);
         if (Array.isArray(sendDocument) && sendDocument.length > 0) {
           const uploadPromises = Array.from(sendDocument).map(
             async (documents) => {
-              if(!documents  || documents.size  === 0 ){
-                alert( ` Пустой  "${documents.name}" не может быть отправлен`);
+              if (!documents || documents.size === 0) {
+                alert(` Пустой  "${documents.name}" не может быть отправлен`);
                 setMessage("");
                 setSendImage("");
                 setImagePrew("");
@@ -334,9 +332,7 @@ function Chats() {
                     progressEvent.loaded,
                     progressEvent.total
                   );
-                  console.log(
-                    `Документа: ${percentCompleted}% завершено`
-                  );
+                  console.log(`Документа: ${percentCompleted}% завершено`);
                 },
               });
 
@@ -354,7 +350,7 @@ function Chats() {
 
         const request_id = 1;
         const messageData = {
-           message: message  || "" ,
+          message: message || "",
           documents: documentsData || [],
           action: "create_message",
           request_id: request_id,
@@ -362,7 +358,7 @@ function Chats() {
 
         // Отправляем сообщение через WebSocket
         chatSocket.send(JSON.stringify(messageData));
-      }else{
+      } else {
         if (!isWebSocketOpen || !chatSocket) {
           console.log("WebSocket не открыт. Сообщение не отправлено.");
           return;
@@ -370,7 +366,7 @@ function Chats() {
 
         const request_id = 1;
         const messageData = {
-           message: message,
+          message: message,
           action: "create_message",
           request_id: request_id,
         };
@@ -387,13 +383,12 @@ function Chats() {
       console.error("Error sending message:", error);
 
       if (error.response) {
-        console.log('Error data:', error.response.data); // Данные об ошибке от сервера
-        console.log('Error status:', error.response.status); // Статус ошибки
-        console.log('Error headers:', error.response.headers); // Заголовки ошибки
+        console.log("Error data:", error.response.data); // Данные об ошибке от сервера
+        console.log("Error status:", error.response.status); // Статус ошибки
+        console.log("Error headers:", error.response.headers); // Заголовки ошибки
       } else {
-        console.log('Error message:', error.message);
+        console.log("Error message:", error.message);
       }
-
     } finally {
       setIsSending(false);
     }
@@ -443,15 +438,16 @@ function Chats() {
     console.log("remove " + imagePrew);
   }
 
-  const keyDownEvent = (e) =>{
+  const keyDownEvent = (e) => {
     if (e.code === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      sendMess()
-
+      sendMess();
     }
+  };
+
+  function downloadFiles() {
+    console.log("click");
   }
-
-
 
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
@@ -535,34 +531,34 @@ function Chats() {
                       {msg.user.username ===
                       localStorage.getItem("username") ? (
                         <>
-                        <Message
-                          sent
-                          avatar={authenticatedUser.photo}
-                          text={msg.text}
-                          photos={msg.images.map((image) => image.image)}
-                          documents={docs ? docs : null}
-                          time={newText}
-                          modalPhoto={modalPh}
-                          photoData={photoData}
-                          // reactionMessage={openReactions}
-                          // isOpenReactions={isOpenReactions}
-                        />
+                          <Message
+                            sent
+                            avatar={authenticatedUser.photo}
+                            text={msg.text}
+                            photos={msg.images.map((image) => image.image)}
+                            // documents={docs ? docs : null}
+                            documents={msg.documents}
+                            time={newText}
+                            modalPhoto={modalPh}
+                            photoData={photoData}
+                            download={downloadFiles}
+                            // reactionMessage={openReactions}
+                            // isOpenReactions={isOpenReactions}
+                          />
                         </>
                       ) : (
                         <Message
                           text={msg.text}
                           time={newText}
                           photos={msg.images.map((image) => image.image)}
-                          documents={docs ? docs : null}
+                          documents={msg.documents}
                           avatar={otherUserAvatar}
                           modalPhoto={modalPh}
                           photoData={photoData}
                         />
                       )}
-
                     </div>
                   );
-
                 })
             )}
           </>

@@ -74,13 +74,23 @@
   display: flex;
   flex-direction: column;
 }
+.documentTitleUpload > a{
+  text-decoration:none;
+  
+  color:white;
+}
+
 .documentTitle{
 font-size:14px;
 width: 100%;
 overflow: hidden;
 cursor: pointer;
 }
+.documentUpload{
+  display: block;
+}
 .documentUpload:hover{
+
   cursor: pointer;
   color:red;
 }
