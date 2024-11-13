@@ -9,7 +9,7 @@ import { MdOutlineEmojiEmotions } from "react-icons/md";
 import ProgressBar from "../../Shared/progressBar/progressBar";
 import EmojiPicker from "emoji-picker-react";
 import { FaRegTrashAlt } from "react-icons/fa";
-import InputFileTypeIcons from "../../Shared/FileTypeIcons/inputFileTypeIcons";
+import {InputFileTypeIcons} from "../../Shared/FileTypeIcons/downloadFileTypeIcons";
 
 
 const ModalSendMessage = ({

@@ -35,7 +35,7 @@ function ChatArea({
               type="file"
               id="documents"
               name="documents"
-              accept=".txt, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx , .zip, .exe, "
+              accept=".txt, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx , .zip, .rar, .exe, "
               onChange={documents}
               multiple
             />

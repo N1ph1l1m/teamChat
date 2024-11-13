@@ -3,7 +3,7 @@ import styles from "../../App/Styles/message.module.css";
 import Picker from "emoji-picker-react";
 import { FaArrowCircleDown } from "react-icons/fa";
 import Icon from "../icon/icon";
-import DownloadFileTypeIcons from "../FileTypeIcons/downloadFileTypeIcons";
+import {DownloadFileTypeIcons} from "../FileTypeIcons/downloadFileTypeIcons";
 
 const HeaderName = ({username}) => (
   <div className={styles.bubbleNameWrap}>
