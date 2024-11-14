@@ -35,7 +35,7 @@ function Chats() {
   // const [isOpenReactions, setReactions] = useState(false);
   const [selectTypeFile, setSelectTypeFile] = useState(false);
   const [messageMenu, setMessageMenu] = useState(false);
-  const [replyMessage, setReplyMessage] = useState({});
+  const [replyMessage, setReplyMessage] = useState([]);
 
   useEffect(() => {
     async function getRoomData() {
@@ -153,7 +153,6 @@ function Chats() {
   const handleInputTextChange = (e) => {
     e.preventDefault();
     setMessage(e.target.value);
-
   };
 
   function inputEmoji(emojiObject) {
@@ -298,7 +297,7 @@ function Chats() {
 
         const request_id = 1;
         const messageData = {
-         message: message || "",
+          message: message || "",
 
           images: imageData || [],
           action: "create_message",
@@ -368,11 +367,9 @@ function Chats() {
           return;
         }
 
-
-      //   if (replyMessage.length > 0) {
-      //      await setMessage({...message,reply_to:replyMessage.text})
-      // }
-
+        //   if (replyMessage.length > 0) {
+        //      await setMessage({...message,reply_to:replyMessage.text})
+        // }
 
         const request_id = 1;
         const messageData = {
@@ -396,6 +393,8 @@ function Chats() {
       setSendImage("");
       setImagePrew("");
       setModel(false);
+      setSelectTypeFile(false);
+      setReplyMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
 
@@ -463,22 +462,27 @@ function Chats() {
   };
 
   function setMenu() {
-    setMessageMenu(!messageMenu)
+    setMessageMenu(!messageMenu);
   }
 
   function hideMenu() {
-    setMessageMenu(false)
+    setMessageMenu(false);
   }
 
-  function repMessage(message){
-    setReplyMessage({
-      id: message.id,
-      text: message.text
-  });
+  function repMessage(message) {
+    setReplyMessage([message]);
 
-
-   console.log( replyMessage.text);
+    console.log(replyMessage);
   }
+
+  function closeReply() {
+    setReplyMessage("");
+  }
+
+  useEffect(() => {
+    console.log("Updated replyMessage:", replyMessage);
+  }, [replyMessage]);
+
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
   return (
@@ -524,6 +528,8 @@ function Chats() {
         emojiEvent={inputEmoji}
         keyDownSend={keyDownEvent}
         selectTypeFile={selectTypeFile}
+        replyMessage={replyMessage}
+        closeReplyMenu={closeReply}
         setSelect={() => setSelectTypeFile(!selectTypeFile)}
         content={
           <>
@@ -569,8 +575,7 @@ function Chats() {
                             setMenu={setMenu}
                             isShowMenu={messageMenu}
                             hiddenMenu={hideMenu}
-                            replyMessage={()=>repMessage(msg)}
-
+                            replyMessage={() => repMessage(msg)}
                           />
                         </>
                       ) : (
@@ -585,7 +590,7 @@ function Chats() {
                           setMenu={setMenu}
                           isShowMenu={messageMenu}
                           hiddenMenu={hideMenu}
-                          replyMessage={()=>repMessage(msg)}
+                          replyMessage={() => repMessage(msg)}
                         />
                       )}
                     </div>

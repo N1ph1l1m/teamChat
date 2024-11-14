@@ -1,4 +1,4 @@
-import React  from "react";
+import React from "react";
 //import Message from "../../Shared/Message/message";
 //import MessageInput from "../../Shared/inputMessage/messageInput";
 import { IoSend } from "react-icons/io5";
@@ -6,6 +6,7 @@ import styles from "../../App/Styles/chatArea.module.css";
 import Icon from "../../Shared/icon/icon";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
 import EmojiPicker from "emoji-picker-react";
+import { IoIosClose } from "react-icons/io";
 import { FaFile, FaFileImage, FaPaperclip } from "react-icons/fa";
 
 function ChatArea({
@@ -23,9 +24,9 @@ function ChatArea({
   selectTypeFile,
   setSelect,
   keyDownSend,
+  replyMessage,
+  closeReplyMenu,
 }) {
-
-
   function renderSelectTypeFile() {
     if (selectTypeFile) {
       return (
@@ -65,8 +66,37 @@ function ChatArea({
     }
     return null;
   }
-
+  function renderReplyMessage() {
+    if (!replyMessage || replyMessage.length === 0) return null;
+    return (
+      <div className={styles.replyMessageWrap}>
+        <div className={styles.replyItems}>
+          {Array.isArray(replyMessage) &&
+            replyMessage.length > 0 &&
+            replyMessage.map((reply) => (
+              <>
+                <span className={styles.replyUserName}>
+                  {reply.user.username}{" "}
+                </span>
+                <div className={styles.replyText}>
+                  <span>{reply.text}</span>
+                </div>
+              </>
+            ))}
+        </div>
+        <Icon>
+          <IoIosClose
+            style={{ cursor: "pointer" }}
+            onClick={closeReplyMenu}
+            color="black"
+            size="50"
+          />
+        </Icon>
+      </div>
+    );
+  }
   const showSelectTypeFile = renderSelectTypeFile();
+  const showReplyMessage = renderReplyMessage();
 
   return (
     <div className={styles.chatAreaWrap}>
@@ -74,9 +104,7 @@ function ChatArea({
         <div className={styles.chatHeaderItem}>
           <p>{title}</p>
         </div>
-        <div
-
-          className={styles.messages}>
+        <div className={styles.messages}>
           {content}
           <div
             className={styles.emojiWrap}
@@ -96,11 +124,8 @@ function ChatArea({
       </div>
       <div className={styles.messageInput}>
         {showSelectTypeFile}
-
-        <div
-          className={styles.inputFileWrap}
-          onClick={setSelect}
-        >
+        {showReplyMessage}
+        <div className={styles.inputFileWrap} onClick={setSelect}>
           <Icon className={styles.icon}>
             <FaPaperclip color="rgb(131, 130, 130)" size="30" />
           </Icon>
