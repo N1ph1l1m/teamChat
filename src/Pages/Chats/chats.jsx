@@ -34,6 +34,8 @@ function Chats() {
   const [progressBar, setProgressBar] = useState(0);
   // const [isOpenReactions, setReactions] = useState(false);
   const [selectTypeFile, setSelectTypeFile] = useState(false);
+  const [messageMenu, setMessageMenu] = useState(false);
+  const [replyMessage, setReplyMessage] = useState({});
 
   useEffect(() => {
     async function getRoomData() {
@@ -151,6 +153,7 @@ function Chats() {
   const handleInputTextChange = (e) => {
     e.preventDefault();
     setMessage(e.target.value);
+
   };
 
   function inputEmoji(emojiObject) {
@@ -295,7 +298,8 @@ function Chats() {
 
         const request_id = 1;
         const messageData = {
-          message: message || "",
+         message: message || "",
+
           images: imageData || [],
           action: "create_message",
           request_id: request_id,
@@ -364,12 +368,25 @@ function Chats() {
           return;
         }
 
+
+      //   if (replyMessage.length > 0) {
+      //      await setMessage({...message,reply_to:replyMessage.text})
+      // }
+
+
         const request_id = 1;
         const messageData = {
-          message: message,
+          message: message || "",
+          images: imageData || [],
+          documents: documentsData || [],
           action: "create_message",
           request_id: request_id,
+          reply_to: replyMessage ? replyMessage : null, // добавляем reply_to, если есть replyMessage
         };
+
+        if (replyMessage && replyMessage.length > 0) {
+          messageData.message = replyMessage.text; // ID или текст исходного сообщения
+        }
 
         // Отправляем сообщение через WebSocket
         chatSocket.send(JSON.stringify(messageData));
@@ -445,10 +462,23 @@ function Chats() {
     }
   };
 
-  function downloadFiles() {
-    console.log("click");
+  function setMenu() {
+    setMessageMenu(!messageMenu)
   }
 
+  function hideMenu() {
+    setMessageMenu(false)
+  }
+
+  function repMessage(message){
+    setReplyMessage({
+      id: message.id,
+      text: message.text
+  });
+
+
+   console.log( replyMessage.text);
+  }
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
   return (
@@ -519,10 +549,6 @@ function Chats() {
                   const isNewDay = previousDate !== messageDate;
                   const photoData = msg.images.map((image) => image);
 
-                  const docs = msg.documents.map((doc) =>
-                    decodeURIComponent(doc.name)
-                  );
-
                   return (
                     <div key={index}>
                       {isNewDay && (
@@ -536,14 +562,15 @@ function Chats() {
                             avatar={authenticatedUser.photo}
                             text={msg.text}
                             photos={msg.images.map((image) => image.image)}
-                            // documents={docs ? docs : null}
                             documents={msg.documents}
                             time={newText}
                             modalPhoto={modalPh}
                             photoData={photoData}
-                            download={downloadFiles}
-                            // reactionMessage={openReactions}
-                            // isOpenReactions={isOpenReactions}
+                            setMenu={setMenu}
+                            isShowMenu={messageMenu}
+                            hiddenMenu={hideMenu}
+                            replyMessage={()=>repMessage(msg)}
+
                           />
                         </>
                       ) : (
@@ -555,6 +582,10 @@ function Chats() {
                           avatar={otherUserAvatar}
                           modalPhoto={modalPh}
                           photoData={photoData}
+                          setMenu={setMenu}
+                          isShowMenu={messageMenu}
+                          hiddenMenu={hideMenu}
+                          replyMessage={()=>repMessage(msg)}
                         />
                       )}
                     </div>

@@ -1,9 +1,12 @@
 import React from "react";
 import styles from "../../App/Styles/message.module.css";
 import Picker from "emoji-picker-react";
-import { FaArrowCircleDown } from "react-icons/fa";
+import { IoIosShareAlt } from "react-icons/io";
+import { IoIosMore } from "react-icons/io";
+import { IoArrowUndoSharp , IoArrowRedoSharp  , IoCheckmarkCircleOutline } from "react-icons/io5";
 import Icon from "../icon/icon";
 import { DownloadFileTypeIcons } from "../FileTypeIcons/downloadFileTypeIcons";
+import { MdOutlineEmojiEmotions } from "react-icons/md";
 
 const HeaderName = ({ username }) => (
   <div className={styles.bubbleNameWrap}>
@@ -15,6 +18,21 @@ const ItemTime = ({ time }) => (
     <span className={styles.bubbleTimeText}>{time}</span>
   </div>
 );
+
+
+const ShowMenu = ({ menu}) => {
+    if(!menu) return null;
+  return (
+    <>
+  <ul className={styles.moreMenu} >
+      <li><IoArrowRedoSharp  color="rgb(117, 117, 117)"  size ="20" style={{marginRight:"4px"}}/><span>Переслать</span></li>
+      <li><IoCheckmarkCircleOutline  color="rgb(117, 117, 117)"  size ="20" style={{marginRight:"4px"}}/><span>Выбрать</span></li>
+      <li><MdOutlineEmojiEmotions  color="rgb(117, 117, 117)"  size ="20" style={{marginRight:"4px"}}/> <span>Реакция</span></li>
+      </ul>
+    </>
+  )
+
+};
 const ShowPhoto = ({ photos, modalPhoto, photoData }) => {
   if (!Array.isArray(photos) || photos.length === 0) return null;
 
@@ -88,7 +106,10 @@ export default function Message({
   photoData,
   reactionMessage,
   isOpenReactions,
-  download,
+  setMenu,
+  isShowMenu,
+  hiddenMenu,
+  replyMessage,
 }) {
   const onlyText =
     text &&
@@ -101,10 +122,14 @@ export default function Message({
   const TextDocuments =
     text && Array.isArray(documents) && documents.length > 0;
 
-  return (
-    <div
+
+
+  return (<>
+<div
       className={`${styles.message} ${sent ? styles.sent : styles.received}`}
       onClick={reactionMessage}
+      onMouseLeave={hiddenMenu}
+
     >
       <img className={styles.messageAvatar} src={avatar} alt={"avatar user"} />
 
@@ -119,7 +144,7 @@ export default function Message({
       {onlyDocuments && (
         <div className={styles.messageBubbleDocuments}>
           <HeaderName username={username} />
-          <ShowDocuments documents={documents} download={download} />
+          <ShowDocuments documents={documents} />
           <ItemTime time={time} />
         </div>
       )}
@@ -176,6 +201,19 @@ export default function Message({
         </div>
       )}
       <Picker open={isOpenReactions} reactionsDefaultOpen={true} />
+      <div className={styles.replyToMessage}>
+      <Icon>
+      <IoArrowUndoSharp  color="rgb(117, 117, 117)"  size ="20" onClick={replyMessage}/>
+      <IoIosMore   color="rgb(117, 117, 117)" size ="20" onClick={setMenu}/>
+      </Icon>
+      <ShowMenu menu={isShowMenu}/>
+      </div>
+
+
+
     </div>
+
+  </>
+
   );
 }

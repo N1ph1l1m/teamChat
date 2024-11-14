@@ -5,6 +5,8 @@
   align-items: flex-end;
   margin-bottom: 10px;
   position: relative;
+  width: 480px;
+  border:1px solid blue;
 }
 .messageAvatar {
   border: 1px solid black;
@@ -24,7 +26,6 @@
   border-radius: 20px;
   text-align: justify;
   overflow: hidden;
-  border:1px solid red;
 }
 
 .sent .messageBubbleText {
@@ -63,8 +64,6 @@
   align-items:center;
   position: relative;
   margin-bottom: 10px;
-  border:1px solid red;
-
 }
 
 .documentTitleUpload{
@@ -76,7 +75,7 @@
 }
 .documentTitleUpload > a{
   text-decoration:none;
-  
+
   color:white;
 }
 
@@ -90,7 +89,6 @@ cursor: pointer;
   display: block;
 }
 .documentUpload:hover{
-
   cursor: pointer;
   color:red;
 }
@@ -319,4 +317,72 @@ cursor: pointer;
 
 .messageBubbleAll > .wrapPhotoOdd > img:last-child {
   border-radius: 0px;
+}
+
+
+
+.menuWrap{
+  position: relative;
+ }
+ .moreMenu{
+   position: absolute;
+   width: 110px;
+   padding: 0px;
+   border:1px solid rgb(212, 212, 212);
+   color:black;
+   text-decoration: none;
+   list-style-type: none;
+   bottom:1px;
+   left:  45px;
+   background-color:#FFFFFF;
+   z-index: 2;
+   border-radius:10px;
+
+ }
+ .moreMenu > li{
+   display: flex;
+   justify-content: space-around;
+   align-items: center;
+   margin-bottom: 5px;
+
+ }
+ .moreMenu > li > span{
+ width: 80px;
+ text-align: left;
+
+ font-size: 14px;
+ }
+ .moreMenu > li:hover{
+   cursor: pointer;
+   background-color:rgb(212, 212, 212);
+   width: 100%;
+   /* border-radius:10px; */
+ }
+
+ .replyToMessage{
+  display: none;
+  border:1px solid #FFFFFF;
+  border-radius:9px;
+  width: 50px;
+  height: 22px;
+  margin-left: 5px;
+  padding: 0px;
+  background-color:#FFFFFF;
+  position: relative;
+}
+.replyToMessage > i :first-child:hover{
+  background-color:rgb(212, 212, 212);
+  cursor: pointer;
+  border-radius:9px 0px 0px 9px;
+
+  /* width: 40px; */
+}
+.replyToMessage > i :nth-child(2):hover{
+  background-color:rgb(212, 212, 212);
+  border-radius:0px 10px 10px 0px;
+  cursor: pointer;
+}
+
+.message:hover  .replyToMessage {
+    display: block;
 }
