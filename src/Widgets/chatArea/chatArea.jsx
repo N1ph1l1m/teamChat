@@ -27,6 +27,7 @@ function ChatArea({
   replyMessage,
   closeReplyMenu,
 }) {
+  const autUsr = localStorage.getItem("username");
   function renderSelectTypeFile() {
     if (selectTypeFile) {
       return (
@@ -64,26 +65,51 @@ function ChatArea({
         </div>
       );
     }
-    return null;
+    // return null;
+  }
+
+  function mediaReplyMessage(reply, text , textS){
+    if(reply.length === 1 ){
+      return(<>
+      <span style={{marginLeft:"5px",color:"#390cce", cursor:"pointer"}}>{text}</span>
+      </>)
+    }
+    if(reply.length >1){
+        return(
+        <>
+          <span style={{marginLeft:"5px", color:"#390cce", cursor:"pointer"}} >{textS}</span>
+        </>
+      )
+    }
+
+
+
+
   }
   function renderReplyMessage() {
-    if (!replyMessage || replyMessage.length === 0) return null;
+    if (!replyMessage || !Array.isArray(replyMessage) || replyMessage.length === 0) return null;
+
     return (
       <div className={styles.replyMessageWrap}>
-        <div className={styles.replyItems}>
-          {Array.isArray(replyMessage) &&
-            replyMessage.length > 0 &&
+          {Array.isArray(replyMessage) && replyMessage.length > 0 &&
             replyMessage.map((reply) => (
-              <>
+        <div className={styles.replyItems} >
+
                 <span className={styles.replyUserName}>
-                  {reply.user.username}{" "}
+                  {reply.user.username}
                 </span>
+
                 <div className={styles.replyText}>
                   <span>{reply.text}</span>
+                  {mediaReplyMessage(reply.photos,"Фотография")}
+                  {mediaReplyMessage(reply.photos,"", "Фотографии")}
+                  {mediaReplyMessage(reply.documents,"Документ")}
+                  {mediaReplyMessage(reply.documents,"", "Документы")}
                 </div>
-              </>
+
+              </div>
             ))}
-        </div>
+
         <Icon>
           <IoIosClose
             style={{ cursor: "pointer" }}

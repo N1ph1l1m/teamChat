@@ -36,6 +36,8 @@ function Chats() {
   const [selectTypeFile, setSelectTypeFile] = useState(false);
   const [messageMenu, setMessageMenu] = useState(false);
   const [replyMessage, setReplyMessage] = useState([]);
+  const [replyMessagePrew, setReplyMessagePrew] = useState([]);
+
 
   useEffect(() => {
     async function getRoomData() {
@@ -260,6 +262,7 @@ function Chats() {
   }
 
   async function sendMess() {
+    console.log(replyMessage)
     if (isSending) return;
     setIsSending(true);
     // console.log(sendImage);
@@ -367,9 +370,7 @@ function Chats() {
           return;
         }
 
-        //   if (replyMessage.length > 0) {
-        //      await setMessage({...message,reply_to:replyMessage.text})
-        // }
+
 
         const request_id = 1;
         const messageData = {
@@ -378,12 +379,12 @@ function Chats() {
           documents: documentsData || [],
           action: "create_message",
           request_id: request_id,
-          reply_to: replyMessage ? replyMessage : null, // добавляем reply_to, если есть replyMessage
+          reply_to: replyMessage ? replyMessage : null,
         };
 
-        if (replyMessage && replyMessage.length > 0) {
-          messageData.message = replyMessage.text; // ID или текст исходного сообщения
-        }
+        // if (replyMessage && replyMessage.length > 0) {
+        //   messageData.message = replyMessage.text; // ID или текст исходного сообщения
+        // }
 
         // Отправляем сообщение через WebSocket
         chatSocket.send(JSON.stringify(messageData));
@@ -395,6 +396,7 @@ function Chats() {
       setModel(false);
       setSelectTypeFile(false);
       setReplyMessage("");
+      setReplyMessagePrew("")
     } catch (error) {
       console.error("Error sending message:", error);
 
@@ -470,13 +472,27 @@ function Chats() {
   }
 
   function repMessage(message) {
-    setReplyMessage([message]);
+     setReplyMessage(message.id)
 
+    // setReplyMessage([{
+    //   id:message.id
+    // }
+    // ])
+
+    setReplyMessagePrew([{
+      id:message.id,
+      user:message.user,
+      text:message.text,
+      photos:message.images,
+      documents:message.documents,
+    }
+    ])
     console.log(replyMessage);
   }
 
   function closeReply() {
     setReplyMessage("");
+    setReplyMessagePrew("");
   }
 
   useEffect(() => {
@@ -528,7 +544,7 @@ function Chats() {
         emojiEvent={inputEmoji}
         keyDownSend={keyDownEvent}
         selectTypeFile={selectTypeFile}
-        replyMessage={replyMessage}
+        replyMessage={replyMessagePrew}
         closeReplyMenu={closeReply}
         setSelect={() => setSelectTypeFile(!selectTypeFile)}
         content={

@@ -5,7 +5,7 @@
   align-items: flex-end;
   margin-bottom: 10px;
   position: relative;
-  width: 480px;
+  width: 510px;
   /* border:1px solid blue; */
 }
 .messageAvatar {
@@ -358,7 +358,6 @@ cursor: pointer;
    width: 100%;
    /* border-radius:10px; */
  }
-
  .replyToMessage{
   display: none;
   border:1px solid #FFFFFF;
@@ -373,9 +372,7 @@ cursor: pointer;
 .replyToMessage > i :first-child:hover{
   background-color:rgb(212, 212, 212);
   cursor: pointer;
-  border-radius:9px 0px 0px 9px;
-
-  /* width: 40px; */
+  border-radius:9px 0px 0px 9px
 }
 .replyToMessage > i :nth-child(2):hover{
   background-color:rgb(212, 212, 212);
