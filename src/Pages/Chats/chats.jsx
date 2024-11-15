@@ -571,6 +571,8 @@ function Chats() {
                   const isNewDay = previousDate !== messageDate;
                   const photoData = msg.images.map((image) => image);
 
+
+                  console.log(typeof(msg.reply_to))
                   return (
                     <div key={index}>
                       {isNewDay && (
@@ -592,6 +594,7 @@ function Chats() {
                             isShowMenu={messageMenu}
                             hiddenMenu={hideMenu}
                             replyMessage={() => repMessage(msg)}
+                            reply = {msg.reply_to}
                           />
                         </>
                       ) : (
@@ -607,6 +610,7 @@ function Chats() {
                           isShowMenu={messageMenu}
                           hiddenMenu={hideMenu}
                           replyMessage={() => repMessage(msg)}
+                          reply = {msg}
                         />
                       )}
                     </div>

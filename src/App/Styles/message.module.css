@@ -27,6 +27,14 @@
   text-align: justify;
   overflow: hidden;
 }
+.messageBubbleText > p {
+  border: 1px solid red;
+  display: block;
+  /* min-height: 10px; */
+  position: relative;
+  word-wrap: break-word;
+  white-space: normal;
+}
 
 .sent .messageBubbleText {
   background-color: #390cce;

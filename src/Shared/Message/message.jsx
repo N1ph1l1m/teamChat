@@ -110,6 +110,7 @@ export default function Message({
   isShowMenu,
   hiddenMenu,
   replyMessage,
+  reply,
 }) {
   const onlyText =
     text &&
@@ -136,7 +137,21 @@ export default function Message({
       {onlyText && (
         <div className={styles.messageBubbleText}>
           <HeaderName username={username} />
-          <span>{text}</span>
+          <p>{text}</p>
+
+          {reply ? (
+  <div key={reply.id}>
+    <span>{reply.text}</span>
+    {reply.reply_to && (
+      <div>
+        <span>Reply to: {reply.reply_to.text}</span> {/* Здесь выводится текст ответа */}
+        <span>Reply ID: {reply.reply_to.id}</span>  {/* Здесь выводится ID ответа */}
+      </div>
+    )}
+  </div>
+) : (
+  <span></span> // или другое сообщение, если нет ответов
+)}
           <ItemTime time={time} />
         </div>
       )}
@@ -148,6 +163,9 @@ export default function Message({
           <ItemTime time={time} />
         </div>
       )}
+
+
+
 
       {TextDocuments && (
         <div className={styles.messageBubbleDocuments}>
