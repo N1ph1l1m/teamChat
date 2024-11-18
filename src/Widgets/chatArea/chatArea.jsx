@@ -93,7 +93,9 @@ function ChatArea({
       <div className={styles.replyMessageWrap}>
           {Array.isArray(replyMessage) && replyMessage.length > 0 &&
             replyMessage.map((reply) => (
-        <div className={styles.replyItems} >
+        <div className={styles.replyItems} style={reply.user.username === autUsr ?
+          {borderLeft:"3px solid #390cce"}:
+          {borderLeft:"3px solid #d3cdcd"} } >
 
                 <span className={styles.replyUserName}>
                   {reply.user.username}

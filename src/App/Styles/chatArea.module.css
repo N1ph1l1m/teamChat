@@ -79,7 +79,7 @@
     width: 90%;
     height: 90%;
     overflow: hidden;
-    /* border-left:2px solid #390cce; */
+    border-left:2px solid #390cce;
     padding-left: 5px;
     display: flex;
     flex-direction: column;
@@ -89,7 +89,6 @@
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 5px;
-
 }
 
 .replyText{

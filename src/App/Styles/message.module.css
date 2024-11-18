@@ -28,7 +28,7 @@
   overflow: hidden;
 }
 .messageBubbleText > p {
-  border: 1px solid red;
+  /* border: 1px solid red; */
   display: block;
   /* min-height: 10px; */
   position: relative;
@@ -37,10 +37,11 @@
 }
 
 .sent .messageBubbleText {
-  background-color: #390cce;
-  color: #ffffff;
-  border-bottom-left-radius: 0;
+  background-color: #a5d8ff;
+  color: black;
+  border-bottom-left-radius: 0px;
 }
+
 .received .messageBubbleText    {
   background-color: #d3cdcd;
   border-bottom-left-radius: 0;
@@ -101,8 +102,8 @@ cursor: pointer;
   color:red;
 }
 .sent .messageBubbleDocuments {
-  background-color: #390cce;
-  color: #ffffff;
+  background-color: #a5d8ff;;
+  color: black;
   border-bottom-left-radius: 0;
 }
 .received .messageBubbleDocuments{
@@ -110,10 +111,6 @@ cursor: pointer;
   border-bottom-left-radius: 0;
   color: black;
 }
-
-
-
-
 
 .bubbleNameWrap {
   display: flex;
@@ -282,8 +279,8 @@ cursor: pointer;
 
 .sent > .messageBubbleAll > .bubbleText {
   width: 403px;
-  background-color: #390cce;
-  color: #ffffff;
+  background-color: #a5d8ff;
+  color: black;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 10px;
   padding: 5px;
@@ -291,7 +288,7 @@ cursor: pointer;
 }
 .received > .messageBubbleAll > .bubbleText {
   width: 403px;
-  background-color: #d3cdcd;
+  background-color: #b3e6b3;
   color: black;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 10px;
@@ -366,7 +363,10 @@ cursor: pointer;
    width: 100%;
    /* border-radius:10px; */
  }
- .replyToMessage{
+
+
+
+ .replyToMessageButton{
   display: none;
   border:1px solid #FFFFFF;
   border-radius:9px;
@@ -377,17 +377,17 @@ cursor: pointer;
   background-color:#FFFFFF;
   position: relative;
 }
-.replyToMessage > i :first-child:hover{
+.replyToMessageButton > i :first-child:hover{
   background-color:rgb(212, 212, 212);
   cursor: pointer;
   border-radius:9px 0px 0px 9px
 }
-.replyToMessage > i :nth-child(2):hover{
+.replyToMessageButton > i :nth-child(2):hover{
   background-color:rgb(212, 212, 212);
   border-radius:0px 10px 10px 0px;
   cursor: pointer;
 }
 
-.message:hover  .replyToMessage {
+.message:hover  .replyToMessageButton {
     display: block;
 }

@@ -7,20 +7,56 @@ import { IoArrowUndoSharp , IoArrowRedoSharp  , IoCheckmarkCircleOutline } from 
 import Icon from "../icon/icon";
 import { DownloadFileTypeIcons } from "../FileTypeIcons/downloadFileTypeIcons";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
-
-const HeaderName = ({ username }) => (
-  <div className={styles.bubbleNameWrap}>
+import { getData } from "../../Entities/api/getUserList";
+import ReplyMessage from "../ReplyMessage/ReplyMessage";
+export const HeaderName = ({ username }) => {
+  return(
+    <div className={styles.bubbleNameWrap}>
     <span className={styles.bubbleNameText}>{username}</span>
   </div>
-);
-const ItemTime = ({ time }) => (
-  <div className={styles.bubbleTimeWrap}>
+  )
+
+};
+const ItemTime = ({ time }) => {
+return(
+ <div className={styles.bubbleTimeWrap}>
     <span className={styles.bubbleTimeText}>{time}</span>
   </div>
-);
+)
+};
 
 
-const ShowMenu = ({ menu}) => {
+
+// const ReplyMessage= ({reply})=>{
+//  return(
+//   <>
+//   { reply ? (
+//   <div key={reply.id}>
+//     {reply.reply_to && (
+//       <div className={styles.replyMessageWrap}>
+//         <HeaderName username={reply.reply_to.user.username}/>
+//         <span>{reply.reply_to.text}</span>
+//         {Array.isArray(reply.reply_to.images) && reply.reply_to.images.length > 0 ? (
+//                 <img
+//                   src={reply.reply_to.images[0].image}
+//                   alt="Reply Photo"
+//                   style={{width:"50px", height:"50px"}}
+//                 />
+//               ) : (
+//                 <span></span>
+//               )}
+
+//       </div>
+//     )}
+//   </div>
+// ) : (<span></span>
+// )}
+// </>
+//  )
+// }
+
+
+const ShowMenu = ({ menu }) => {
     if(!menu) return null;
   return (
     <>
@@ -66,7 +102,7 @@ const ShowPhoto = ({ photos, modalPhoto, photoData }) => {
   );
 };
 
-const ShowDocuments = ({ documents }) => {
+ export const ShowDocuments = ({ documents }) => {
   if (!documents) return null;
 
   return (
@@ -136,22 +172,8 @@ export default function Message({
 
       {onlyText && (
         <div className={styles.messageBubbleText}>
-          <HeaderName username={username} />
+       <ReplyMessage reply={reply} />
           <p>{text}</p>
-
-          {reply ? (
-  <div key={reply.id}>
-    <span>{reply.text}</span>
-    {reply.reply_to && (
-      <div>
-        <span>Reply to: {reply.reply_to.text}</span> {/* Здесь выводится текст ответа */}
-        <span>Reply ID: {reply.reply_to.id}</span>  {/* Здесь выводится ID ответа */}
-      </div>
-    )}
-  </div>
-) : (
-  <span></span> // или другое сообщение, если нет ответов
-)}
           <ItemTime time={time} />
         </div>
       )}
@@ -159,7 +181,8 @@ export default function Message({
       {onlyDocuments && (
         <div className={styles.messageBubbleDocuments}>
           <HeaderName username={username} />
-          <ShowDocuments documents={documents} />
+          <ReplyMessage reply={reply}  />
+          <ShowDocuments documents={documents}/>
           <ItemTime time={time} />
         </div>
       )}
@@ -170,8 +193,10 @@ export default function Message({
       {TextDocuments && (
         <div className={styles.messageBubbleDocuments}>
           <HeaderName username={username} />
+          <ReplyMessage reply={reply}  />
           <ShowDocuments documents={documents} />
           <span> {text}</span>
+
           <ItemTime time={time} />
         </div>
       )}
@@ -183,6 +208,8 @@ export default function Message({
             modalPhoto={modalPhoto}
             photoData={photoData}
           />
+              <ReplyMessage reply={reply}  username={username}  />
+
           <div className={styles.bubbleTimeWrapPhoto}>
             <span className={styles.bubbleTimeTextPhoto}>{time}</span>
           </div>
@@ -199,6 +226,8 @@ export default function Message({
           />
           <div className={styles.bubbleText} style={{ width: "300px" }}>
             <span>{text}</span>
+            <ReplyMessage reply={reply}  username={username}  />
+
             <ItemTime time={time} />
           </div>
         </div>
@@ -213,13 +242,14 @@ export default function Message({
             photoData={photoData}
           />
           <div className={styles.bubbleText}>
+          <ReplyMessage reply={reply}  username={username}/>
             <span>{text}</span>
             <ItemTime time={time} />
           </div>
         </div>
       )}
       <Picker open={isOpenReactions} reactionsDefaultOpen={true} />
-      <div className={styles.replyToMessage}>
+      <div className={styles.replyToMessageButton}>
       <Icon>
       <IoArrowUndoSharp  color="rgb(117, 117, 117)"  size ="20" onClick={replyMessage}/>
       <IoIosMore   color="rgb(117, 117, 117)" size ="20" onClick={setMenu}/>
