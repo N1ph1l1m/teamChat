@@ -17,7 +17,7 @@ const ModalSendMessage = ({
   isOpen,
   onCancel,
   onSubmit,
-  image,
+  inputPrewiew,
   input,
   inputValue,
   keyDownSend,
@@ -59,8 +59,8 @@ const ModalSendMessage = ({
               <div className={styles.modalBody}>
                 <div className={styles.wrapContentModal}>
                   <div className={styles.wrapPhoto}>
-                    {Array.isArray(image) && image.length > 0
-                      ? image.map((img, index) => (
+                    {Array.isArray(inputPrewiew) && inputPrewiew.length > 0
+                      ? inputPrewiew.map((img, index) => (
                           <div key={index} className={styles.inputWrapFiles}>
                             {InputFileTypeIcons(img, index)}
                             <ProgressBar value={progressBar} />

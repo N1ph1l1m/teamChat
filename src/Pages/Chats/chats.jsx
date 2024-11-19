@@ -21,7 +21,7 @@ function Chats() {
   const [isWebSocketOpen, setIsWebSocketOpen] = useState(false);
   const [chatSocket, setChatSocket] = useState(null);
   const [roomList, setRoomList] = useState(null);
-  const [imagePrew, setImagePrew] = useState({});
+  const [inputPrew, setInputPrew] = useState({});
   const [otherUserAvatar, setOtherUserAvatar] = useState(null);
   const [authUser, setAuthUser] = useState([]);
   const [modal, setModel] = useState(false);
@@ -163,7 +163,13 @@ function Chats() {
 
   const handleInputImages = (e) => {
     try {
-      if (e.target.files.length > 0) {
+      if(e.target.files.length > 10){
+        alert("Можно отправить только 10 файлов")
+        setModel(false);
+        setSendImage("")
+        return null;
+      }
+
         setModel(true);
         const files = Array.from(e.target.files);
         console.log(files);
@@ -182,7 +188,7 @@ function Chats() {
             };
             prewImages.push(previewData);
             console.log(previewData);
-            setImagePrew((prev) => ({
+            setInputPrew((prev) => ({
               ...prev,
               preview: [...(prev.preview || []), previewData],
             }));
@@ -191,19 +197,26 @@ function Chats() {
           reader.readAsDataURL(file);
         });
 
-        if (imagePrew && imagePrew.preview) {
-          console.log("Предпросмотр изображений:", imagePrew.previews);
+        if (inputPrew && inputPrew.preview) {
+          console.log("Предпросмотр изображений:", inputPrew.previews);
         }
-      } else {
-        console.log("Файл не выбран");
-      }
+
+
     } catch (error) {
       console.error(error);
     }
   };
   const handleInputDocuments = (e) => {
     try {
-      if (e.target.files.length > 0) {
+
+      if(e.target.files.length > 10){
+        alert("Можно отправить только 10 файлов")
+        setModel(false);
+        setSendDocument("")
+        return null;
+      }
+
+
         setModel(true);
         const files = Array.from(e.target.files);
         setSendDocument(files);
@@ -220,7 +233,7 @@ function Chats() {
             prewImages.push(previewData);
             console.log(previewData);
 
-            setImagePrew((prev) => ({
+            setInputPrew((prev) => ({
               ...prev,
               preview: [...(prev.preview || []), previewData],
             }));
@@ -232,9 +245,6 @@ function Chats() {
         if (prewImages.length > 0) {
           console.log("Предпросмотр изображений с типами:", prewImages);
         }
-      } else {
-        console.log("Файл не выбран");
-      }
     } catch (error) {
       console.error(error);
     }
@@ -242,7 +252,7 @@ function Chats() {
 
   function handleCancelAddPhoto() {
     setModel(false);
-    setImagePrew("");
+    setInputPrew("");
     setProgressBar(0);
   }
 
@@ -264,6 +274,7 @@ function Chats() {
   async function sendMess() {
     console.log(replyMessage)
     if (isSending) return;
+    // if(!message) return;
     setIsSending(true);
     // console.log(sendImage);
 
@@ -298,10 +309,10 @@ function Chats() {
           return;
         }
 
-        const request_id = 1;
+        const request_id = 1
+
         const messageData = {
           message: message || "",
-
           images: imageData || [],
           action: "create_message",
           request_id: request_id,
@@ -318,7 +329,7 @@ function Chats() {
                 alert(` Пустой  "${documents.name}" не может быть отправлен`);
                 setMessage("");
                 setSendImage("");
-                setImagePrew("");
+                setInputPrew("");
                 setModel(false);
                 return null;
               }
@@ -373,6 +384,7 @@ function Chats() {
 
 
         const request_id = 1;
+        if(!message) return null;
         const messageData = {
           message: message || "",
           images: imageData || [],
@@ -382,17 +394,13 @@ function Chats() {
           reply_to: replyMessage ? replyMessage : null,
         };
 
-        // if (replyMessage && replyMessage.length > 0) {
-        //   messageData.message = replyMessage.text; // ID или текст исходного сообщения
-        // }
 
-        // Отправляем сообщение через WebSocket
         chatSocket.send(JSON.stringify(messageData));
       }
 
       setMessage("");
       setSendImage("");
-      setImagePrew("");
+      setInputPrew("");
       setModel(false);
       setSelectTypeFile(false);
       setReplyMessage("");
@@ -452,8 +460,8 @@ function Chats() {
   function openModelEmoji() {
     setModelEmoji(!isOpenModelEmoji);
   }
-  function removeElementModal(imagePrew) {
-    console.log("remove " + imagePrew);
+  function removeElementModal(inputPrew) {
+    console.log("remove " + inputPrew);
   }
 
   const keyDownEvent = (e) => {
@@ -507,7 +515,7 @@ function Chats() {
         title="Отправить сообщение "
         onCancel={handleCancelAddPhoto}
         onSubmit={sendMess}
-        image={imagePrew.preview}
+        inputPrewiew={inputPrew.preview}
         input={handleInputTextChange}
         inputValue={message}
         keyDownSend={keyDownEvent}

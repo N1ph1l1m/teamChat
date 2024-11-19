@@ -73,8 +73,11 @@
   align-items:center;
   position: relative;
   margin-bottom: 10px;
+  color:black;
 }
-
+.documentHeaderWrap > span{
+  color:black;
+}
 .documentTitleUpload{
   margin-left: 5px;
   width: 80%;
@@ -96,6 +99,7 @@ cursor: pointer;
 }
 .documentUpload{
   display: block;
+  color:black;
 }
 .documentUpload:hover{
   cursor: pointer;
@@ -288,7 +292,7 @@ cursor: pointer;
 }
 .received > .messageBubbleAll > .bubbleText {
   width: 403px;
-  background-color: #b3e6b3;
+  background-color: #d3cdcd;
   color: black;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 10px;

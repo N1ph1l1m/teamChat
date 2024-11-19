@@ -27,33 +27,6 @@ return(
 
 
 
-// const ReplyMessage= ({reply})=>{
-//  return(
-//   <>
-//   { reply ? (
-//   <div key={reply.id}>
-//     {reply.reply_to && (
-//       <div className={styles.replyMessageWrap}>
-//         <HeaderName username={reply.reply_to.user.username}/>
-//         <span>{reply.reply_to.text}</span>
-//         {Array.isArray(reply.reply_to.images) && reply.reply_to.images.length > 0 ? (
-//                 <img
-//                   src={reply.reply_to.images[0].image}
-//                   alt="Reply Photo"
-//                   style={{width:"50px", height:"50px"}}
-//                 />
-//               ) : (
-//                 <span></span>
-//               )}
-
-//       </div>
-//     )}
-//   </div>
-// ) : (<span></span>
-// )}
-// </>
-//  )
-// }
 
 
 const ShowMenu = ({ menu }) => {
@@ -120,7 +93,7 @@ const ShowPhoto = ({ photos, modalPhoto, photoData }) => {
               download
               className={styles.documentTitle}
             >
-              {document.name}
+              <span style={{color:'black'}}>{document.name}</span>
               <span className={styles.documentUpload}>Загрузить</span>
             </a>
           </div>
@@ -148,6 +121,9 @@ export default function Message({
   replyMessage,
   reply,
 }) {
+
+
+
   const onlyText =
     text &&
     Array.isArray(photos) &&
@@ -196,19 +172,19 @@ export default function Message({
           <ReplyMessage reply={reply}  />
           <ShowDocuments documents={documents} />
           <span> {text}</span>
-
           <ItemTime time={time} />
         </div>
       )}
 
       {!text && photos && (
         <div className={styles.messageBublePhoto}>
+        <ReplyMessage reply={reply}/>
           <ShowPhoto
             photos={photos}
             modalPhoto={modalPhoto}
             photoData={photoData}
           />
-              <ReplyMessage reply={reply}  username={username}  />
+
 
           <div className={styles.bubbleTimeWrapPhoto}>
             <span className={styles.bubbleTimeTextPhoto}>{time}</span>
@@ -226,8 +202,7 @@ export default function Message({
           />
           <div className={styles.bubbleText} style={{ width: "300px" }}>
             <span>{text}</span>
-            <ReplyMessage reply={reply}  username={username}  />
-
+            <ReplyMessage reply={reply}/>
             <ItemTime time={time} />
           </div>
         </div>
@@ -242,7 +217,7 @@ export default function Message({
             photoData={photoData}
           />
           <div className={styles.bubbleText}>
-          <ReplyMessage reply={reply}  username={username}/>
+          <ReplyMessage reply={reply}/>
             <span>{text}</span>
             <ItemTime time={time} />
           </div>
@@ -256,9 +231,6 @@ export default function Message({
       </Icon>
       <ShowMenu menu={isShowMenu}/>
       </div>
-
-
-
     </div>
 
   </>

@@ -223,7 +223,11 @@ export function InputFileTypeIcons(img, index) {
             );
           }
       default:
-        <img className ="fileType"  src={defaultIcon} alt="default"  />
+        return (
+          <Icon>
+            <img className="fileType" src={img.content} alt="default" />
+          </Icon>
+        );
     }
   }
 
