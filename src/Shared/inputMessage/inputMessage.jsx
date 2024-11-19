@@ -4,8 +4,6 @@ import classNames from 'classnames';
 import Icon from '../icon/icon';
 import '../../App/Styles/inputMessage.scss';
 import styled from "styled-components";
-
-
 import { FaPaperclip } from "react-icons/fa";
 import { CiImageOn } from "react-icons/ci";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
@@ -59,8 +57,8 @@ const InputMessage = ({
                 attrs.required && <span className='inputRequired'>Required</span>
             }
             </LabelsWrapper>
-    
-            <textarea 
+
+            <textarea
 
                 name={id}
                 id={id}
@@ -80,8 +78,8 @@ const InputMessage = ({
                 <Icon><IoIosSend color="gray" size="20"/></Icon>
                 </div>
             </WrapIcon>
-      
-           
+
+
         </InputWrapper>
     )
 }
@@ -93,12 +91,12 @@ InputMessage.propTypes = {
     label: PropTypes.string,
     error: PropTypes.string,
   };
-  
+
   InputMessage.defaultProps = {
     className: '',
     label: '',
     error: '',
   };
 
-  
+
 export default InputMessage;

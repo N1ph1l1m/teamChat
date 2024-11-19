@@ -1,0 +1,45 @@
+.documentHeaderWrap{
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items:center;
+    position: relative;
+    margin-bottom: 10px;
+    color:black;
+  }
+  .documentHeaderWrap > span{
+    color:black;
+  }
+
+  .documentTitleUpload{
+    margin-left: 5px;
+    width: 80%;
+
+    display: flex;
+    flex-direction: column;
+  }
+  .documentTitleUpload > a{
+    text-decoration:none;
+
+    color:white;
+  }
+  .documentTitle{
+    font-size:14px;
+    width: 100%;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.documentUpload{
+    display: block;
+    color:black;
+  }
+  .documentUpload:hover{
+    cursor: pointer;
+    color:red;
+  }

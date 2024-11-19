@@ -1,0 +1,9 @@
+.bubbleTimeWrap {
+    display: flex;
+    justify-content: flex-end;
+    align-items: start;
+  }
+
+  .bubbleTimeText {
+    font-size: 12px;
+  }

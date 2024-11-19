@@ -1,0 +1,10 @@
+.bubbleNameWrap {
+    display: flex;
+    justify-content: flex-start;
+    align-items: start;
+    margin-bottom: 3px;
+  }
+  .bubbleNameText {
+    font-size: 16px;
+    font-weight: 700;
+  }

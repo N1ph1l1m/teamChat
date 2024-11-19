@@ -1,55 +1,55 @@
-.replyMessageWrap{
-    border:2px solid gray;
-    border-left:5px solid #444444;
-    background-color:#ffffff9c;
-    color:black;
-    border-radius:10px;
-    padding: 5px;
-    max-height: 100px;
-    overflow: hidden;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-   }
-.replyDocumentsItems{
-    display: flex;
-    flex-flow: row;
-    align-items:end;
+.replyMessageWrap {
+  border: 2px solid gray;
+  border-left: 5px solid #444444;
+  background-color: #ffffff9c;
+  color: black;
+  border-radius: 10px;
+  padding: 5px;
+  max-height: 100px;
+  overflow: hidden;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.replyDocumentsItems {
+  display: flex;
+  flex-flow: row;
+  align-items: end;
 }
 .replyDocumentsItems span {
-    display: block;
-    margin-bottom: 8px;
+  display: block;
+  margin-bottom: 8px;
 }
-.replyDocumentsItems >  i > img{
-    width: 40px;
-    height: 40px;
+.replyDocumentsItems > i > img {
+  width: 40px;
+  height: 40px;
 }
-.replyMessageWrapTextPhoto{
-    border:2px solid gray;
-    border-left:5px solid #444444;
-    background-color:#e6f0fa;
-    color:black;
-    border-radius:10px ;
-    padding: 3px;
-    max-height: 80px;
-    overflow: hidden;
-    display:flex;
-    flex-flow: row;
-    justify-content: flex-start;
-    align-items:flex-start;
-    object-fit: cover;
+.replyMessageWrapTextPhoto {
+  border: 2px solid gray;
+  border-left: 5px solid #444444;
+  background-color: #e6f0fa;
+  color: black;
+  border-radius: 10px;
+  padding: 3px;
+  max-height: 80px;
+  overflow: hidden;
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  object-fit: cover;
 }
-.replyMessageTexPhotoImg{
-    width: 60px;
-    height: 60px;
-    border-radius:10px;
-    margin-right: 5px;
+.replyMessageTexPhotoImg {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  margin-right: 5px;
 }
-.replyMessageTextPhotoTitle{
-    /* border:2px solid green; */
-    height: 50px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 12px;
+.replyMessageTextPhotoTitle {
+  /* border:2px solid green; */
+  height: 50px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
 }

@@ -81,10 +81,6 @@ function ChatArea({
         </>
       )
     }
-
-
-
-
   }
   function renderReplyMessage() {
     if (!replyMessage || !Array.isArray(replyMessage) || replyMessage.length === 0) return null;

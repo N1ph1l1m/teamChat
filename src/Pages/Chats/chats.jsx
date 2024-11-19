@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import ChatArea from "../../Widgets/chatArea/chatArea";
-import Message from "../../Shared/Message/message";
+import Message from "../../Widgets/Message/message";
 import Icon from "../../Shared/icon/icon";
 import { BiMessageAltX } from "react-icons/bi";
 import { getData } from "../../Entities/api/getUserList";
@@ -37,7 +37,6 @@ function Chats() {
   const [messageMenu, setMessageMenu] = useState(false);
   const [replyMessage, setReplyMessage] = useState([]);
   const [replyMessagePrew, setReplyMessagePrew] = useState([]);
-
 
   useEffect(() => {
     async function getRoomData() {
@@ -163,88 +162,86 @@ function Chats() {
 
   const handleInputImages = (e) => {
     try {
-      if(e.target.files.length > 10){
-        alert("Можно отправить только 10 файлов")
+      if (e.target.files.length > 10) {
+        alert("Можно отправить только 10 файлов");
         setModel(false);
-        setSendImage("")
+        setSendImage("");
         return null;
       }
 
-        setModel(true);
-        const files = Array.from(e.target.files);
-        console.log(files);
-        const fileType = e.target.files;
-        console.log(fileType);
-        setSendImage(files);
-        console.log("Выбранный файл изображения:", files);
+      setModel(true);
+      setSelectTypeFile(false);
+      const files = Array.from(e.target.files);
+      console.log(files);
+      const fileType = e.target.files;
+      console.log(fileType);
+      setSendImage(files);
+      console.log("Выбранный файл изображения:", files);
 
-        const prewImages = [];
-        files.forEach((file) => {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            const previewData = {
-              content: reader.result,
-              type: file.type,
-            };
-            prewImages.push(previewData);
-            console.log(previewData);
-            setInputPrew((prev) => ({
-              ...prev,
-              preview: [...(prev.preview || []), previewData],
-            }));
+      const prewImages = [];
+      files.forEach((file) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const previewData = {
+            content: reader.result,
+            type: file.type,
           };
+          prewImages.push(previewData);
+          console.log(previewData);
+          setInputPrew((prev) => ({
+            ...prev,
+            preview: [...(prev.preview || []), previewData],
+          }));
+        };
 
-          reader.readAsDataURL(file);
-        });
+        reader.readAsDataURL(file);
+      });
 
-        if (inputPrew && inputPrew.preview) {
-          console.log("Предпросмотр изображений:", inputPrew.previews);
-        }
-
-
+      if (inputPrew && inputPrew.preview) {
+        console.log("Предпросмотр изображений:", inputPrew.previews);
+      }
     } catch (error) {
       console.error(error);
     }
   };
   const handleInputDocuments = (e) => {
     try {
-
-      if(e.target.files.length > 10){
-        alert("Можно отправить только 10 файлов")
+      if (e.target.files.length > 10) {
+        alert("Можно отправить только 10 файлов");
         setModel(false);
-        setSendDocument("")
+        setSendDocument("");
         return null;
       }
 
+      setModel(true);
+      setSelectTypeFile(false);
+      const files = Array.from(e.target.files);
+      setSendDocument(files);
 
-        setModel(true);
-        const files = Array.from(e.target.files);
-        setSendDocument(files);
+      const prewImages = [];
+      files.forEach((file) => {
+        const reader = new FileReader();
 
-        const prewImages = [];
-        files.forEach((file) => {
-          const reader = new FileReader();
-
-          reader.onloadend = () => {
-            const previewData = {
-              content: reader.result,
-              type: file.type,
-            };
-            prewImages.push(previewData);
-            console.log(previewData);
-
-            setInputPrew((prev) => ({
-              ...prev,
-              preview: [...(prev.preview || []), previewData],
-            }));
+        reader.onloadend = () => {
+          const previewData = {
+            content: reader.result,
+            type: file.type,
           };
+          prewImages.push(previewData);
+          console.log(previewData);
 
-          reader.readAsDataURL(file);
-        });
+          setInputPrew((prev) => ({
+            ...prev,
+            preview: [...(prev.preview || []), previewData],
+          }));
+        };
 
-        if (prewImages.length > 0) {
-          console.log("Предпросмотр изображений с типами:", prewImages);
-        }
+        reader.readAsDataURL(file);
+      });
+
+      if (prewImages.length > 0) {
+        console.log("Предпросмотр изображений с типами:", prewImages);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -272,7 +269,7 @@ function Chats() {
   }
 
   async function sendMess() {
-    console.log(replyMessage)
+    console.log(replyMessage);
     if (isSending) return;
     // if(!message) return;
     setIsSending(true);
@@ -309,7 +306,7 @@ function Chats() {
           return;
         }
 
-        const request_id = 1
+        const request_id = 1;
 
         const messageData = {
           message: message || "",
@@ -381,10 +378,8 @@ function Chats() {
           return;
         }
 
-
-
         const request_id = 1;
-        if(!message) return null;
+        if (!message) return null;
         const messageData = {
           message: message || "",
           images: imageData || [],
@@ -393,7 +388,6 @@ function Chats() {
           request_id: request_id,
           reply_to: replyMessage ? replyMessage : null,
         };
-
 
         chatSocket.send(JSON.stringify(messageData));
       }
@@ -404,7 +398,7 @@ function Chats() {
       setModel(false);
       setSelectTypeFile(false);
       setReplyMessage("");
-      setReplyMessagePrew("")
+      setReplyMessagePrew("");
     } catch (error) {
       console.error("Error sending message:", error);
 
@@ -480,21 +474,17 @@ function Chats() {
   }
 
   function repMessage(message) {
-     setReplyMessage(message.id)
+    setReplyMessage(message.id);
 
-    // setReplyMessage([{
-    //   id:message.id
-    // }
-    // ])
-
-    setReplyMessagePrew([{
-      id:message.id,
-      user:message.user,
-      text:message.text,
-      photos:message.images,
-      documents:message.documents,
-    }
-    ])
+    setReplyMessagePrew([
+      {
+        id: message.id,
+        user: message.user,
+        text: message.text,
+        photos: message.images,
+        documents: message.documents,
+      },
+    ]);
     console.log(replyMessage);
   }
 
@@ -504,7 +494,7 @@ function Chats() {
   }
 
   useEffect(() => {
-    console.log("Updated replyMessage:", replyMessage);
+    // console.log("Updated replyMessage:", replyMessage);
   }, [replyMessage]);
 
   const userAuth = autUsr;
@@ -599,9 +589,7 @@ function Chats() {
                             isShowMenu={messageMenu}
                             hiddenMenu={hideMenu}
                             replyMessage={() => repMessage(msg)}
-                            reply = {msg}
-
-
+                            reply={msg}
                           />
                         </>
                       ) : (
@@ -617,8 +605,7 @@ function Chats() {
                           isShowMenu={messageMenu}
                           hiddenMenu={hideMenu}
                           replyMessage={() => repMessage(msg)}
-                          reply = {msg}
-
+                          reply={msg}
                         />
                       )}
                     </div>
