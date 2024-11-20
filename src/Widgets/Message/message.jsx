@@ -28,6 +28,7 @@ export default function Message({
   hiddenMenu,
   replyMessage,
   reply,
+  setReactions,
 }) {
   const onlyText =
     text &&
@@ -57,7 +58,7 @@ export default function Message({
           <div className={styles.messageBubbleText}>
             <ReplyMessage reply={reply} />
             <p>{text}</p>
-            <MessageTime time={time} />
+            <MessageTime avatar = {avatar} time={time} />
           </div>
         )}
 
@@ -95,17 +96,19 @@ export default function Message({
         )}
 
         {text && Array.isArray(photos) && photos.length === 1 && (
-          <div className={styles.messageBubbleAll}>
+          <div
+           className={`${styles.messageBubbleAll} ${styles.one}`}>
             <HeaderName username={username} />
             <MessagePhoto
               photos={photos}
               modalPhoto={modalPhoto}
               photoData={photoData}
             />
-            <div className={styles.bubbleText} style={{ width: "300px" }}>
+            <div className={styles.bubbleText} style={{width: "300px"}} >
               <p>{text}</p>
-              <ReplyMessage reply={reply} />
-              <MessageTime time={time} />
+
+              <MessageTime time={time} avatar={avatar} />
+              <ReplyMessage style={{display: "block"}}  reply={reply} />
             </div>
           </div>
         )}
@@ -135,7 +138,7 @@ export default function Message({
             />
             <IoIosMore color="rgb(117, 117, 117)" size="20" onClick={setMenu} />
           </Icon>
-          <MessageMenu menu={isShowMenu} />
+          <MessageMenu menu={isShowMenu} setReactions={setReactions} />
         </div>
       </div>
     </>

@@ -274,7 +274,6 @@ function Chats() {
   }
 
   async function sendMess() {
-    console.log(replyMessage);
     if (isSending) return;
     // if(!message) return;
     setIsSending(true);
@@ -385,6 +384,7 @@ function Chats() {
 
         const request_id = 1;
         if (!message) return null;
+        if(!message && replyMessage) return null;
         const messageData = {
           message: message || "",
           images: imageData || [],
@@ -503,7 +503,9 @@ function Chats() {
     setEmoji(false);
 
   }
-
+  function setReactions(){
+    console.log("reactions click");
+  }
   useEffect(() => {
     // console.log("Updated replyMessage:", replyMessage);
   }, [replyMessage]);
@@ -601,6 +603,7 @@ function Chats() {
                             hiddenMenu={hideMenu}
                             replyMessage={() => repMessage(msg)}
                             reply={msg}
+                            setReactions={setReactions}
                           />
                         </>
                       ) : (
@@ -617,6 +620,7 @@ function Chats() {
                           hiddenMenu={hideMenu}
                           replyMessage={() => repMessage(msg)}
                           reply={msg}
+                          setReactions={setReactions}
                         />
                       )}
                     </div>

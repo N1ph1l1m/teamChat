@@ -1,7 +1,10 @@
 .bubbleTimeWrap {
     display: flex;
     justify-content: flex-end;
-    align-items: start;
+    align-items: flex-end;
+    position: relative;
+    /* border:1px solid red; */
+
   }
 
   .bubbleTimeText {

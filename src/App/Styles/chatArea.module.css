@@ -118,8 +118,7 @@
   position: absolute;
   bottom: 70px;
   right: 30px;
-  box-sizing:border-box;
-
+  box-sizing: border-box;
 }
 
 .messageInput button {
@@ -177,8 +176,8 @@
   height: 50px;
 }
 
-.selectTypeFiles > label:hover{
-  background-color:rgb(211, 211, 211);
+.selectTypeFiles > label:hover {
+  background-color: rgb(211, 211, 211);
 }
 @media screen and (max-height: 800px) {
   .chatHeader {
