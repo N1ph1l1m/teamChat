@@ -1,11 +1,11 @@
 import React from "react";
 import styles from "../../App/Styles/message.module.css";
-import Picker from "emoji-picker-react";
+// import Picker from "emoji-picker-react";
 import { IoIosMore } from "react-icons/io";
 import { IoArrowUndoSharp } from "react-icons/io5";
 import Icon from "../../Shared/icon/icon";
 import { MessageMenu } from "../../Shared/menuMessage/menuMessage";
-import ReplyMessage from "../../Shared/ReplyMessage/ReplyMessage";
+import ReplyMessage from "../ReplyMessage/ReplyMessage";
 import { HeaderName } from "../../Shared/HeaderNameMessage/HeaderNameMessage";
 import { MessageTime } from "../../Shared/messageTime/messageTime";
 import { MessagePhoto } from "../../Shared/messagePhoto/messagePhoto";
@@ -125,7 +125,7 @@ export default function Message({
             </div>
           </div>
         )}
-        <Picker open={isOpenReactions} reactionsDefaultOpen={true} />
+
         <div className={styles.replyToMessageButton}>
           <Icon>
             <IoArrowUndoSharp

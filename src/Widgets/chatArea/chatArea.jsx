@@ -5,7 +5,9 @@ import { IoSend } from "react-icons/io5";
 import styles from "../../App/Styles/chatArea.module.css";
 import Icon from "../../Shared/icon/icon";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
-import EmojiPicker from "emoji-picker-react";
+// import EmojiPicker from "emoji-picker-react";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 import { IoIosClose } from "react-icons/io";
 import { FaFile, FaFileImage, FaPaperclip } from "react-icons/fa";
 
@@ -19,7 +21,6 @@ function ChatArea({
   sendmessage,
   isOpenEmoji,
   openEmoji,
-  closeEmoji,
   emojiEvent,
   selectTypeFile,
   setSelect,
@@ -68,45 +69,64 @@ function ChatArea({
     // return null;
   }
 
-  function mediaReplyMessage(reply, text , textS){
-    if(reply.length === 1 ){
-      return(<>
-      <span style={{marginLeft:"5px",color:"#390cce", cursor:"pointer"}}>{text}</span>
-      </>)
-    }
-    if(reply.length >1){
-        return(
+  function mediaReplyMessage(reply, text, textS) {
+    if (reply.length === 1) {
+      return (
         <>
-          <span style={{marginLeft:"5px", color:"#390cce", cursor:"pointer"}} >{textS}</span>
+          <span
+            style={{ marginLeft: "5px", color: "#390cce", cursor: "pointer" }}
+          >
+            {text}
+          </span>
         </>
-      )
+      );
+    }
+    if (reply.length > 1) {
+      return (
+        <>
+          <span
+            style={{ marginLeft: "5px", color: "#390cce", cursor: "pointer" }}
+          >
+            {textS}
+          </span>
+        </>
+      );
     }
   }
   function renderReplyMessage() {
-    if (!replyMessage || !Array.isArray(replyMessage) || replyMessage.length === 0) return null;
+    if (
+      !replyMessage ||
+      !Array.isArray(replyMessage) ||
+      replyMessage.length === 0
+    )
+      return null;
 
     return (
       <div className={styles.replyMessageWrap}>
-          {Array.isArray(replyMessage) && replyMessage.length > 0 &&
-            replyMessage.map((reply) => (
-        <div className={styles.replyItems} style={reply.user.username === autUsr ?
-          {borderLeft:"3px solid #390cce"}:
-          {borderLeft:"3px solid #d3cdcd"} } >
+        {Array.isArray(replyMessage) &&
+          replyMessage.length > 0 &&
+          replyMessage.map((reply) => (
+            <div
+              className={styles.replyItems}
+              style={
+                reply.user.username === autUsr
+                  ? { borderLeft: "3px solid #390cce" }
+                  : { borderLeft: "3px solid #d3cdcd" }
+              }
+            >
+              <span className={styles.replyUserName}>
+                {reply.user.username}
+              </span>
 
-                <span className={styles.replyUserName}>
-                  {reply.user.username}
-                </span>
-
-                <div className={styles.replyText}>
-                  <span>{reply.text}</span>
-                  {mediaReplyMessage(reply.photos,"Фотография")}
-                  {mediaReplyMessage(reply.photos,"", "Фотографии")}
-                  {mediaReplyMessage(reply.documents,"Документ")}
-                  {mediaReplyMessage(reply.documents,"", "Документы")}
-                </div>
-
+              <div className={styles.replyText}>
+                <span>{reply.text}</span>
+                {mediaReplyMessage(reply.photos, "Фотография")}
+                {mediaReplyMessage(reply.photos, "", "Фотографии")}
+                {mediaReplyMessage(reply.documents, "Документ")}
+                {mediaReplyMessage(reply.documents, "", "Документы")}
               </div>
-            ))}
+            </div>
+          ))}
 
         <Icon>
           <IoIosClose
@@ -132,16 +152,14 @@ function ChatArea({
           {content}
           <div
             className={styles.emojiWrap}
-            onMouseOver={openEmoji}
-            onMouseLeave={closeEmoji}
+            style={isOpenEmoji ? { display: "block" } : { display: "none" }}
           >
-            <EmojiPicker
-              open={isOpenEmoji}
-              width={350}
-              height={350}
-              searchDisabled={true}
-              onEmojiClick={emojiEvent}
-              skinTonesDisabled={true}
+            <Picker
+              data={data}
+              theme={"ligth"}
+              onEmojiSelect={emojiEvent}
+              locale={"ru"}
+              searchPosition={"none"}
             />
           </div>
         </div>

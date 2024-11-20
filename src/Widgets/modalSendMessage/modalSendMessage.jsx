@@ -7,7 +7,8 @@ import { IoSend } from "react-icons/io5";
 import { IoIosClose } from "react-icons/io";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
 import ProgressBar from "../../Shared/progressBar/progressBar";
-import EmojiPicker from "emoji-picker-react";
+import data from '@emoji-mart/data'
+import Picker from '@emoji-mart/react';
 import { FaRegTrashAlt } from "react-icons/fa";
 import {InputFileTypeIcons} from "../../Shared/FileTypeIcons/downloadFileTypeIcons";
 
@@ -33,18 +34,20 @@ const ModalSendMessage = ({
       {isOpen && (
         <Portal>
           <div className={styles.modalOverlay}>
-            <div className={styles.modalWrap}>
-              <div className={styles.emojiWrap} onClick={openEmoji}>
-                <EmojiPicker
-                  open={isOpenEmoji}
-                  width={300}
-                  height={300}
-                  searchDisabled={true}
-                  onEmojiClick={emojiEvent}
-                  skinTonesDisabled={true}
-                />
+            <div className={styles.modalWrap}
+            >
+              <div className={styles.emojiWrap}
+               style={isOpenEmoji ? {display:"block"} : {display:"none"}}>
+              <Picker
+              data={data}
+              theme={"ligth"}
+              onEmojiSelect={emojiEvent}
+              previewPosition={"none"}
+              searchPosition={"none"}
+              />
               </div>
-              <div className={styles.modalHeader}>
+              <div className={styles.modalHeader}
+              >
                 <h2 className={styles.modalTitle}>{title}</h2>
                 <Icon>
                   <IoIosClose
@@ -94,6 +97,7 @@ const ModalSendMessage = ({
                         onClick={onSubmit}
                         color="rgb(116, 116, 116)"
                         size="25"
+
                       />
                     </Icon>
                   </div>

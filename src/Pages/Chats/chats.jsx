@@ -157,7 +157,12 @@ function Chats() {
   };
 
   function inputEmoji(emojiObject) {
-    setMessage((prevInput) => prevInput + emojiObject.emoji);
+    const sys  = emojiObject.unified.split("_");
+    const codeArray = [];
+    sys.forEach((el)=>codeArray.push("0x" + el));
+    let emoji = String.fromCodePoint(...codeArray);
+
+    setMessage((prevInput) => prevInput +emoji);
   }
 
   const handleInputImages = (e) => {
@@ -493,6 +498,12 @@ function Chats() {
     setReplyMessagePrew("");
   }
 
+  function selectTypeSendFile(){
+    setSelectTypeFile(!selectTypeFile);
+    setEmoji(false);
+
+  }
+
   useEffect(() => {
     // console.log("Updated replyMessage:", replyMessage);
   }, [replyMessage]);
@@ -544,7 +555,7 @@ function Chats() {
         selectTypeFile={selectTypeFile}
         replyMessage={replyMessagePrew}
         closeReplyMenu={closeReply}
-        setSelect={() => setSelectTypeFile(!selectTypeFile)}
+        setSelect={selectTypeSendFile}
         content={
           <>
             {messages.filter((msg) => msg.room && msg.room.id === parseInt(id))
