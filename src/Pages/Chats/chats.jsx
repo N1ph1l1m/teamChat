@@ -39,7 +39,7 @@ function Chats() {
   const [replyMessagePrew, setReplyMessagePrew] = useState([]);
   const [emojiWindow, setEmojiWindow] = useState(false);
   const [reactionToMessage, setReactionToMessage] = useState([]);
-  const [selectReactionEmoji,setReactionEmoji] = useState([])
+  const [selectReactionEmoji, setReactionEmoji] = useState([]);
 
   useEffect(() => {
     async function getRoomData() {
@@ -160,12 +160,12 @@ function Chats() {
   };
 
   function inputEmoji(emojiObject) {
-    const sys  = emojiObject.unified.split("_");
+    const sys = emojiObject.unified.split("_");
     const codeArray = [];
-    sys.forEach((el)=>codeArray.push("0x" + el));
+    sys.forEach((el) => codeArray.push("0x" + el));
     let emoji = String.fromCodePoint(...codeArray);
 
-    setMessage((prevInput) => prevInput +emoji);
+    setMessage((prevInput) => prevInput + emoji);
   }
 
   const handleInputImages = (e) => {
@@ -387,7 +387,7 @@ function Chats() {
 
         const request_id = 1;
         if (!message) return null;
-        if(!message && replyMessage) return null;
+        if (!message && replyMessage) return null;
         const messageData = {
           message: message || "",
           images: imageData || [],
@@ -501,16 +501,13 @@ function Chats() {
     setReplyMessagePrew("");
   }
 
-  function selectTypeSendFile(){
+  function selectTypeSendFile() {
     setSelectTypeFile(!selectTypeFile);
     setEmoji(false);
-
   }
-  function  showEmojiWindows(){
-    setEmojiWindow(!emojiWindow)
+  function showEmojiWindows() {
+    setEmojiWindow(!emojiWindow);
   }
-
-
 
   useEffect(() => {
     console.log("Updated replyMessage:", replyMessage);
@@ -519,19 +516,83 @@ function Chats() {
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
 
+  // async function handleEmojiSelect(selectReactionEmoji) {
+  //   setReactionEmoji(selectReactionEmoji);
+  //   setReactionToMessage([
+  //     {
+  //       id_user: authenticatedUser.id,
+  //       emoji: selectReactionEmoji,
+  //     },
+  //   ]);
 
+  //   const url = "http://127.0.0.1:8000/chat/reaction/";
+  //   const response = await axios.post(url, {
+  //     body: {
+  //       id_user: reactionToMessage.id_user,
+  //       emoji: reactionToMessage.emoji,
+  //     },
+  //   });
+  //   console.log(response.data);
+  // }
 
+  async function handleEmojiSelect(selectReactionEmoji) {
+    // Создаем данные для отправки на сервер
+    const reactionData = {
+      id_user: authenticatedUser.id,
+      emoji: selectReactionEmoji,
+    };
 
+    try {
+      // Отправляем запрос на сервер
+      const url = "http://127.0.0.1:8000/chat/reaction/";
+      const response = await axios.post(url, reactionData);
 
+      // Обновляем состояния на основе ответа сервера
+      const newReaction = {
+        id: response.data.id, // Получаем ID из ответа
+        emoji: response.data.emoji,
+        id_user: response.data.id_user,
+      };
 
-  const handleEmojiSelect = (emoji) => {
-    setReactionEmoji(emoji)
-    setReactionToMessage([{
-      id_user:authenticatedUser.id,
-      emoji:selectReactionEmoji,
-    }])
-  };
+      setReactionEmoji(selectReactionEmoji);
+      setReactionToMessage((prevReactions) => [...prevReactions, newReaction]);
+      // создать новое веб сокет сосединение через консумерс сообщения
+      // console.log("Ответ сервера:", response.data);
+      // const request_id = 1;
+      // // Проверяем WebSocket и отправляем данные
+      // if (isWebSocketOpen && chatSocket) {
+      //   chatSocket.send(
+      //     JSON.stringify({
+      //       action: "update",
+      //       pk: 1779,
+      //       data: {
+      //         reactions: [
+      //           {
+      //             id: newReaction.id,
+      //             emoji: newReaction.emoji,
+      //             id_user: {
+      //               id: newReaction.id_user.id,
+      //               username: newReaction.id_user.username,
+      //               photo: newReaction.id_user.photo,
+      //             },
+      //           },
+      //         ],
+      //       },
+      //       request_id: request_id,
+      //     })
+      //   );
+      // } else {
+      //   console.log("WebSocket не открыт. Сообщение не отправлено.");
+      // }
 
+      return response;
+    } catch (error) {
+      console.error(
+        "Ошибка при отправке реакции:",
+        error.response?.data || error.message
+      );
+    }
+  }
 
   return (
     <>
@@ -624,7 +685,7 @@ function Chats() {
                             replyMessage={() => repMessage(msg)}
                             reply={msg}
                             setEmojiWindow={showEmojiWindows}
-                            emojiWindow = {emojiWindow}
+                            emojiWindow={emojiWindow}
                             reactions={msg.reactions}
                             onEmojiSelect={handleEmojiSelect}
                           />
@@ -644,7 +705,7 @@ function Chats() {
                           replyMessage={() => repMessage(msg)}
                           reply={msg}
                           setEmojiWindow={showEmojiWindows}
-                          emojiWindow = {emojiWindow}
+                          emojiWindow={emojiWindow}
                           reactions={msg.reactions}
                         />
                       )}
