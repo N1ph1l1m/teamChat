@@ -34,9 +34,12 @@ function Chats() {
   const [progressBar, setProgressBar] = useState(0);
   // const [isOpenReactions, setReactions] = useState(false);
   const [selectTypeFile, setSelectTypeFile] = useState(false);
-  const [messageMenu, setMessageMenu] = useState(false);
+  const [messageMenu, setMessageMenu] = useState(true);
   const [replyMessage, setReplyMessage] = useState([]);
   const [replyMessagePrew, setReplyMessagePrew] = useState([]);
+  const [emojiWindow, setEmojiWindow] = useState(false);
+  const [reactionToMessage, setReactionToMessage] = useState([]);
+  const [selectReactionEmoji,setReactionEmoji] = useState([])
 
   useEffect(() => {
     async function getRoomData() {
@@ -503,15 +506,33 @@ function Chats() {
     setEmoji(false);
 
   }
-  function setReactions(){
-    console.log("reactions click");
+  function  showEmojiWindows(){
+    setEmojiWindow(!emojiWindow)
   }
+
+
+
   useEffect(() => {
-    // console.log("Updated replyMessage:", replyMessage);
+    console.log("Updated replyMessage:", replyMessage);
   }, [replyMessage]);
 
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
+
+
+
+
+
+
+  const handleEmojiSelect = (emoji) => {
+    setReactionEmoji(emoji)
+    setReactionToMessage([{
+      id_user:authenticatedUser.id,
+      emoji:selectReactionEmoji,
+    }])
+  };
+
+
   return (
     <>
       <ModalSendMessage
@@ -570,7 +591,6 @@ function Chats() {
               </div>
             ) : (
               messages
-
                 .filter((msg) => msg.room && msg.room.id === parseInt(id))
                 .map((msg, index, arr) => {
                   const newText = msg.created_at.substring(11, 16);
@@ -603,7 +623,10 @@ function Chats() {
                             hiddenMenu={hideMenu}
                             replyMessage={() => repMessage(msg)}
                             reply={msg}
-                            setReactions={setReactions}
+                            setEmojiWindow={showEmojiWindows}
+                            emojiWindow = {emojiWindow}
+                            reactions={msg.reactions}
+                            onEmojiSelect={handleEmojiSelect}
                           />
                         </>
                       ) : (
@@ -620,7 +643,9 @@ function Chats() {
                           hiddenMenu={hideMenu}
                           replyMessage={() => repMessage(msg)}
                           reply={msg}
-                          setReactions={setReactions}
+                          setEmojiWindow={showEmojiWindows}
+                          emojiWindow = {emojiWindow}
+                          reactions={msg.reactions}
                         />
                       )}
                     </div>

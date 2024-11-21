@@ -24,7 +24,7 @@
   width: 80px;
   text-align: left;
 
-  font-size: 14px;
+  font-size: 15px;
   }
   .moreMenu > li:hover{
     cursor: pointer;
@@ -32,3 +32,15 @@
     width: 100%;
     /* border-radius:10px; */
   }
+.wrapEmoji{
+  position: absolute;
+  top:-75px;
+  left: 160px;
+  height: 100px;
+  width: 200px;
+  overflow: hidden;
+  box-sizing: border-box;
+  border-radius:10px;
+  border:1px solid rgb(212, 212, 212);
+  z-index: 100;
+}

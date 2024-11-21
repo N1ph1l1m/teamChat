@@ -7,9 +7,11 @@ import Icon from "../../Shared/icon/icon";
 import { MessageMenu } from "../../Shared/menuMessage/menuMessage";
 import ReplyMessage from "../ReplyMessage/ReplyMessage";
 import { HeaderName } from "../../Shared/HeaderNameMessage/HeaderNameMessage";
-import { MessageTime } from "../../Shared/messageTime/messageTime";
+import {MessageFooter} from "../MessageFooter/MessageFooter";
 import { MessagePhoto } from "../../Shared/messagePhoto/messagePhoto";
 import { MessageDocuments } from "../../Shared/messageDocuments/messageDocuments";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 
 export default function Message({
   text,
@@ -21,14 +23,15 @@ export default function Message({
   documents,
   modalPhoto,
   photoData,
-  reactionMessage,
-  isOpenReactions,
   setMenu,
   isShowMenu,
   hiddenMenu,
   replyMessage,
   reply,
-  setReactions,
+  reactions,
+  setEmojiWindow,
+  emojiWindow,
+  onEmojiSelect
 }) {
   const onlyText =
     text &&
@@ -45,7 +48,6 @@ export default function Message({
     <>
       <div
         className={`${styles.message} ${sent ? styles.sent : styles.received}`}
-        onClick={reactionMessage}
         onMouseLeave={hiddenMenu}
       >
         <img
@@ -58,7 +60,7 @@ export default function Message({
           <div className={styles.messageBubbleText}>
             <ReplyMessage reply={reply} />
             <p>{text}</p>
-            <MessageTime avatar = {avatar} time={time} />
+            <MessageFooter reactions={reactions} avatar = {avatar}  emoji={"😀"} time={time} />
           </div>
         )}
 
@@ -67,7 +69,7 @@ export default function Message({
             <HeaderName username={username} />
             <ReplyMessage reply={reply} />
             <MessageDocuments documents={documents} />
-            <MessageTime time={time} />
+            <MessageFooter time={time} />
           </div>
         )}
 
@@ -77,7 +79,7 @@ export default function Message({
             <ReplyMessage reply={reply} />
             <MessageDocuments documents={documents} />
             <p> {text}</p>
-            <MessageTime time={time} />
+            <MessageFooter time={time} />
           </div>
         )}
 
@@ -107,7 +109,7 @@ export default function Message({
             <div className={styles.bubbleText} style={{width: "300px"}} >
               <p>{text}</p>
 
-              <MessageTime time={time} avatar={avatar} />
+              <MessageFooter time={time} avatar={avatar} />
               <ReplyMessage style={{display: "block"}}  reply={reply} />
             </div>
           </div>
@@ -124,7 +126,7 @@ export default function Message({
             <div className={styles.bubbleText}>
               <ReplyMessage reply={reply} />
               <p>{text}</p>
-              <MessageTime time={time} />
+              <MessageFooter time={time} />
             </div>
           </div>
         )}
@@ -138,7 +140,7 @@ export default function Message({
             />
             <IoIosMore color="rgb(117, 117, 117)" size="20" onClick={setMenu} />
           </Icon>
-          <MessageMenu menu={isShowMenu} setReactions={setReactions} />
+          <MessageMenu menu={isShowMenu} setEmojiWindow={setEmojiWindow}  emojiWindow = {emojiWindow} onEmojiSelect = {onEmojiSelect}/>
         </div>
       </div>
     </>

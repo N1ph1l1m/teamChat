@@ -10,7 +10,7 @@
     align-items:flex-start;
     flex-flow: nowrap row;
     margin-right: 10px;
-    display: none;
+    /* display: none; */
     }
   .reactionEmoji{
       font-size:20px;
