@@ -422,6 +422,8 @@ function Chats() {
     }
   }
 
+
+
   function formatRoomName(roomName) {
     try {
       const username = autUsr;
@@ -513,30 +515,47 @@ function Chats() {
     console.log("Updated replyMessage:", replyMessage);
   }, [replyMessage]);
 
+
+  useEffect(() => {
+    console.log("Updated replyMessage:",  selectReactionEmoji);
+  }, [selectReactionEmoji]);
+
+
+
+
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
 
-  // async function handleEmojiSelect(selectReactionEmoji) {
-  //   setReactionEmoji(selectReactionEmoji);
-  //   setReactionToMessage([
-  //     {
-  //       id_user: authenticatedUser.id,
-  //       emoji: selectReactionEmoji,
-  //     },
-  //   ]);
 
-  //   const url = "http://127.0.0.1:8000/chat/reaction/";
-  //   const response = await axios.post(url, {
-  //     body: {
-  //       id_user: reactionToMessage.id_user,
-  //       emoji: reactionToMessage.emoji,
-  //     },
-  //   });
-  //   console.log(response.data);
-  // }
+
+  async function sendReaction(messageId, reactionId) {
+    try {
+      const url = `http://127.0.0.1:8000/chat/message/${messageId}/`;
+
+      // Создаем объект с массивом "reactions"
+      const payload = {
+        reactions: [reactionId],
+      };
+
+      // Отправляем PUT-запрос с правильным форматом данных
+      const response = await axios.put(url, payload);
+
+      if (response.status === 200 || response.status === 204) {
+        console.log("Реакция успешно обновлена:", response.data);
+        return response.data;
+      } else {
+        console.error("Неожиданный статус ответа:", response.status);
+      }
+    } catch (error) {
+      console.error(
+        "Ошибка при отправке реакции:",
+        error.response?.data || error.message
+      );
+    }
+  }
+
 
   async function handleEmojiSelect(selectReactionEmoji) {
-    // Создаем данные для отправки на сервер
     const reactionData = {
       id_user: authenticatedUser.id,
       emoji: selectReactionEmoji,
@@ -547,52 +566,35 @@ function Chats() {
       const url = "http://127.0.0.1:8000/chat/reaction/";
       const response = await axios.post(url, reactionData);
 
-      // Обновляем состояния на основе ответа сервера
-      const newReaction = {
-        id: response.data.id, // Получаем ID из ответа
-        emoji: response.data.emoji,
-        id_user: response.data.id_user,
-      };
+      // Проверяем, что ответ от сервера корректный
+      if (response.status === 201 || response.status === 200) {
+        const newReaction = {
+          id: response.data.id, // Получаем ID из ответа
+          emoji: response.data.emoji,
+          id_user: response.data.id_user,
+        };
+        // Обновляем состояния
+        setReactionEmoji(newReaction);
+        console.log(selectReactionEmoji)
 
-      setReactionEmoji(selectReactionEmoji);
-      setReactionToMessage((prevReactions) => [...prevReactions, newReaction]);
-      // создать новое веб сокет сосединение через консумерс сообщения
-      // console.log("Ответ сервера:", response.data);
-      // const request_id = 1;
-      // // Проверяем WebSocket и отправляем данные
-      // if (isWebSocketOpen && chatSocket) {
-      //   chatSocket.send(
-      //     JSON.stringify({
-      //       action: "update",
-      //       pk: 1779,
-      //       data: {
-      //         reactions: [
-      //           {
-      //             id: newReaction.id,
-      //             emoji: newReaction.emoji,
-      //             id_user: {
-      //               id: newReaction.id_user.id,
-      //               username: newReaction.id_user.username,
-      //               photo: newReaction.id_user.photo,
-      //             },
-      //           },
-      //         ],
-      //       },
-      //       request_id: request_id,
-      //     })
-      //   );
-      // } else {
-      //   console.log("WebSocket не открыт. Сообщение не отправлено.");
-      // }
+        await sendReaction( 1791, newReaction.id);
 
-      return response;
+        console.log("Новая реакция успешно создана:", newReaction);
+        return response;
+      } else {
+        console.error("Ошибка: Непредвиденный ответ от сервера", response.status);
+      }
     } catch (error) {
-      console.error(
-        "Ошибка при отправке реакции:",
-        error.response?.data || error.message
-      );
+      if (error.response) {
+        console.error("Ошибка сервера:", error.response.data);
+      } else if (error.request) {
+        console.error("Ошибка сети. Сервер не отвечает:", error.request);
+      } else {
+        console.error("Неизвестная ошибка:", error.message);
+      }
     }
   }
+
 
   return (
     <>
@@ -686,7 +688,7 @@ function Chats() {
                             reply={msg}
                             setEmojiWindow={showEmojiWindows}
                             emojiWindow={emojiWindow}
-                            reactions={msg.reactions}
+                            reactions={msg}
                             onEmojiSelect={handleEmojiSelect}
                           />
                         </>
@@ -706,7 +708,7 @@ function Chats() {
                           reply={msg}
                           setEmojiWindow={showEmojiWindows}
                           emojiWindow={emojiWindow}
-                          reactions={msg.reactions}
+                          // reactions={msg.reactions}
                         />
                       )}
                     </div>
