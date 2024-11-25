@@ -7,11 +7,12 @@ import Icon from "../../Shared/icon/icon";
 import { MessageMenu } from "../../Shared/menuMessage/menuMessage";
 import ReplyMessage from "../ReplyMessage/ReplyMessage";
 import { HeaderName } from "../../Shared/HeaderNameMessage/HeaderNameMessage";
-import {MessageFooter} from "../MessageFooter/MessageFooter";
+import { MessageFooter } from "../MessageFooter/MessageFooter";
 import { MessagePhoto } from "../../Shared/messagePhoto/messagePhoto";
 import { MessageDocuments } from "../../Shared/messageDocuments/messageDocuments";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
+import { MessageReaction } from "../../Shared/messageReaction/messageReaction";
 
 export default function Message({
   text,
@@ -62,8 +63,12 @@ export default function Message({
           <div className={styles.messageBubbleText}>
             <ReplyMessage reply={reply} />
             <p>{text}</p>
-            <MessageFooter reactions={reactions} avatar = {avatar}  emoji={"😀"} time={time}
-                onDestroyReaction ={ onDestroyReaction} />
+            <MessageFooter
+              time={time}
+              reactions={reactions}
+              avatar={avatar}
+              onDestroyReaction={onDestroyReaction}
+            />
           </div>
         )}
 
@@ -72,8 +77,12 @@ export default function Message({
             <HeaderName username={username} />
             <ReplyMessage reply={reply} />
             <MessageDocuments documents={documents} />
-            <MessageFooter time={time}
-                 onDestroyReaction ={ onDestroyReaction} />
+            <MessageFooter
+              time={time}
+              reactions={reactions}
+              avatar={avatar}
+              onDestroyReaction={onDestroyReaction}
+            />
           </div>
         )}
 
@@ -83,8 +92,12 @@ export default function Message({
             <ReplyMessage reply={reply} />
             <MessageDocuments documents={documents} />
             <p> {text}</p>
-            <MessageFooter time={time}
-                onDestroyReaction ={ onDestroyReaction} />
+            <MessageFooter
+              time={time}
+              reactions={reactions}
+              avatar={avatar}
+              onDestroyReaction={onDestroyReaction}
+            />
           </div>
         )}
 
@@ -96,27 +109,36 @@ export default function Message({
               modalPhoto={modalPhoto}
               photoData={photoData}
             />
+
             <div className={styles.bubbleTimeWrapPhoto}>
+              <MessageReaction
+                reactions={reactions}
+                avatar={avatar}
+                authUsers={authUsers}
+                onDestroyReaction={onDestroyReaction}
+              />
               <span className={styles.bubbleTimeTextPhoto}>{time}</span>
             </div>
           </div>
         )}
 
         {text && Array.isArray(photos) && photos.length === 1 && (
-          <div
-           className={`${styles.messageBubbleAll} ${styles.one}`}>
+          <div className={`${styles.messageBubbleAll} ${styles.one}`}>
             <HeaderName username={username} />
             <MessagePhoto
               photos={photos}
               modalPhoto={modalPhoto}
               photoData={photoData}
             />
-            <div className={styles.bubbleText} style={{width: "300px"}} >
+            <div className={styles.bubbleText} style={{ width: "300px" }}>
               <p>{text}</p>
-
-              <MessageFooter time={time} avatar={avatar}
-                  onDestroyReaction ={ onDestroyReaction} />
-              <ReplyMessage style={{display: "block"}}  reply={reply} />
+              <MessageFooter
+                time={time}
+                reactions={reactions}
+                avatar={avatar}
+                onDestroyReaction={onDestroyReaction}
+              />
+              <ReplyMessage style={{ display: "block" }} reply={reply} />
             </div>
           </div>
         )}
@@ -132,8 +154,10 @@ export default function Message({
             <div className={styles.bubbleText}>
               <ReplyMessage reply={reply} />
               <p>{text}</p>
-              <MessageFooter time={time}
-                  onDestroyReaction ={ onDestroyReaction} />
+              <MessageFooter
+                time={time}
+                onDestroyReaction={onDestroyReaction}
+              />
             </div>
           </div>
         )}
@@ -147,12 +171,15 @@ export default function Message({
             />
             <IoIosMore color="rgb(117, 117, 117)" size="20" onClick={setMenu} />
           </Icon>
-          <MessageMenu  authUsers = {authUsers} menu={isShowMenu} setEmojiWindow={setEmojiWindow}  emojiWindow = {emojiWindow} onEmojiSelect = {onEmojiSelect}  />
+          <MessageMenu
+            authUsers={authUsers}
+            menu={isShowMenu}
+            setEmojiWindow={setEmojiWindow}
+            emojiWindow={emojiWindow}
+            onEmojiSelect={onEmojiSelect}
+          />
         </div>
       </div>
     </>
   );
 }
-
-
-// src={reaction.id_user.photo ?  reaction.id_user.photo : `http://127.0.0.1:8000${reaction.id_user.photo}`}

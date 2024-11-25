@@ -5,8 +5,8 @@
   align-items: flex-end;
   margin-bottom: 10px;
   position: relative;
-  width: 510px;
-  /* border:1px solid blue; */
+  width: 710px;
+  border:1px solid blue;
 }
 .messageAvatar {
   border: 1px solid black;
@@ -74,6 +74,7 @@
 
 
 .messageBublePhoto {
+  border:1px solid red;
   display: flex;
   justify-content: center;
   flex-direction: row;
@@ -111,6 +112,7 @@
 }
 
 .messageBubbleAll {
+  border:1px solid green;
   position: relative;
   display: inline-block;
   width: 420px;

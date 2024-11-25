@@ -13,6 +13,7 @@ import ModalSendMessage from "../../Widgets/modalSendMessage/modalSendMessage";
 function Chats() {
   const autUsr = localStorage.getItem("username");
   const { id } = useParams();
+  const REQUEST_ID = 1;
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [sendImage, setSendImage] = useState("");
@@ -71,9 +72,7 @@ function Chats() {
       const data = await getData(`chat/room/message/`, setMessages);
       return data;
     }
-
     const room_pk = id;
-    const request_id = 1;
     const token = localStorage.getItem("token").trim();
 
     function webSocket() {
@@ -89,21 +88,21 @@ function Chats() {
           JSON.stringify({
             pk: room_pk,
             action: "join_room",
-            request_id: request_id,
+            request_id: REQUEST_ID,
           })
         );
         socket.send(
           JSON.stringify({
             pk: room_pk,
             action: "retrieve",
-            request_id: request_id,
+            request_id: REQUEST_ID,
           })
         );
         socket.send(
           JSON.stringify({
             pk: room_pk,
             action: "subscribe_to_messages_in_room",
-            request_id: request_id,
+            request_id: REQUEST_ID,
           })
         );
       };
@@ -293,30 +292,22 @@ function Chats() {
     setPhotoModal(false);
   }
 
-  const BYTES_IN_MB = 1048576;
   function updateProgress(loaded, total) {
-    const loadedMb = (loaded / BYTES_IN_MB).toFixed(1);
-    const totalSizeMb = (total / BYTES_IN_MB).toFixed(1);
     const percentLoaded = Math.round((loaded / total) * 100);
-
     setProgressBar(percentLoaded);
-
     return percentLoaded;
   }
 
   async function sendMess() {
     if (isSending) return;
-    // if(!message) return;
+
     setIsSending(true);
-    // console.log(sendImage);
 
     try {
       let imageData = [];
       let documentsData = [];
       if (sendImage) {
-        // sendImage && message || sendImage
         if (Array.isArray(sendImage) && sendImage.length > 0) {
-          // Отправляем все изображения и ждем завершения всех запросов
           const uploadPromises = Array.from(sendImage).map(async (img) => {
             console.log("Отправка изображения");
             const formData = new FormData();
@@ -341,13 +332,11 @@ function Chats() {
           return;
         }
 
-        const request_id = 1;
-
         const messageData = {
           message: message || "",
           images: imageData || [],
           action: "create_message",
-          request_id: request_id,
+          request_id: REQUEST_ID,
         };
 
         // Отправляем сообщение через WebSocket
@@ -396,16 +385,12 @@ function Chats() {
           console.log("WebSocket не открыт. Сообщение не отправлено.");
           return;
         }
-
-        const request_id = 1;
         const messageData = {
           message: message || "",
           documents: documentsData || [],
           action: "create_message",
-          request_id: request_id,
+          request_id: REQUEST_ID,
         };
-
-        // Отправляем сообщение через WebSocket
         chatSocket.send(JSON.stringify(messageData));
       } else {
         if (!isWebSocketOpen || !chatSocket) {
@@ -413,7 +398,6 @@ function Chats() {
           return;
         }
 
-        const request_id = 1;
         if (!message) return null;
         if (!message && replyMessage) return null;
         const messageData = {
@@ -421,7 +405,7 @@ function Chats() {
           images: imageData || [],
           documents: documentsData || [],
           action: "create_message",
-          request_id: request_id,
+          request_id: REQUEST_ID,
           reply_to: replyMessage ? replyMessage : null,
         };
 
@@ -536,27 +520,15 @@ function Chats() {
   function showEmojiWindows() {
     setEmojiWindow(!emojiWindow);
   }
-
-  // useEffect(() => {
-  //   console.log("Updated replyMessage:", replyMessage);
-  // }, [replyMessage]);
-
-  // useEffect(() => {
-  //   // console.log("Updated replyMessage:", selectReactionEmoji);
-  // }, [selectReactionEmoji]);
-
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
 
   async function sendReaction(messageId, reactionId) {
     try {
-
-
-      const request_id = 1;
       const messageData = {
         message_id: messageId,
         reaction_id: reactionId,
-        request_id: request_id,
+        request_id: REQUEST_ID,
         action: "update_message_reactions",
       };
 
@@ -569,34 +541,25 @@ function Chats() {
     }
   }
 
-
-  async function deleteReaction(reactionId, messageId ) {
+  async function deleteReaction(reactionId, messageId, requestion) {
     try {
+      if (!reactionId) return null;
 
-      const request_id = 1;
-      const messageData = {
-        message_id: messageId,
-        reaction_id: reactionId,
-        request_id: request_id,
-        action: "delete_reaction",
-      };
-
-      chatSocket.send(JSON.stringify(messageData));
-
-
-      console.log("click")
-      const url = `http://127.0.0.1:8000/chat/reaction/destroy/${reactionId}/`;
-      const response = await axios.delete(url);
-
-      if (response.status === 204) {
-        console.log("Реакция успешно удалена:", reactionId);
-        // await sendReaction(focusMessage);
-      } else {
-        console.error("Непредвиденный ответ от сервера", response.status);
+      if (requestion.id_user.username === autUsr) {
+        const messageData = {
+          message_id: messageId,
+          reaction_id: reactionId,
+          request_id: REQUEST_ID,
+          action: "delete_reaction",
+        };
+        chatSocket.send(JSON.stringify(messageData));
+        const url = `http://127.0.0.1:8000/chat/reaction/destroy/${reactionId}/`;
+        const response = await axios.delete(url);
+        if (response.status === 204) {
+        } else {
+          console.error("Непредвиденный ответ от сервера", response.status);
+        }
       }
-
-
-
     } catch (error) {
       console.error(
         "Ошибка при отправке реакции:",
@@ -612,24 +575,17 @@ function Chats() {
     };
 
     try {
-      // Отправляем запрос на сервер
       const url = "http://127.0.0.1:8000/chat/reaction/";
       const response = await axios.post(url, reactionData);
-
-      // Проверяем, что ответ от сервера корректный
       if (response.status === 201 || response.status === 200) {
         const newReaction = {
           id: response.data.id, // Получаем ID из ответа
           emoji: response.data.emoji,
           id_user: response.data.id_user,
         };
-        // Обновляем состояния
         setReactionEmoji(newReaction);
-        console.log(selectReactionEmoji);
-
         await sendReaction(focusMessage, newReaction.id);
-
-        console.log("Новая реакция успешно создана:", newReaction);
+        showEmojiWindows();
         return response;
       } else {
         console.error(
@@ -647,31 +603,57 @@ function Chats() {
       }
     }
   }
+  const NoMessages = () => (
+    <div className={styles.nullMessageWrap}>
+      <Icon>
+        <BiMessageAltX color="gray" size="25" />
+      </Icon>
+      <p className={styles.nullMessageText}>Сообщений пока нет</p>
+    </div>
+  );
 
+  const MessageGroup = ({
+    msg,
+    photoData,
+    isNewDay,
+    authenticatedUser,
+    otherUserAvatar,
+    localUser,
+  }) => {
+    const messageDate = msg.created_at.substring(0, 10);
+    const messageTime = msg.created_at.substring(11, 16);
+    const isAuthored = msg.user.username === localUser;
+    return (
+      <div>
+        {isNewDay && <p className={styles.dataTimeMessage}>{messageDate}</p>}
+        <Message
+          sent={isAuthored}
+          text={msg.text}
+          time={messageTime}
+          photos={msg.images.map((image) => image.image)}
+          documents={msg.documents}
+          avatar={isAuthored ? authenticatedUser.photo : otherUserAvatar}
+          modalPhoto={modalPh}
+          photoData={photoData}
+          setMenu={() => setMenu(msg.id)}
+          isShowMenu={messageMenu}
+          hiddenMenu={hideMenu}
+          replyMessage={() => repMessage(msg)}
+          reply={msg}
+          setEmojiWindow={showEmojiWindows}
+          emojiWindow={emojiWindow}
+          reactions={msg}
+          onEmojiSelect={handleEmojiSelect}
+          authUsers={authUser}
+          onDestroyReaction={deleteReaction}
+        />
+      </div>
+    );
+  };
 
-  async function onDestroyReaction(reactionId) {
-    try {
-      console.log("click")
-      const url = `http://127.0.0.1:8000/chat/reaction/destroy/${reactionId}/`;
-      const response = await axios.delete(url);
-
-      if (response.status === 204) {
-        console.log("Реакция успешно удалена:", reactionId);
-        // await sendReaction(focusMessage);
-      } else {
-        console.error("Непредвиденный ответ от сервера", response.status);
-      }
-    } catch (error) {
-      if (error.response) {
-        console.error("Ошибка сервера:", error.response.data);
-      } else if (error.request) {
-        console.error("Ошибка сети. Сервер не отвечает:", error.request);
-      } else {
-        console.error("Неизвестная ошибка:", error.message);
-      }
-    }
-  }
-
+  const filteredMessages = messages.filter(
+    (msg) => msg.room && msg.room.id === parseInt(id)
+  );
   return (
     <>
       <ModalSendMessage
@@ -720,80 +702,30 @@ function Chats() {
         setSelect={selectTypeSendFile}
         content={
           <>
-            {messages.filter((msg) => msg.room && msg.room.id === parseInt(id))
-              .length === 0 ? (
-              <div className={styles.nullMessageWrap}>
-                <Icon>
-                  <BiMessageAltX color="gray" size="25" />
-                </Icon>
-                <p className={styles.nullMessageText}>Сообщений пока нет</p>
-              </div>
+            {filteredMessages.length === 0 ? (
+              <NoMessages />
             ) : (
-              messages
-                .filter((msg) => msg.room && msg.room.id === parseInt(id))
-                .map((msg, index, arr) => {
-                  const newText = msg.created_at.substring(11, 16);
-                  const messageDate = msg.created_at.substring(0, 10);
-                  const previousMessage = arr[index - 1];
-                  const previousDate = previousMessage
-                    ? previousMessage.created_at.substring(0, 10)
-                    : null;
-                  const isNewDay = previousDate !== messageDate;
-                  const photoData = msg.images.map((image) => image);
-                  return (
-                    <div key={index}>
-                      {isNewDay && (
-                        <p className={styles.dataTimeMessage}>{messageDate}</p>
-                      )}
-                      {msg.user.username ===
-                      localStorage.getItem("username") ? (
-                        <>
-                          <Message
-                            sent
-                            avatar={authenticatedUser.photo}
-                            text={msg.text}
-                            photos={msg.images.map((image) => image.image)}
-                            documents={msg.documents}
-                            time={newText}
-                            modalPhoto={modalPh}
-                            photoData={photoData}
-                            setMenu={() => setMenu(msg.id)}
-                            isShowMenu={messageMenu}
-                            hiddenMenu={hideMenu}
-                            replyMessage={() => repMessage(msg)}
-                            reply={msg}
-                            setEmojiWindow={showEmojiWindows}
-                            emojiWindow={emojiWindow}
-                            reactions={msg}
-                            onEmojiSelect={handleEmojiSelect}
-                            authUsers={authUser}
-                            onDestroyReaction ={deleteReaction}
-                          />
-                        </>
-                      ) : (
-                        <Message
-                          text={msg.text}
-                          time={newText}
-                          photos={msg.images.map((image) => image.image)}
-                          documents={msg.documents}
-                          avatar={otherUserAvatar}
-                          modalPhoto={modalPh}
-                          photoData={photoData}
-                          setMenu={() => setMenu(msg.id)}
-                          isShowMenu={messageMenu}
-                          hiddenMenu={hideMenu}
-                          replyMessage={() => repMessage(msg)}
-                          reply={msg}
-                          setEmojiWindow={showEmojiWindows}
-                          emojiWindow={emojiWindow}
-                          reactions={msg}
-                          onEmojiSelect={handleEmojiSelect}
-                          onDestroyReaction ={ deleteReaction}
-                        />
-                      )}
-                    </div>
-                  );
-                })
+              filteredMessages.map((msg, index, arr) => {
+                const previousMessage = arr[index - 1];
+                const previousDate = previousMessage
+                  ? previousMessage.created_at.substring(0, 10)
+                  : null;
+                const isNewDay =
+                  previousDate !== msg.created_at.substring(0, 10);
+                const photoData = msg.images.map((image) => image);
+                return (
+                  <MessageGroup
+                    key={index}
+                    msg={msg}
+                    previousDate={previousDate}
+                    photoData={photoData}
+                    isNewDay={isNewDay}
+                    authenticatedUser={authenticatedUser}
+                    otherUserAvatar={otherUserAvatar}
+                    localUser={autUsr}
+                  />
+                );
+              })
             )}
           </>
         }
