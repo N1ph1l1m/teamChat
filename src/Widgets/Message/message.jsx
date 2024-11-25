@@ -31,7 +31,8 @@ export default function Message({
   reactions,
   setEmojiWindow,
   emojiWindow,
-  onEmojiSelect
+  onEmojiSelect,
+  authUsers,
 }) {
   const onlyText =
     text &&
@@ -140,9 +141,12 @@ export default function Message({
             />
             <IoIosMore color="rgb(117, 117, 117)" size="20" onClick={setMenu} />
           </Icon>
-          <MessageMenu menu={isShowMenu} setEmojiWindow={setEmojiWindow}  emojiWindow = {emojiWindow} onEmojiSelect = {onEmojiSelect}/>
+          <MessageMenu  authUsers = {authUsers} menu={isShowMenu} setEmojiWindow={setEmojiWindow}  emojiWindow = {emojiWindow} onEmojiSelect = {onEmojiSelect}  />
         </div>
       </div>
     </>
   );
 }
+
+
+// src={reaction.id_user.photo ?  reaction.id_user.photo : `http://127.0.0.1:8000${reaction.id_user.photo}`}

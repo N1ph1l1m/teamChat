@@ -38,8 +38,8 @@ function Chats() {
   const [replyMessage, setReplyMessage] = useState([]);
   const [replyMessagePrew, setReplyMessagePrew] = useState([]);
   const [emojiWindow, setEmojiWindow] = useState(false);
-  const [reactionToMessage, setReactionToMessage] = useState([]);
   const [selectReactionEmoji, setReactionEmoji] = useState([]);
+  const [focusMessage, setFocusMessage] = useState();
 
   useEffect(() => {
     async function getRoomData() {
@@ -60,6 +60,7 @@ function Chats() {
       try {
         console.log("fentchData");
         const data = await getData("users/", setAuthUser);
+        console.log(authUser);
         return data;
       } catch (error) {
         console.error(error);
@@ -123,6 +124,35 @@ function Chats() {
               return prevMessages;
             });
 
+            break;
+          case "update":
+            setMessages((prevMessages) => {
+              const updatedMessages = prevMessages.map((msg) => {
+                if (msg.id === data.data.id) {
+                  // Обновляем путь к фото, добавляем префикс сервера
+                  const updatedMessage = { ...msg, ...data.data };
+
+                  // Если путь к фото относительный, добавляем префикс
+                  if (updatedMessage.reactions) {
+                    updatedMessage.reactions = updatedMessage.reactions.map(
+                      (reaction) => {
+                        if (
+                          reaction.id_user.photo &&
+                          !reaction.id_user.photo.startsWith("http")
+                        ) {
+                          reaction.id_user.photo = `http://127.0.0.1:8000${reaction.id_user.photo}`;
+                        }
+                        return reaction;
+                      }
+                    );
+                  }
+                  return updatedMessage;
+                }
+                return msg;
+              });
+              console.log(data.data); // Логирование для отладки
+              return updatedMessages;
+            });
             break;
           default:
             break;
@@ -422,8 +452,6 @@ function Chats() {
     }
   }
 
-
-
   function formatRoomName(roomName) {
     try {
       const username = autUsr;
@@ -475,7 +503,8 @@ function Chats() {
     }
   };
 
-  function setMenu() {
+  function setMenu(msg) {
+    setFocusMessage(msg);
     setMessageMenu(!messageMenu);
   }
 
@@ -515,37 +544,24 @@ function Chats() {
     console.log("Updated replyMessage:", replyMessage);
   }, [replyMessage]);
 
-
   useEffect(() => {
-    console.log("Updated replyMessage:",  selectReactionEmoji);
+    console.log("Updated replyMessage:", selectReactionEmoji);
   }, [selectReactionEmoji]);
-
-
-
 
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
 
-
-
   async function sendReaction(messageId, reactionId) {
     try {
-      const url = `http://127.0.0.1:8000/chat/message/${messageId}/`;
-
-      // Создаем объект с массивом "reactions"
-      const payload = {
-        reactions: [reactionId],
+      const request_id = 1;
+      const messageData = {
+        message_id: messageId,
+        reaction_id: reactionId,
+        request_id: request_id,
+        action: "update_message_reactions",
       };
 
-      // Отправляем PUT-запрос с правильным форматом данных
-      const response = await axios.put(url, payload);
-
-      if (response.status === 200 || response.status === 204) {
-        console.log("Реакция успешно обновлена:", response.data);
-        return response.data;
-      } else {
-        console.error("Неожиданный статус ответа:", response.status);
-      }
+      chatSocket.send(JSON.stringify(messageData));
     } catch (error) {
       console.error(
         "Ошибка при отправке реакции:",
@@ -553,7 +569,6 @@ function Chats() {
       );
     }
   }
-
 
   async function handleEmojiSelect(selectReactionEmoji) {
     const reactionData = {
@@ -575,14 +590,17 @@ function Chats() {
         };
         // Обновляем состояния
         setReactionEmoji(newReaction);
-        console.log(selectReactionEmoji)
+        console.log(selectReactionEmoji);
 
-        await sendReaction( 1791, newReaction.id);
+        await sendReaction(focusMessage, newReaction.id);
 
         console.log("Новая реакция успешно создана:", newReaction);
         return response;
       } else {
-        console.error("Ошибка: Непредвиденный ответ от сервера", response.status);
+        console.error(
+          "Ошибка: Непредвиденный ответ от сервера",
+          response.status
+        );
       }
     } catch (error) {
       if (error.response) {
@@ -594,7 +612,6 @@ function Chats() {
       }
     }
   }
-
 
   return (
     <>
@@ -681,7 +698,7 @@ function Chats() {
                             time={newText}
                             modalPhoto={modalPh}
                             photoData={photoData}
-                            setMenu={setMenu}
+                            setMenu={() => setMenu(msg.id)}
                             isShowMenu={messageMenu}
                             hiddenMenu={hideMenu}
                             replyMessage={() => repMessage(msg)}
@@ -690,6 +707,8 @@ function Chats() {
                             emojiWindow={emojiWindow}
                             reactions={msg}
                             onEmojiSelect={handleEmojiSelect}
+                            authUsers={authUser}
+                            // focusMessage={()=>{setFocusMessage(msg.id)}}
                           />
                         </>
                       ) : (
@@ -701,14 +720,15 @@ function Chats() {
                           avatar={otherUserAvatar}
                           modalPhoto={modalPh}
                           photoData={photoData}
-                          setMenu={setMenu}
+                          setMenu={() => setMenu(msg.id)}
                           isShowMenu={messageMenu}
                           hiddenMenu={hideMenu}
                           replyMessage={() => repMessage(msg)}
                           reply={msg}
                           setEmojiWindow={showEmojiWindows}
                           emojiWindow={emojiWindow}
-                          // reactions={msg.reactions}
+                          reactions={msg}
+                          onEmojiSelect={handleEmojiSelect}
                         />
                       )}
                     </div>

@@ -2,6 +2,7 @@ import React from "react";
 import styles from "../../App/Styles/messageReaction.module.css";
 
 export function MessageReaction({ reactions }) {
+
   return (
     <>
       {reactions && reactions.reactions && reactions.reactions.length > 0 ? (
@@ -9,7 +10,7 @@ export function MessageReaction({ reactions }) {
           <div key={index} className={styles.wrapReactionMessage}>
             <span className={styles.reactionEmoji}>{reaction.emoji}</span>
             <img
-              src={reactions.user.photo}
+              src={reaction.id_user.photo  }
               className={styles.avatarReacter}
               alt="avatar user"
             />
