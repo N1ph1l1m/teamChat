@@ -107,6 +107,7 @@ function ChatArea({
           replyMessage.length > 0 &&
           replyMessage.map((reply) => (
             <div
+            key={reply.id}
               className={styles.replyItems}
               style={
                 reply.user.username === autUsr

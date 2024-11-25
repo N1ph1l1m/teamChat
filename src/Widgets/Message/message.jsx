@@ -33,6 +33,7 @@ export default function Message({
   emojiWindow,
   onEmojiSelect,
   authUsers,
+  onDestroyReaction,
 }) {
   const onlyText =
     text &&
@@ -61,7 +62,8 @@ export default function Message({
           <div className={styles.messageBubbleText}>
             <ReplyMessage reply={reply} />
             <p>{text}</p>
-            <MessageFooter reactions={reactions} avatar = {avatar}  emoji={"😀"} time={time} />
+            <MessageFooter reactions={reactions} avatar = {avatar}  emoji={"😀"} time={time}
+                onDestroyReaction ={ onDestroyReaction} />
           </div>
         )}
 
@@ -70,7 +72,8 @@ export default function Message({
             <HeaderName username={username} />
             <ReplyMessage reply={reply} />
             <MessageDocuments documents={documents} />
-            <MessageFooter time={time} />
+            <MessageFooter time={time}
+                 onDestroyReaction ={ onDestroyReaction} />
           </div>
         )}
 
@@ -80,7 +83,8 @@ export default function Message({
             <ReplyMessage reply={reply} />
             <MessageDocuments documents={documents} />
             <p> {text}</p>
-            <MessageFooter time={time} />
+            <MessageFooter time={time}
+                onDestroyReaction ={ onDestroyReaction} />
           </div>
         )}
 
@@ -110,7 +114,8 @@ export default function Message({
             <div className={styles.bubbleText} style={{width: "300px"}} >
               <p>{text}</p>
 
-              <MessageFooter time={time} avatar={avatar} />
+              <MessageFooter time={time} avatar={avatar}
+                  onDestroyReaction ={ onDestroyReaction} />
               <ReplyMessage style={{display: "block"}}  reply={reply} />
             </div>
           </div>
@@ -127,7 +132,8 @@ export default function Message({
             <div className={styles.bubbleText}>
               <ReplyMessage reply={reply} />
               <p>{text}</p>
-              <MessageFooter time={time} />
+              <MessageFooter time={time}
+                  onDestroyReaction ={ onDestroyReaction} />
             </div>
           </div>
         )}

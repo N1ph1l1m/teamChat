@@ -60,7 +60,6 @@ function Chats() {
       try {
         console.log("fentchData");
         const data = await getData("users/", setAuthUser);
-        console.log(authUser);
         return data;
       } catch (error) {
         console.error(error);
@@ -150,7 +149,6 @@ function Chats() {
                 }
                 return msg;
               });
-              console.log(data.data); // Логирование для отладки
               return updatedMessages;
             });
             break;
@@ -524,7 +522,6 @@ function Chats() {
         documents: message.documents,
       },
     ]);
-    console.log(replyMessage);
   }
 
   function closeReply() {
@@ -540,19 +537,21 @@ function Chats() {
     setEmojiWindow(!emojiWindow);
   }
 
-  useEffect(() => {
-    console.log("Updated replyMessage:", replyMessage);
-  }, [replyMessage]);
+  // useEffect(() => {
+  //   console.log("Updated replyMessage:", replyMessage);
+  // }, [replyMessage]);
 
-  useEffect(() => {
-    console.log("Updated replyMessage:", selectReactionEmoji);
-  }, [selectReactionEmoji]);
+  // useEffect(() => {
+  //   // console.log("Updated replyMessage:", selectReactionEmoji);
+  // }, [selectReactionEmoji]);
 
   const userAuth = autUsr;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
 
   async function sendReaction(messageId, reactionId) {
     try {
+
+
       const request_id = 1;
       const messageData = {
         message_id: messageId,
@@ -562,6 +561,42 @@ function Chats() {
       };
 
       chatSocket.send(JSON.stringify(messageData));
+    } catch (error) {
+      console.error(
+        "Ошибка при отправке реакции:",
+        error.response?.data || error.message
+      );
+    }
+  }
+
+
+  async function deleteReaction(reactionId, messageId ) {
+    try {
+
+      const request_id = 1;
+      const messageData = {
+        message_id: messageId,
+        reaction_id: reactionId,
+        request_id: request_id,
+        action: "delete_reaction",
+      };
+
+      chatSocket.send(JSON.stringify(messageData));
+
+
+      console.log("click")
+      const url = `http://127.0.0.1:8000/chat/reaction/destroy/${reactionId}/`;
+      const response = await axios.delete(url);
+
+      if (response.status === 204) {
+        console.log("Реакция успешно удалена:", reactionId);
+        // await sendReaction(focusMessage);
+      } else {
+        console.error("Непредвиденный ответ от сервера", response.status);
+      }
+
+
+
     } catch (error) {
       console.error(
         "Ошибка при отправке реакции:",
@@ -601,6 +636,30 @@ function Chats() {
           "Ошибка: Непредвиденный ответ от сервера",
           response.status
         );
+      }
+    } catch (error) {
+      if (error.response) {
+        console.error("Ошибка сервера:", error.response.data);
+      } else if (error.request) {
+        console.error("Ошибка сети. Сервер не отвечает:", error.request);
+      } else {
+        console.error("Неизвестная ошибка:", error.message);
+      }
+    }
+  }
+
+
+  async function onDestroyReaction(reactionId) {
+    try {
+      console.log("click")
+      const url = `http://127.0.0.1:8000/chat/reaction/destroy/${reactionId}/`;
+      const response = await axios.delete(url);
+
+      if (response.status === 204) {
+        console.log("Реакция успешно удалена:", reactionId);
+        // await sendReaction(focusMessage);
+      } else {
+        console.error("Непредвиденный ответ от сервера", response.status);
       }
     } catch (error) {
       if (error.response) {
@@ -708,7 +767,7 @@ function Chats() {
                             reactions={msg}
                             onEmojiSelect={handleEmojiSelect}
                             authUsers={authUser}
-                            // focusMessage={()=>{setFocusMessage(msg.id)}}
+                            onDestroyReaction ={deleteReaction}
                           />
                         </>
                       ) : (
@@ -729,6 +788,7 @@ function Chats() {
                           emojiWindow={emojiWindow}
                           reactions={msg}
                           onEmojiSelect={handleEmojiSelect}
+                          onDestroyReaction ={ deleteReaction}
                         />
                       )}
                     </div>

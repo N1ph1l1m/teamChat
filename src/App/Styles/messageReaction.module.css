@@ -10,6 +10,7 @@
     align-items:flex-start;
     flex-flow: nowrap row;
     margin-right: 10px;
+    cursor: pointer;
     /* display: none; */
     }
   .reactionEmoji{
