@@ -3,9 +3,7 @@
     justify-content: flex-end;
     align-items: flex-end;
     position: relative;
-    /* border:1px solid red; */
-
-  }
+}
 
   .bubbleTimeText {
     font-size: 12px;

@@ -14,15 +14,14 @@
   border-radius: 10px 10px 0px 0px ;
   background-color: transparent;
   object-fit: cover;
+  border-radius:10px;
 }
-
 .wrapPhotoTwo {
   position: relative;
   width: 410px;
   display: flex;
   flex-direction: row;
 }
-
 .photoMessageTwoPhoto {
   cursor: pointer;
   width: 200px;
@@ -40,7 +39,7 @@
 
 .wrapPhotoEven {
   position: relative;
-  width: 410px;
+  width: 415px;
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
@@ -63,20 +62,17 @@
   border-radius: 0px 10px 0px 0px;
 }
 
-/* .photoMessageEven:nth-last-child(2) {
-  border-radius: 0px 0px 0px 10px;
-}
-.photoMessageEven:last-child {
-  border-radius: 0px 0px 10px 0px;
-} */
 .wrapPhotoOdd {
   position: relative;
-  width: 450px;
+  width: 415px;
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
   flex-direction: row;
   box-sizing: border-box;
+}
+.messageBubbleAll  .wrapPhotoOdd  .bubbleTimeWrapPhoto  .bubbleTimeTextPhoto{
+  /* border:1px solid green; */
 }
 
 .photoMessageOdd {

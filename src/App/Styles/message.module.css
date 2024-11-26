@@ -6,7 +6,6 @@
   margin-bottom: 10px;
   position: relative;
   width: 710px;
-  border:1px solid blue;
 }
 .messageAvatar {
   border: 1px solid black;
@@ -43,7 +42,7 @@
   border-bottom-left-radius: 0px;
 }
 
-.received .messageBubbleText    {
+.received .messageBubbleText{
   background-color: #d3cdcd;
   border-bottom-left-radius: 0;
   color: black;
@@ -55,7 +54,6 @@
   padding: 5px;
   border-radius: 20px;
   text-align: justify;
-
 }
 .messageBubbleDocuments>  .bubbleTimeWrap > .bubbleTimeText{
   margin-right: 5px;
@@ -74,13 +72,14 @@
 
 
 .messageBublePhoto {
-  border:1px solid red;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   flex-direction: row;
+  align-items:flex-end;
   position: relative;
   height: auto;
 }
+
 
 .bubbleTimeWrap {
   display: flex;
@@ -94,37 +93,46 @@
   font-size: 12px;
   padding: 3px;
   font-weight: 600;
+  height: 20px;
 }
+
 
 .sent .received {
   display: flex;
   justify-content: flex-start;
 }
 
-.bubbleTimeWrapPhoto {
+.bubbleTimeWrapPhoto{
   position: absolute;
   bottom: 8px;
   right: 15px;
-  display: none;
-}
-.messageBublePhoto:hover > .bubbleTimeWrapPhoto {
-  display: block;
+  display: flex;
+  align-items: flex-end;
 }
 
+
 .messageBubbleAll {
-  border:1px solid green;
   position: relative;
   display: inline-block;
   width: 420px;
   min-width: 60px;
   text-align: justify;
   overflow: hidden;
-
 }
 
 .sent .messageBubbleAll.one {
   width: 310px;
 }
+.sent  .messageBubbleAll.one  img:first-child  {
+  border-radius: 10px 10px 0px 0px;
+}
+.received  .messageBubbleAll.one  img:first-child{
+  border-radius: 10px 10px 0px 0px;
+}
+.received .messageBubbleAll.one {
+  width: 310px;
+}
+
 
 .messageBubbleAll > .wrapPhoto > img {
   border-radius: 10px 10px 0px 0px;

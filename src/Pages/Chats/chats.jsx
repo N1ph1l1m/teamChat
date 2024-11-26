@@ -127,10 +127,7 @@ function Chats() {
             setMessages((prevMessages) => {
               const updatedMessages = prevMessages.map((msg) => {
                 if (msg.id === data.data.id) {
-                  // Обновляем путь к фото, добавляем префикс сервера
                   const updatedMessage = { ...msg, ...data.data };
-
-                  // Если путь к фото относительный, добавляем префикс
                   if (updatedMessage.reactions) {
                     updatedMessage.reactions = updatedMessage.reactions.map(
                       (reaction) => {
@@ -143,6 +140,29 @@ function Chats() {
                         return reaction;
                       }
                     );
+                  }
+                  if(updatedMessage.images){
+                    updatedMessage.images = updatedMessage.images.map(
+                      (image) => {
+                       if (
+                          image.image &&
+                          !image.image.startsWith("http")
+                      ){
+                        image.image = `http://127.0.0.1:8000${image.image}`;
+                        }
+                        return image
+                      }
+                    )
+                  }
+                  if (updatedMessage.reply_to) {
+                    if (updatedMessage.reply_to.images) {
+                      updatedMessage.reply_to.images = updatedMessage.reply_to.images.map((image) => {
+                        if (image.image && !image.image.startsWith("http")) {
+                          image.image = `http://127.0.0.1:8000${image.image}`;
+                        }
+                        return image;
+                      });
+                    }
                   }
                   return updatedMessage;
                 }
@@ -263,7 +283,7 @@ function Chats() {
             type: file.type,
           };
           prewImages.push(previewData);
-          console.log(previewData);
+          // console.log(previewData);
 
           setInputPrew((prev) => ({
             ...prev,
@@ -275,7 +295,7 @@ function Chats() {
       });
 
       if (prewImages.length > 0) {
-        console.log("Предпросмотр изображений с типами:", prewImages);
+        // console.log("Предпросмотр изображений с типами:", prewImages);
       }
     } catch (error) {
       console.error(error);
@@ -319,9 +339,8 @@ function Chats() {
                 "Content-Type": "multipart/form-data",
               },
             });
-            console.log(response.data);
             setSendingPhoto(response.data);
-            return response.data.id; // Возвращаем id изображения с сервера
+            return response.data.id;
           });
 
           // Дожидаемся всех завершенных запросов
@@ -342,7 +361,7 @@ function Chats() {
         // Отправляем сообщение через WebSocket
         chatSocket.send(JSON.stringify(messageData));
       } else if (sendDocument) {
-        console.log(sendDocument);
+        // console.log(sendDocument);
         if (Array.isArray(sendDocument) && sendDocument.length > 0) {
           const uploadPromises = Array.from(sendDocument).map(
             async (documents) => {
@@ -355,10 +374,10 @@ function Chats() {
                 return null;
               }
 
-              console.log("Отправка документов");
+              // console.log("Отправка документов");
               const formData = new FormData();
               formData.append("document", documents);
-              console.log(formData);
+              // console.log(formData);
 
               const url = "http://127.0.0.1:8000/chat/documents-upload/";
               const response = await axios.post(url, formData, {

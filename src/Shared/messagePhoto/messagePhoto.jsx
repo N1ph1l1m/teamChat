@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "../../App/Styles/messagePhoto.module.css";
 
-export function MessagePhoto({ photos, modalPhoto, photoData }) {
+export function MessagePhoto({ photos, modalPhoto, photoData, reaction }) {
   if (!Array.isArray(photos) || photos.length === 0) return null;
 
   let wrapClass = styles.wrapPhoto;
@@ -30,6 +30,7 @@ export function MessagePhoto({ photos, modalPhoto, photoData }) {
           onClick={() => modalPhoto({ photoData: photoData, id: index })}
         />
       ))}
+      {reaction}
     </div>
   );
 }

@@ -68,7 +68,7 @@ const ModalSendMessage = ({
                             {InputFileTypeIcons(img, index)}
                             <ProgressBar value={progressBar} />
                             <FaRegTrashAlt
-                              size="30"
+                              size="25"
                               color="black"
                               style={{ marginLeft: "10px" }}
                               onClick={() => removeElement(index)}

@@ -101,7 +101,8 @@ export default function Message({
           </div>
         )}
 
-        {!text && photos && (
+        {!text &&   Array.isArray(documents) &&
+          documents.length === 0 && photos &&  (
           <div className={styles.messageBublePhoto}>
             <ReplyMessage reply={reply} />
             <MessagePhoto
@@ -111,13 +112,12 @@ export default function Message({
             />
 
             <div className={styles.bubbleTimeWrapPhoto}>
-              <MessageReaction
-                reactions={reactions}
-                avatar={avatar}
-                authUsers={authUsers}
-                onDestroyReaction={onDestroyReaction}
-              />
-              <span className={styles.bubbleTimeTextPhoto}>{time}</span>
+              <MessageFooter
+              reactions={reactions}
+              avatar={avatar}
+              onDestroyReaction={onDestroyReaction}
+            />
+             <span className={styles.bubbleTimeTextPhoto}>{time}</span>
             </div>
           </div>
         )}
@@ -128,18 +128,18 @@ export default function Message({
             <MessagePhoto
               photos={photos}
               modalPhoto={modalPhoto}
-              photoData={photoData}
-            />
+              photoData={photoData}/>
             <div className={styles.bubbleText} style={{ width: "300px" }}>
               <p>{text}</p>
-              <MessageFooter
-                time={time}
-                reactions={reactions}
-                avatar={avatar}
-                onDestroyReaction={onDestroyReaction}
-              />
               <ReplyMessage style={{ display: "block" }} reply={reply} />
+              <MessageFooter
+              time={time}
+              reactions={reactions}
+              avatar={avatar}
+              onDestroyReaction={onDestroyReaction}
+            />
             </div>
+
           </div>
         )}
 
@@ -155,9 +155,10 @@ export default function Message({
               <ReplyMessage reply={reply} />
               <p>{text}</p>
               <MessageFooter
-                time={time}
-                onDestroyReaction={onDestroyReaction}
-              />
+              reactions={reactions}
+              avatar={avatar}
+              onDestroyReaction={onDestroyReaction}
+            />
             </div>
           </div>
         )}
