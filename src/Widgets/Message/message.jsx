@@ -10,9 +10,6 @@ import { HeaderName } from "../../Shared/HeaderNameMessage/HeaderNameMessage";
 import { MessageFooter } from "../MessageFooter/MessageFooter";
 import { MessagePhoto } from "../../Shared/messagePhoto/messagePhoto";
 import { MessageDocuments } from "../../Shared/messageDocuments/messageDocuments";
-import data from "@emoji-mart/data";
-import Picker from "@emoji-mart/react";
-import { MessageReaction } from "../../Shared/messageReaction/messageReaction";
 
 export default function Message({
   text,
@@ -61,6 +58,7 @@ export default function Message({
 
         {onlyText && (
           <div className={styles.messageBubbleText}>
+          <HeaderName username={username} />
             <ReplyMessage reply={reply} />
             <p>{text}</p>
             <MessageFooter

@@ -642,10 +642,15 @@ function Chats() {
     const messageDate = msg.created_at.substring(0, 10);
     const messageTime = msg.created_at.substring(11, 16);
     const isAuthored = msg.user.username === localUser;
+    const userNameMesage =
+    msg.user.username.charAt(0).toUpperCase() +
+    msg.user.username.slice(1);
+    console.log(userNameMesage)
     return (
       <div>
         {isNewDay && <p className={styles.dataTimeMessage}>{messageDate}</p>}
         <Message
+          username={isAuthored ?  null : userNameMesage }
           sent={isAuthored}
           text={msg.text}
           time={messageTime}
