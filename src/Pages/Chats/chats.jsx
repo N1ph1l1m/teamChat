@@ -4,7 +4,7 @@ import axios from "axios";
 import ChatArea from "../../Widgets/chatArea/chatArea";
 import Message from "../../Widgets/Message/message";
 import Icon from "../../Shared/icon/icon";
-import { BiMessageAltX } from "react-icons/bi";
+import { BiMessageAltX, BiNoSignal } from "react-icons/bi";
 import { getData } from "../../Entities/api/getUserList";
 import styles from "../../App/Styles/chats.module.css";
 import ModalPhoto from "../../Widgets/modalPhoto/modalPhoto";
@@ -45,11 +45,11 @@ function Chats() {
   useEffect(() => {
     async function getRoomData() {
       try {
-        console.log("getRoomData");
+        // console.log("getRoomData");
         const data = await axios.get(`http://127.0.0.1:8000/chat/rooms/${id}/`);
         if (data) {
           setRoomList(data.data);
-          console.log("setRoomList");
+          // console.log("setRoomList");
           return data;
         }
       } catch (error) {
@@ -59,7 +59,7 @@ function Chats() {
 
     async function fetchData() {
       try {
-        console.log("fentchData");
+        // console.log("fentchData");
         const data = await getData("users/", setAuthUser);
         return data;
       } catch (error) {
@@ -68,7 +68,7 @@ function Chats() {
     }
 
     async function getMessageData() {
-      console.log("Message");
+      // console.log("Message");
       const data = await getData(`chat/room/message/`, setMessages);
       return data;
     }
@@ -76,7 +76,7 @@ function Chats() {
     const token = localStorage.getItem("token").trim();
 
     function webSocket() {
-      console.log("websocket");
+      // console.log("websocket");
       const socket = new WebSocket(
         `ws://localhost:8000/ws/chat/${room_pk}/?token=${token}`
       );
@@ -179,7 +179,7 @@ function Chats() {
     }
 
     function showMessageAvatar(roomList) {
-      console.log("avatar");
+      // console.log("avatar");
       if (roomList.data) {
         const otherUser = roomList.data.current_users.find(
           (user) => user.username !== autUsr
@@ -645,11 +645,11 @@ function Chats() {
     const userNameMesage =
     msg.user.username.charAt(0).toUpperCase() +
     msg.user.username.slice(1);
-    console.log(userNameMesage)
     return (
       <div>
         {isNewDay && <p className={styles.dataTimeMessage}>{messageDate}</p>}
         <Message
+          messageId={()=>{console.log(msg)}}
           username={isAuthored ?  null : userNameMesage }
           sent={isAuthored}
           text={msg.text}
@@ -664,6 +664,7 @@ function Chats() {
           hiddenMenu={hideMenu}
           replyMessage={() => repMessage(msg)}
           reply={msg}
+          forwardMessage = {msg}
           setEmojiWindow={showEmojiWindows}
           emojiWindow={emojiWindow}
           reactions={msg}

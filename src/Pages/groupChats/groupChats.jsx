@@ -49,7 +49,7 @@ function GroupChats() {
         const data = await axios.get(`http://127.0.0.1:8000/chat/rooms/${id}/`);
         if (data) {
           setRoomList(data.data);
-          console.log("setRoomList");
+          // console.log("setRoomList");
           return data;
         }
       } catch (error) {
@@ -68,7 +68,7 @@ function GroupChats() {
     }
 
     async function getMessageData() {
-      console.log("Message");
+      // console.log("Message");
       const data = await getData(`chat/room/message/`, setMessages);
       return data;
     }

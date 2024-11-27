@@ -12,6 +12,7 @@ import { MessagePhoto } from "../../Shared/messagePhoto/messagePhoto";
 import { MessageDocuments } from "../../Shared/messageDocuments/messageDocuments";
 
 export default function Message({
+  messageId,
   text,
   avatar,
   sent,
@@ -26,6 +27,7 @@ export default function Message({
   hiddenMenu,
   replyMessage,
   reply,
+  forwardMessage,
   reactions,
   setEmojiWindow,
   emojiWindow,
@@ -33,22 +35,26 @@ export default function Message({
   authUsers,
   onDestroyReaction,
 }) {
+  const isForwardMessage = forwardMessage  && forwardMessage.forwarded_messages;
   const onlyText =
     text &&
     Array.isArray(photos) &&
     photos.length === 0 &&
     Array.isArray(documents) &&
-    documents.length === 0;
+    documents.length === 0 ;
+
   const onlyDocuments =
     !text && Array.isArray(documents) && documents.length > 0;
   const TextDocuments =
     text && Array.isArray(documents) && documents.length > 0;
+
 
   return (
     <>
       <div
         className={`${styles.message} ${sent ? styles.sent : styles.received}`}
         onMouseLeave={hiddenMenu}
+        onClick={messageId}
       >
         <img
           className={styles.messageAvatar}
@@ -56,10 +62,44 @@ export default function Message({
           alt={"avatar user"}
         />
 
+        {console.log(typeof(forwardMessage.forwarded_messages))}
+
+
+        {/* {text && isForwardMessage && (
+          <div className={styles.messageBubbleText} >
+          <HeaderName username={username} />
+            <div style={{border:"1px solid red"}} >
+            {Array.isArray(forwardMessage.forwarded_messages) &&
+              forwardMessage.forwarded_messages.length > 0 &&  forwardMessage.forwarded_messages.map((forward)=>(
+                <>
+                <p>Переслано от {forward.forwarded_by.username}</p>
+                <p>{forward.original_message.text}</p>
+                </>
+
+              ))
+            }
+            </div>
+
+            <p>{text}</p>
+            <MessageFooter
+              time={time}
+              reactions={reactions}
+              avatar={avatar}
+              onDestroyReaction={onDestroyReaction}
+            />
+          </div>
+        )} */}
+
+
+
+
+
+
         {onlyText && (
           <div className={styles.messageBubbleText}>
           <HeaderName username={username} />
             <ReplyMessage reply={reply} />
+
             <p>{text}</p>
             <MessageFooter
               time={time}
