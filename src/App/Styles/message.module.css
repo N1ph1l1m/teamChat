@@ -118,6 +118,7 @@
   min-width: 60px;
   text-align: justify;
   overflow: hidden;
+  border:1px solid red;
 }
 
 .sent .messageBubbleAll.one {

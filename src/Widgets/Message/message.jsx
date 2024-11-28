@@ -10,6 +10,8 @@ import { HeaderName } from "../../Shared/HeaderNameMessage/HeaderNameMessage";
 import { MessageFooter } from "../MessageFooter/MessageFooter";
 import { MessagePhoto } from "../../Shared/messagePhoto/messagePhoto";
 import { MessageDocuments } from "../../Shared/messageDocuments/messageDocuments";
+import ForwardMessage from "../../Shared/ForwardMessage/ForwardMessage";
+
 
 export default function Message({
   messageId,
@@ -35,20 +37,26 @@ export default function Message({
   authUsers,
   onDestroyReaction,
 }) {
-  const isForwardMessage = forwardMessage  && forwardMessage.forwarded_messages;
-  const onlyText =
-    text &&
-    Array.isArray(photos) &&
-    photos.length === 0 &&
-    Array.isArray(documents) &&
-    documents.length === 0 ;
+  const isForwardMessage = forwardMessage && forwardMessage.forwarded_messages;
 
-  const onlyDocuments =
-    !text && Array.isArray(documents) && documents.length > 0;
-  const TextDocuments =
-    text && Array.isArray(documents) && documents.length > 0;
+  const isPhotoNull = Array.isArray(photos) && photos.length === 0;
+
+  const isDocumentNull = Array.isArray(documents) && documents.length === 0;
+
+  const isForwardMessageNull = Array.isArray(isForwardMessage) && isForwardMessage.length === 0;
+
+  const onlyText = text && isPhotoNull && isDocumentNull && isForwardMessage;
+
+  const isForwardMessageArray =  Array.isArray(forwardMessage.forwarded_messages) &&  forwardMessage.forwarded_messages.length > 0;
+
+  const onlyForward =  isForwardMessage && isForwardMessageArray && !text && isPhotoNull && isDocumentNull;
+
+  const onlyDocuments = !text && Array.isArray(documents) && documents.length > 0;
+
+   const TextDocuments = text && Array.isArray(documents) && documents.length > 0;
 
 
+  console.log(forwardMessage.original_messages)
   return (
     <>
       <div
@@ -62,25 +70,17 @@ export default function Message({
           alt={"avatar user"}
         />
 
-        {console.log(typeof(forwardMessage.forwarded_messages))}
+        {onlyForward && (
+          <div className={styles.messageBubbleText}>
+            <ForwardMessage
+              forwardMessage={forwardMessage}
+              photos={forwardMessage?.forwarded_messages?.flatMap((msg) =>
+                        msg.original_message?.images?.map((image) => image.image) || [])
+                      }
 
-
-        {/* {text && isForwardMessage && (
-          <div className={styles.messageBubbleText} >
-          <HeaderName username={username} />
-            <div style={{border:"1px solid red"}} >
-            {Array.isArray(forwardMessage.forwarded_messages) &&
-              forwardMessage.forwarded_messages.length > 0 &&  forwardMessage.forwarded_messages.map((forward)=>(
-                <>
-                <p>Переслано от {forward.forwarded_by.username}</p>
-                <p>{forward.original_message.text}</p>
-                </>
-
-              ))
-            }
-            </div>
-
-            <p>{text}</p>
+            modalPhoto={modalPhoto}
+            photoData={photoData}
+            />
             <MessageFooter
               time={time}
               reactions={reactions}
@@ -88,18 +88,12 @@ export default function Message({
               onDestroyReaction={onDestroyReaction}
             />
           </div>
-        )} */}
-
-
-
-
-
+        )}
 
         {onlyText && (
           <div className={styles.messageBubbleText}>
-          <HeaderName username={username} />
+            <HeaderName username={username} />
             <ReplyMessage reply={reply} />
-
             <p>{text}</p>
             <MessageFooter
               time={time}
@@ -139,8 +133,8 @@ export default function Message({
           </div>
         )}
 
-        {!text &&   Array.isArray(documents) &&
-          documents.length === 0 && photos &&  (
+        {!text &&  Array.isArray(documents) &&
+          documents.length === 0  &&  isForwardMessageNull  && photos && (
           <div className={styles.messageBublePhoto}>
             <ReplyMessage reply={reply} />
             <MessagePhoto
@@ -151,11 +145,11 @@ export default function Message({
 
             <div className={styles.bubbleTimeWrapPhoto}>
               <MessageFooter
-              reactions={reactions}
-              avatar={avatar}
-              onDestroyReaction={onDestroyReaction}
-            />
-             <span className={styles.bubbleTimeTextPhoto}>{time}</span>
+                reactions={reactions}
+                avatar={avatar}
+                onDestroyReaction={onDestroyReaction}
+              />
+              <span className={styles.bubbleTimeTextPhoto}>{time}</span>
             </div>
           </div>
         )}
@@ -166,18 +160,18 @@ export default function Message({
             <MessagePhoto
               photos={photos}
               modalPhoto={modalPhoto}
-              photoData={photoData}/>
+              photoData={photoData}
+            />
             <div className={styles.bubbleText} style={{ width: "300px" }}>
               <p>{text}</p>
               <ReplyMessage style={{ display: "block" }} reply={reply} />
               <MessageFooter
-              time={time}
-              reactions={reactions}
-              avatar={avatar}
-              onDestroyReaction={onDestroyReaction}
-            />
+                time={time}
+                reactions={reactions}
+                avatar={avatar}
+                onDestroyReaction={onDestroyReaction}
+              />
             </div>
-
           </div>
         )}
 
@@ -193,10 +187,10 @@ export default function Message({
               <ReplyMessage reply={reply} />
               <p>{text}</p>
               <MessageFooter
-              reactions={reactions}
-              avatar={avatar}
-              onDestroyReaction={onDestroyReaction}
-            />
+                reactions={reactions}
+                avatar={avatar}
+                onDestroyReaction={onDestroyReaction}
+              />
             </div>
           </div>
         )}

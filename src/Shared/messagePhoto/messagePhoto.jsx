@@ -27,7 +27,9 @@ export function MessagePhoto({ photos, modalPhoto, photoData, reaction }) {
           src={photo}
           className={photoClass}
           alt={`message photo ${index + 1}`}
-          onClick={() => modalPhoto({ photoData: photoData, id: index })}
+          onClick={() => {
+            console.log(photoData);
+            modalPhoto( { photoData: photoData, id: index } )  }}
         />
       ))}
       {reaction}
