@@ -2,11 +2,10 @@ import React from "react";
 import styles from "../../App/Styles/forwardMessags.module.css";
 import { HeaderName } from "../HeaderNameMessage/HeaderNameMessage";
 import { MessagePhoto } from "../messagePhoto/messagePhoto";
+import { MessageDocuments } from "../messageDocuments/messageDocuments";
 
 export default function ForwardMessage({
   forwardMessage,
-  photos,
-  modalPhoto,
   photoData,
 }) {
   const forwwardBy = () => {
@@ -21,7 +20,7 @@ export default function ForwardMessage({
     return (
       <>
         {firstForward.map((forward, index) => (
-          <h4 key={index}>Переслано от {forward.forwarded_by.username}</h4>
+          <h4 className={styles.forwardMessageTitle} key={index}>Переслано от {forward.forwarded_by.username}</h4>
         ))}
       </>
     );
@@ -85,6 +84,7 @@ export default function ForwardMessage({
       <>
         <div className={styles.forwardMessageWrap}>
           {forwwardBy()}
+          <div style={{marginTop:"-15px" }}>
           {Array.isArray(forwardMessage.forwarded_messages) &&
             forwardMessage.forwarded_messages.length > 0 &&
             forwardMessage.forwarded_messages.map((forward, index) => (
@@ -92,13 +92,16 @@ export default function ForwardMessage({
                 {header(forward)}
                   <MessagePhoto
                     photos={forward.original_message.images.map((img) => img.image)}
-                    modalPhoto={modalPhoto}
+                    modalPhoto={()=>{}}
                     photoData={photoData}
                   />
+                  <MessageDocuments documents={forward.original_message.documents}/>
 
                 <span>{forward.original_message.text}</span>
               </div>
             ))}
+          </div>
+
         </div>
       </>
     </>

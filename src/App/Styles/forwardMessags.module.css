@@ -1,16 +1,17 @@
 .forwardMessageWrap{
     background-color:#FFFFFF;
-    padding: 3px;
     border-radius:10px;
 
 }
-.forwardMessageWrap > h4{
-    color: blue;
+.forwardMessageTitle{
+    color: black;
     font-weight: 600;
     font-size:16px;
+    margin-left: 10px;
+    margin-top: 10px;
+
 }
 .forwardMessageContentWrap{
-    border:1px solid rgba(0, 0, 0, 0.178);
     border-left: 3px solid #444444;
     color: black;
     padding: 5px;
@@ -19,6 +20,8 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
+
     margin-bottom: 5px;
 
 }
@@ -32,7 +35,7 @@
 .forwardTime{
 color:#444444;
 font-size: 12px;
-margin-top: -5px;
+
 }
 .forwardAvatar{
     border:1px solid rgba(0, 0, 0, 0.178);
