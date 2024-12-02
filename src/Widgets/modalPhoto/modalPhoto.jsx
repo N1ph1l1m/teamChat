@@ -1,11 +1,8 @@
 import React from "react";
 import Portal from "../modalCreateGroup/portal";
 import PropTypes from "prop-types";
-
 import styles from "../../App/Styles/modalPhoto.module.css";
 import Icon from "../../Shared/icon/icon";
-import Button from "../../Shared/button/button";
-import { IoSend } from "react-icons/io5";
 import { IoIosClose } from "react-icons/io";
 import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 

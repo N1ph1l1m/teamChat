@@ -14,8 +14,76 @@
 
 }
 .dataTimeMessage{
-    margin-top: -10px;
+    position: absolute;
+    top: -40px;
     color:gray;
+    left: 50%;
     font: 12px;
+    z-index: 2;
     margin-bottom: 10px;
+
+}
+.selectedMessageWrap{
+    position: relative;
+    /* border:1px solid green; */
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items:center;
+
+    /* background-color: #af0303; */
+
+}
+
+.checkboxMessage{
+  width: 20px;
+  height: 20px;
+  border: 2px solid #000;
+  border-radius: 50%;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #fff;
+  cursor: pointer;
+  outline: none;
+  position: relative;
+  transition: all 0.3s ease;
+  display: none;
+
+}
+.checkboxMessage:checked{
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.checkboxMessage:checked::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .forwardMenuWrap{
+    width: 100%;
+    height: 100%;
+    /* border:1px solid red; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+  }
+.forwardButton{
+    width: 90px;
+    height: 30px;
+    font-weight: 600;
+    background-color:transparent;
+    color:white;
+    font-size: 14px;
+    border-radius:10px;
+    border:0px solid black;
+    cursor: pointer;
 }

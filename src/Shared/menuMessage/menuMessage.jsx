@@ -11,6 +11,7 @@ export function MessageMenu({
   setEmojiWindow,
   emojiWindow,
   onEmojiSelect,
+  onSelectMessage,
 }) {
   if (!menu) return null;
 
@@ -31,7 +32,7 @@ export function MessageMenu({
           />
           <span>Переслать</span>
         </li>
-        <li>
+        <li   onClick={onSelectMessage}>
           <IoCheckmarkCircleOutline
             color="rgb(117, 117, 117)"
             size="20"

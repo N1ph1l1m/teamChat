@@ -8,6 +8,7 @@ import { BiMessageAltX, BiNoSignal } from "react-icons/bi";
 import { getData } from "../../Entities/api/getUserList";
 import styles from "../../App/Styles/chats.module.css";
 import ModalPhoto from "../../Widgets/modalPhoto/modalPhoto";
+import Button from "../../Shared/button/button";
 import ModalSendMessage from "../../Widgets/modalSendMessage/modalSendMessage";
 // import EmojiPicker from "emoji-picker-react";
 function Chats() {
@@ -41,6 +42,8 @@ function Chats() {
   const [emojiWindow, setEmojiWindow] = useState(false);
   const [selectReactionEmoji, setReactionEmoji] = useState([]);
   const [focusMessage, setFocusMessage] = useState();
+  const [isSelectedMessage,setIsSelectedMessage] = useState(false);
+  const [selectedMessage, setSelectedMessage] = useState([]);
 
   useEffect(() => {
     async function getRoomData() {
@@ -631,6 +634,8 @@ function Chats() {
     </div>
   );
 
+
+
   const MessageGroup = ({
     msg,
     photoData,
@@ -671,14 +676,45 @@ function Chats() {
           onEmojiSelect={handleEmojiSelect}
           authUsers={authUser}
           onDestroyReaction={deleteReaction}
+          onSelectMessage={()=>{
+            setIsSelectedMessage(!isSelectedMessage)
+          }}
         />
+
+
       </div>
     );
   };
 
+  const handleCheckboxChangeMessage = (id) => {
+    setSelectedMessage((prevSelectedUsers) => {
+      if (prevSelectedUsers.some((msg) => msg.id === id)) {
+        return prevSelectedUsers.filter((msg) => msg.id !== id);
+      } else {
+        return [...prevSelectedUsers, { id }];
+      }
+    });
+    // console.log(selectedMessage.length)
+  };
+
+  const ForwardMessageMenu = () => {
+    return(
+    <div className={styles.forwardMenuWrap}>
+      <button  className={styles.forwardButton} >
+        Переслать
+      </button>
+
+      <button className={styles.forwardButton} onClick={()=>setIsSelectedMessage(false)}>
+        Отмена
+        </button>
+    </div>)
+  }
+
   const filteredMessages = messages.filter(
     (msg) => msg.room && msg.room.id === parseInt(id)
   );
+  const titleName  =  roomList ? formatRoomName(roomList.name) : "";
+  const forwardTitle = isSelectedMessage ? <ForwardMessageMenu/>  : "";
   return (
     <>
       <ModalSendMessage
@@ -710,9 +746,12 @@ function Chats() {
         nextPhoto={nextImg}
         prevPhoto={prevImg}
       />
+
+
       <ChatArea
-        title={roomList ? formatRoomName(roomList.name) : ""}
-        inputValue={message}
+        // title={roomList ? formatRoomName(roomList.name) : ""}
+        title = {forwardTitle ? forwardTitle :titleName}
+        inputValue={message }
         input={handleInputTextChange}
         documents={handleInputDocuments}
         images={handleInputImages}
@@ -739,16 +778,30 @@ function Chats() {
                   previousDate !== msg.created_at.substring(0, 10);
                 const photoData = msg.images.map((image) => image);
                 return (
+
+                  <label   key={index} className={styles.selectedMessageWrap}
+                   onClick={(e) => {
+                      if (!isSelectedMessage) e.preventDefault();
+                        }}>
+
                   <MessageGroup
-                    key={index}
-                    msg={msg}
-                    previousDate={previousDate}
-                    photoData={photoData}
-                    isNewDay={isNewDay}
-                    authenticatedUser={authenticatedUser}
-                    otherUserAvatar={otherUserAvatar}
-                    localUser={autUsr}
+                        key={index}
+                        msg={msg}
+                        previousDate={previousDate}
+                        photoData={photoData}
+                        isNewDay={isNewDay}
+                        authenticatedUser={authenticatedUser}
+                        otherUserAvatar={otherUserAvatar}
+                        localUser={autUsr}
                   />
+                      <input  type="checkbox"
+                        onChange={()=>handleCheckboxChangeMessage(msg.id)}
+                        className={styles.checkboxMessage}
+                        id={msg.id}
+                        style = {isSelectedMessage ? ({display:"block"}):({display:"none"})}
+                    />
+               </label>
+
                 );
               })
             )}

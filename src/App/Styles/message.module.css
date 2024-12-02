@@ -5,7 +5,8 @@
   align-items: flex-end;
   margin-bottom: 10px;
   position: relative;
-  width: 710px;
+  min-width: 550px;
+  max-width: 710px;
 }
 .messageAvatar {
   border: 1px solid black;
@@ -118,7 +119,6 @@
   min-width: 60px;
   text-align: justify;
   overflow: hidden;
-  border:1px solid red;
 }
 
 .sent .messageBubbleAll.one {
@@ -137,6 +137,7 @@
 
 .messageBubbleAll > .wrapPhoto > img {
   border-radius: 10px 10px 0px 0px;
+
 }
 
 .sent > .messageBubbleAll > .bubbleText {
@@ -157,6 +158,7 @@
   border-bottom-right-radius: 10px;
   padding: 5px;
   margin-top: -2px;
+
 }
 
 .messageBubbleAll > .wrapPhotoTwo > img:first-child {
@@ -174,17 +176,22 @@
 }
 .messageBubbleAll > .wrapPhotoEven > img:last-child {
   border-radius: 0px;
+
 }
 .messageBubbleAll > .wrapPhotoEven > img:nth-last-child(2) {
   border-radius: 0px;
+
 }
 
 .messageBubbleAll > .wrapPhotoOdd > img:nth-last-child(2) {
   border-radius: 0px;
+  border:1px solid red;
 }
+
 
 .messageBubbleAll > .wrapPhotoOdd > img:last-child {
   border-radius: 0px;
+
 }
 .menuWrap{
   position: relative;
@@ -213,4 +220,18 @@
 
 .message:hover  .replyToMessageButton {
     display: block;
+}
+
+.photoMessageOdd:nth-last-child(2) {
+  border-radius: 0px 0px 0px 10px;
+}
+.photoMessageOdd:last-child {
+  border-radius: 0px 0px 10px 0px;
+}
+
+.messageBubbleAll img:nth-last-child(2) {
+  border-radius: 0px ;
+}
+.messageBubbleAll img:last-child {
+  border-radius: 0px ;
 }

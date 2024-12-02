@@ -70,9 +70,7 @@
   flex-wrap: wrap;
   flex-direction: row;
   box-sizing: border-box;
-}
-.messageBubbleAll  .wrapPhotoOdd  .bubbleTimeWrapPhoto  .bubbleTimeTextPhoto{
-  /* border:1px solid green; */
+
 }
 
 .photoMessageOdd {
@@ -83,6 +81,7 @@
   margin-right: 3px;
   margin-bottom: 3px;
   object-fit: cover;
+
 }
 
 .photoMessageOdd:first-child {
@@ -90,9 +89,9 @@
   width: 403px;
   height: 400px;
 }
-.photoMessageOdd:nth-last-child(2) {
-  border-radius: 0px 0px 0px 10px;
-}
 .photoMessageOdd:last-child {
   border-radius: 0px 0px 10px 0px;
+}
+.photoMessageOdd:nth-last-child(2) {
+  border-radius: 0px 0px 0px 10px;
 }

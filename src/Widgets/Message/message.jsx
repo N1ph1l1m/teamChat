@@ -36,6 +36,7 @@ export default function Message({
   onEmojiSelect,
   authUsers,
   onDestroyReaction,
+  onSelectMessage,
 }) {
   const isForwardMessage = forwardMessage && forwardMessage.forwarded_messages;
 
@@ -55,14 +56,12 @@ export default function Message({
 
    const TextDocuments = text && Array.isArray(documents) && documents.length > 0;
 
-
-  console.log(forwardMessage.original_messages)
   return (
     <>
       <div
         className={`${styles.message} ${sent ? styles.sent : styles.received}`}
         onMouseLeave={hiddenMenu}
-        onClick={messageId}
+        // onClick={messageId}
       >
         <img
           className={styles.messageAvatar}
@@ -210,6 +209,7 @@ export default function Message({
             setEmojiWindow={setEmojiWindow}
             emojiWindow={emojiWindow}
             onEmojiSelect={onEmojiSelect}
+            onSelectMessage={onSelectMessage}
           />
         </div>
       </div>
