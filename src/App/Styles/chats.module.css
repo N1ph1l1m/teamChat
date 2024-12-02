@@ -25,6 +25,7 @@
 }
 .selectedMessageWrap{
     position: relative;
+    cursor: pointer;
     /* border:1px solid green; */
     margin-top: 10px;
     display: flex;

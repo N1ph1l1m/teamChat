@@ -3,8 +3,6 @@ import "../../App/Styles/navItem.scss";
 import Badge from "../badge/badge";
 import Icon from "../icon/icon";
 
-
-
 function NaviItem(props) {
   function numBadge() {
     if (props.badgeCount > 0) {
@@ -17,7 +15,7 @@ function NaviItem(props) {
   const badge = numBadge();
   return (
     <>
-      <div className="wrap">
+      <div onClick={props.click} className="wrap">
         <div className="menuWrap">
           <div className="iconText">
             <Icon> {props.icon}</Icon>

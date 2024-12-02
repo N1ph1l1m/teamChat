@@ -18,6 +18,7 @@ import joinroom from "../../Entities/api/joinroom";
 import Badge from "../../Shared/badge/badge.jsx";
 import styles from "../../App/Styles/mainLayout.module.css";
 import userLogo from "../../App/images/userAvatar.png";
+import RoomList from "../../Entities/Lists/roomList.jsx";
 
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
@@ -54,36 +55,36 @@ function MainLayout() {
     );
   }
 
-  function RoomList() {
-    //console.log(roomList.current_users)
-    return (
-      <>
-        {roomList
-          .filter((room) => room.name.includes(authUser))
-          .map((room) => {
-            const newName = room.name
-              .replace(authUser, "")
-              .replace(/^_+|_+$/g, "")
-              .trim();
-            const capitalized =
-              newName.charAt(0).toUpperCase() + newName.slice(1);
-            const otherUser = room.current_users.find(
-              (user) => user.username !== authUser
-            );
-            const avatar = otherUser ? otherUser.photo : userLogo;
-            return (
-              <Link key={room.pk} to={`chats/${room.pk}`}>
-                <NaviItem
-                  icon={<img src={avatar} alt={"avatar"} />}
-                  tittle={capitalized}
-                  badgeCount={room.message.length}
-                />
-              </Link>
-            );
-          })}
-      </>
-    );
-  }
+  // function RoomList() {
+  //   //console.log(roomList.current_users)
+  //   return (
+  //     <>
+  //       {roomList
+  //         .filter((room) => room.name.includes(authUser))
+  //         .map((room) => {
+  //           const newName = room.name
+  //             .replace(authUser, "")
+  //             .replace(/^_+|_+$/g, "")
+  //             .trim();
+  //           const capitalized =
+  //             newName.charAt(0).toUpperCase() + newName.slice(1);
+  //           const otherUser = room.current_users.find(
+  //             (user) => user.username !== authUser
+  //           );
+  //           const avatar = otherUser ? otherUser.photo : userLogo;
+  //           return (
+  //             <Link key={room.pk} to={`chats/${room.pk}`}>
+  //               <NaviItem
+  //                 icon={<img src={avatar} alt={"avatar"} />}
+  //                 tittle={capitalized}
+  //                 badgeCount={room.message.length}
+  //               />
+  //             </Link>
+  //           );
+  //         })}
+  //     </>
+  //   );
+  // }
 
   function GroupRoomList() {
     return (
@@ -240,7 +241,14 @@ function MainLayout() {
               <DropDown
                 title="Чаты"
                 onClick={() => getData("chat/rooms", setRoomList)}
-                content={<>{RoomList()}</>}
+                content={
+                  <RoomList
+                    roomList={roomList}
+                    authUser={authUser}
+                    userLogo={userLogo}
+                    link
+                  />
+                }
               />
               <DropDown
                 title="Груповые чаты"

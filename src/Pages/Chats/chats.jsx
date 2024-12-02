@@ -8,8 +8,12 @@ import { BiMessageAltX, BiNoSignal } from "react-icons/bi";
 import { getData } from "../../Entities/api/getUserList";
 import styles from "../../App/Styles/chats.module.css";
 import ModalPhoto from "../../Widgets/modalPhoto/modalPhoto";
+import ModalForwardMessage from "../../Widgets/ModalForwardMessage/modalForwardMessage";
 import Button from "../../Shared/button/button";
 import ModalSendMessage from "../../Widgets/modalSendMessage/modalSendMessage";
+import RoomList from "../../Entities/Lists/roomList";
+import userLogo from "../../App/images/userAvatar.png";
+
 // import EmojiPicker from "emoji-picker-react";
 function Chats() {
   const autUsr = localStorage.getItem("username");
@@ -23,6 +27,7 @@ function Chats() {
   const [isWebSocketOpen, setIsWebSocketOpen] = useState(false);
   const [chatSocket, setChatSocket] = useState(null);
   const [roomList, setRoomList] = useState(null);
+  const [roomListForwardModal, setRoomListForwardModal] = useState(null);
   const [inputPrew, setInputPrew] = useState({});
   const [otherUserAvatar, setOtherUserAvatar] = useState(null);
   const [authUser, setAuthUser] = useState([]);
@@ -42,8 +47,10 @@ function Chats() {
   const [emojiWindow, setEmojiWindow] = useState(false);
   const [selectReactionEmoji, setReactionEmoji] = useState([]);
   const [focusMessage, setFocusMessage] = useState();
-  const [isSelectedMessage,setIsSelectedMessage] = useState(false);
+  const [isSelectedMessage, setIsSelectedMessage] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState([]);
+  const [isOpenModalForward, setOpenModalForward] = useState(false);
+  const [isSelectRoomSendForward, setSelectRoomSendForward] = useState();
 
   useEffect(() => {
     async function getRoomData() {
@@ -64,6 +71,14 @@ function Chats() {
       try {
         // console.log("fentchData");
         const data = await getData("users/", setAuthUser);
+        return data;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    async function fetchDataRoomList() {
+      try {
+        const data = await getData("chat/rooms", setRoomListForwardModal);
         return data;
       } catch (error) {
         console.error(error);
@@ -144,27 +159,25 @@ function Chats() {
                       }
                     );
                   }
-                  if(updatedMessage.images){
+                  if (updatedMessage.images) {
                     updatedMessage.images = updatedMessage.images.map(
                       (image) => {
-                       if (
-                          image.image &&
-                          !image.image.startsWith("http")
-                      ){
-                        image.image = `http://127.0.0.1:8000${image.image}`;
-                        }
-                        return image
-                      }
-                    )
-                  }
-                  if (updatedMessage.reply_to) {
-                    if (updatedMessage.reply_to.images) {
-                      updatedMessage.reply_to.images = updatedMessage.reply_to.images.map((image) => {
                         if (image.image && !image.image.startsWith("http")) {
                           image.image = `http://127.0.0.1:8000${image.image}`;
                         }
                         return image;
-                      });
+                      }
+                    );
+                  }
+                  if (updatedMessage.reply_to) {
+                    if (updatedMessage.reply_to.images) {
+                      updatedMessage.reply_to.images =
+                        updatedMessage.reply_to.images.map((image) => {
+                          if (image.image && !image.image.startsWith("http")) {
+                            image.image = `http://127.0.0.1:8000${image.image}`;
+                          }
+                          return image;
+                        });
                     }
                   }
                   return updatedMessage;
@@ -195,12 +208,12 @@ function Chats() {
 
     async function go() {
       fetchData();
+      fetchDataRoomList();
       const dataRoom = await getRoomData();
       webSocket();
       showMessageAvatar(dataRoom);
       await getMessageData();
     }
-
     go();
   }, [id]);
 
@@ -305,10 +318,12 @@ function Chats() {
     }
   };
 
-  function handleCancelAddPhoto() {
+  function handleCancelModal() {
     setModel(false);
     setInputPrew("");
     setProgressBar(0);
+    setOpenModalForward(false);
+    setSelectedMessage("");
   }
 
   function handleCancelPhoto() {
@@ -634,8 +649,6 @@ function Chats() {
     </div>
   );
 
-
-
   const MessageGroup = ({
     msg,
     photoData,
@@ -648,14 +661,15 @@ function Chats() {
     const messageTime = msg.created_at.substring(11, 16);
     const isAuthored = msg.user.username === localUser;
     const userNameMesage =
-    msg.user.username.charAt(0).toUpperCase() +
-    msg.user.username.slice(1);
+      msg.user.username.charAt(0).toUpperCase() + msg.user.username.slice(1);
     return (
       <div>
         {isNewDay && <p className={styles.dataTimeMessage}>{messageDate}</p>}
         <Message
-          messageId={()=>{console.log(msg)}}
-          username={isAuthored ?  null : userNameMesage }
+          messageId={() => {
+            console.log(msg);
+          }}
+          username={isAuthored ? null : userNameMesage}
           sent={isAuthored}
           text={msg.text}
           time={messageTime}
@@ -669,19 +683,17 @@ function Chats() {
           hiddenMenu={hideMenu}
           replyMessage={() => repMessage(msg)}
           reply={msg}
-          forwardMessage = {msg}
+          forwardMessage={msg}
           setEmojiWindow={showEmojiWindows}
           emojiWindow={emojiWindow}
           reactions={msg}
           onEmojiSelect={handleEmojiSelect}
           authUsers={authUser}
           onDestroyReaction={deleteReaction}
-          onSelectMessage={()=>{
-            setIsSelectedMessage(!isSelectedMessage)
+          onSelectMessage={() => {
+            setIsSelectedMessage(!isSelectedMessage);
           }}
         />
-
-
       </div>
     );
   };
@@ -698,28 +710,43 @@ function Chats() {
   };
 
   const ForwardMessageMenu = () => {
-    return(
-    <div className={styles.forwardMenuWrap}>
-      <button  className={styles.forwardButton} >
-        Переслать
-      </button>
-
-      <button className={styles.forwardButton} onClick={()=>setIsSelectedMessage(false)}>
-        Отмена
+    return (
+      <div className={styles.forwardMenuWrap}>
+        <button
+          className={styles.forwardButton}
+          onClick={() => {
+            setOpenModalForward(true);
+          }}
+        >
+          Переслать
         </button>
-    </div>)
-  }
+
+        <button
+          className={styles.forwardButton}
+          onClick={() => {
+            setIsSelectedMessage(false);
+          }}
+        >
+          Отмена
+        </button>
+      </div>
+    );
+  };
+  const handleRoomSelect = (roomPk) => {
+    console.log("Selected Room PK:", roomPk);
+    setSelectRoomSendForward(roomPk);
+  };
 
   const filteredMessages = messages.filter(
     (msg) => msg.room && msg.room.id === parseInt(id)
   );
-  const titleName  =  roomList ? formatRoomName(roomList.name) : "";
-  const forwardTitle = isSelectedMessage ? <ForwardMessageMenu/>  : "";
+  const titleName = roomList ? formatRoomName(roomList.name) : "";
+  const forwardTitle = isSelectedMessage ? <ForwardMessageMenu /> : "";
   return (
     <>
       <ModalSendMessage
         title="Отправить сообщение "
-        onCancel={handleCancelAddPhoto}
+        onCancel={handleCancelModal}
         onSubmit={sendMess}
         inputPrewiew={inputPrew.preview}
         input={handleInputTextChange}
@@ -731,6 +758,23 @@ function Chats() {
         emojiEvent={inputEmoji}
         progressBar={progressBar}
         removeElement={removeElementModal}
+      />
+      <ModalForwardMessage
+        isOpen={isOpenModalForward}
+        openEmoji={openModelEmoji}
+        isOpenEmoji={isOpenModelEmoji}
+        emojiEvent={inputEmoji}
+        input={handleInputTextChange}
+        keyDownSend={keyDownEvent}
+        onCancel={handleCancelModal}
+        roomList={
+          <RoomList
+            authUser={autUsr}
+            roomList={roomListForwardModal}
+            userLogo={userLogo}
+            onRoomSelect={handleRoomSelect}
+          />
+        }
       />
       <ModalPhoto
         sizeGalary={modalPhoto.photoData}
@@ -747,11 +791,10 @@ function Chats() {
         prevPhoto={prevImg}
       />
 
-
       <ChatArea
         // title={roomList ? formatRoomName(roomList.name) : ""}
-        title = {forwardTitle ? forwardTitle :titleName}
-        inputValue={message }
+        title={forwardTitle ? forwardTitle : titleName}
+        inputValue={message}
         input={handleInputTextChange}
         documents={handleInputDocuments}
         images={handleInputImages}
@@ -778,30 +821,35 @@ function Chats() {
                   previousDate !== msg.created_at.substring(0, 10);
                 const photoData = msg.images.map((image) => image);
                 return (
-
-                  <label   key={index} className={styles.selectedMessageWrap}
-                   onClick={(e) => {
+                  <label
+                    key={index}
+                    className={styles.selectedMessageWrap}
+                    onClick={(e) => {
                       if (!isSelectedMessage) e.preventDefault();
-                        }}>
-
-                  <MessageGroup
-                        key={index}
-                        msg={msg}
-                        previousDate={previousDate}
-                        photoData={photoData}
-                        isNewDay={isNewDay}
-                        authenticatedUser={authenticatedUser}
-                        otherUserAvatar={otherUserAvatar}
-                        localUser={autUsr}
-                  />
-                      <input  type="checkbox"
-                        onChange={()=>handleCheckboxChangeMessage(msg.id)}
-                        className={styles.checkboxMessage}
-                        id={msg.id}
-                        style = {isSelectedMessage ? ({display:"block"}):({display:"none"})}
+                    }}
+                  >
+                    <MessageGroup
+                      key={index}
+                      msg={msg}
+                      previousDate={previousDate}
+                      photoData={photoData}
+                      isNewDay={isNewDay}
+                      authenticatedUser={authenticatedUser}
+                      otherUserAvatar={otherUserAvatar}
+                      localUser={autUsr}
                     />
-               </label>
-
+                    <input
+                      type="checkbox"
+                      onChange={() => handleCheckboxChangeMessage(msg.id)}
+                      className={styles.checkboxMessage}
+                      id={msg.id}
+                      style={
+                        isSelectedMessage
+                          ? { display: "block" }
+                          : { display: "none" }
+                      }
+                    />
+                  </label>
                 );
               })
             )}
