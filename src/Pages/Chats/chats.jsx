@@ -51,7 +51,6 @@ function Chats() {
   const [selectedMessage, setSelectedMessage] = useState([]);
   const [isOpenModalForward, setOpenModalForward] = useState(false);
   const [isSelectRoomSendForward, setSelectRoomSendForward] = useState();
-  const [forwardMessage,setForwardMessage] = useState([]);
 
   useEffect(() => {
     async function getRoomData() {
@@ -671,8 +670,6 @@ function Chats() {
         }
       }
   }
-
-
   async function sendForwardMessage() {
     try {
       console.log(authUserId);
@@ -698,11 +695,14 @@ function Chats() {
             }
         }
 
-        // После всех запросов обновляем состояние
-        setForwardMessage(prevState => [...prevState, ...forwardedIds]);
 
         // Отправляем информацию о пересланных сообщениях
-        await createNewMessageForward(isSelectRoomSendForward, 6, forwardedIds);
+        await createNewMessageForward(isSelectRoomSendForward, authUserId, forwardedIds);
+
+        setIsSelectedMessage(false)
+        setSelectedMessage("");
+        setSelectRoomSendForward("")
+        setOpenModalForward(false)
 
     } catch (error) {
         if (error.response) {
@@ -724,6 +724,53 @@ function Chats() {
       <p className={styles.nullMessageText}>Сообщений пока нет</p>
     </div>
   );
+
+  const handleCheckboxChangeMessage = (id) => {
+    setSelectedMessage((prevSelectedUsers) => {
+
+       if (!Array.isArray(prevSelectedUsers)) {
+            console.error("prevSelectedUsers is not an array:", prevSelectedUsers);
+            return [{ id }];
+        }
+
+      if (prevSelectedUsers.some((msg) => msg.id === id)) {
+        return prevSelectedUsers.filter((msg) => msg.id !== id);
+      } else {
+        return [...prevSelectedUsers, { id }];
+      }
+    });
+  };
+
+  const ForwardMessageMenu = () => {
+    return (
+      <div className={styles.forwardMenuWrap}>
+        <button
+          className={styles.forwardButton}
+          onClick={() => {
+              console.log(authUserId)
+            setOpenModalForward(true);
+          }}
+        >
+          Переслать
+        </button>
+
+        <button
+          className={styles.forwardButton}
+          onClick={() => {
+            setIsSelectedMessage(false);
+          }}
+        >
+          Отмена
+        </button>
+      </div>
+    );
+  };
+  const handleRoomSelect = (roomPk) => {
+    console.log("Selected Room PK:", roomPk);
+    setSelectRoomSendForward(roomPk);
+  };
+
+
 
   const MessageGroup = ({
     msg,
@@ -774,45 +821,6 @@ function Chats() {
     );
   };
 
-  const handleCheckboxChangeMessage = (id) => {
-    setSelectedMessage((prevSelectedUsers) => {
-      if (prevSelectedUsers.some((msg) => msg.id === id)) {
-        return prevSelectedUsers.filter((msg) => msg.id !== id);
-      } else {
-        return [...prevSelectedUsers, { id }];
-      }
-    });
-    // console.log(selectedMessage.length)
-  };
-
-  const ForwardMessageMenu = () => {
-    return (
-      <div className={styles.forwardMenuWrap}>
-        <button
-          className={styles.forwardButton}
-          onClick={() => {
-              console.log(authUserId)
-            setOpenModalForward(true);
-          }}
-        >
-          Переслать
-        </button>
-
-        <button
-          className={styles.forwardButton}
-          onClick={() => {
-            setIsSelectedMessage(false);
-          }}
-        >
-          Отмена
-        </button>
-      </div>
-    );
-  };
-  const handleRoomSelect = (roomPk) => {
-    console.log("Selected Room PK:", roomPk);
-    setSelectRoomSendForward(roomPk);
-  };
 
 
   const filteredMessages = messages.filter(
