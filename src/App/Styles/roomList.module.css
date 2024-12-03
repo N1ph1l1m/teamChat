@@ -1,0 +1,9 @@
+.checkBoxWrap{
+    border:1px solid green;
+    width: 100%;
+    display: flex;
+    align-items:center
+}
+.checkBoxWrap:hover{
+    background-color:rgba(116, 116, 116, 0.461);
+}

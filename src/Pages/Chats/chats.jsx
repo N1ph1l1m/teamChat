@@ -4,12 +4,11 @@ import axios from "axios";
 import ChatArea from "../../Widgets/chatArea/chatArea";
 import Message from "../../Widgets/Message/message";
 import Icon from "../../Shared/icon/icon";
-import { BiMessageAltX, BiNoSignal } from "react-icons/bi";
+import { BiMessageAltX } from "react-icons/bi";
 import { getData } from "../../Entities/api/getUserList";
 import styles from "../../App/Styles/chats.module.css";
 import ModalPhoto from "../../Widgets/modalPhoto/modalPhoto";
 import ModalForwardMessage from "../../Widgets/ModalForwardMessage/modalForwardMessage";
-import Button from "../../Shared/button/button";
 import ModalSendMessage from "../../Widgets/modalSendMessage/modalSendMessage";
 import RoomList from "../../Entities/Lists/roomList";
 import userLogo from "../../App/images/userAvatar.png";
@@ -19,6 +18,7 @@ function Chats() {
   const autUsr = localStorage.getItem("username");
   const { id } = useParams();
   const REQUEST_ID = 1;
+  const [authUserId,setAuthUserId]= useState("")
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [sendImage, setSendImage] = useState("");
@@ -51,6 +51,7 @@ function Chats() {
   const [selectedMessage, setSelectedMessage] = useState([]);
   const [isOpenModalForward, setOpenModalForward] = useState(false);
   const [isSelectRoomSendForward, setSelectRoomSendForward] = useState();
+  const [forwardMessage,setForwardMessage] = useState([]);
 
   useEffect(() => {
     async function getRoomData() {
@@ -59,6 +60,13 @@ function Chats() {
         const data = await axios.get(`http://127.0.0.1:8000/chat/rooms/${id}/`);
         if (data) {
           setRoomList(data.data);
+          data.data.current_users.map((user)=>{
+            if(user.username === autUsr  ){
+           setAuthUserId(user.id)
+            }else{
+              return null;
+            }
+          })
           // console.log("setRoomList");
           return data;
         }
@@ -640,6 +648,74 @@ function Chats() {
       }
     }
   }
+
+  async function createNewMessageForward(room,user,forward) {
+    try{
+          const selected = {
+            "room": room,
+            "user": user,
+            "forwarded_messages": forward
+          }
+
+          console.log(selected)
+          const url = "http://127.0.0.1:8000/chat/message-create/"
+          const response   = await  axios.post(url,selected)
+          console.log(response.id);
+      }catch(error){
+        if (error.response) {
+          console.error("Ошибка сервера:", error.response.data);
+        } else if (error.request) {
+          console.error("Ошибка сети. Сервер не отвечает:", error.request);
+        } else {
+          console.error("Неизвестная ошибка:", error.message);
+        }
+      }
+  }
+
+
+  async function sendForwardMessage() {
+    try {
+      console.log(authUserId);
+        const forwardedIds = [];
+
+        for (const select of selectedMessage) {
+            const selected = {
+                "original_message": select.id,
+                "forwarded_by": authUserId,
+                "forwarded_to_room": isSelectRoomSendForward
+            };
+
+            console.log("Forwarding message:", selected);
+
+            const url = "http://127.0.0.1:8000/chat/forward-create/";
+            const response = await axios.post(url, selected);
+
+            if (response && response.data && response.data.id) {
+                console.log("Message forwarded with ID:", response.data.id);
+                forwardedIds.push(response.data.id);
+            } else {
+                console.error("Forward response does not contain id:", response);
+            }
+        }
+
+        // После всех запросов обновляем состояние
+        setForwardMessage(prevState => [...prevState, ...forwardedIds]);
+
+        // Отправляем информацию о пересланных сообщениях
+        await createNewMessageForward(isSelectRoomSendForward, 6, forwardedIds);
+
+    } catch (error) {
+        if (error.response) {
+            console.error("Ошибка сервера:", error.response.data);
+        } else if (error.request) {
+            console.error("Ошибка сети. Сервер не отвечает:", error.request);
+        } else {
+            console.error("Неизвестная ошибка:", error.message);
+        }
+    }
+}
+
+
   const NoMessages = () => (
     <div className={styles.nullMessageWrap}>
       <Icon>
@@ -715,6 +791,7 @@ function Chats() {
         <button
           className={styles.forwardButton}
           onClick={() => {
+              console.log(authUserId)
             setOpenModalForward(true);
           }}
         >
@@ -736,6 +813,7 @@ function Chats() {
     console.log("Selected Room PK:", roomPk);
     setSelectRoomSendForward(roomPk);
   };
+
 
   const filteredMessages = messages.filter(
     (msg) => msg.room && msg.room.id === parseInt(id)
@@ -767,12 +845,15 @@ function Chats() {
         input={handleInputTextChange}
         keyDownSend={keyDownEvent}
         onCancel={handleCancelModal}
+        onSubmit={sendForwardMessage}
         roomList={
           <RoomList
             authUser={autUsr}
             roomList={roomListForwardModal}
             userLogo={userLogo}
             onRoomSelect={handleRoomSelect}
+            selectedRoom={isSelectRoomSendForward}
+            changeRoom={handleRoomSelect}
           />
         }
       />

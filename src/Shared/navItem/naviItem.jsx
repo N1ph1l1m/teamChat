@@ -1,5 +1,5 @@
 import React from "react";
-import "../../App/Styles/navItem.scss";
+import styles from  "../../App/Styles/navItem.module.css";
 import Badge from "../badge/badge";
 import Icon from "../icon/icon";
 
@@ -15,14 +15,14 @@ function NaviItem(props) {
   const badge = numBadge();
   return (
     <>
-      <div onClick={props.click} className="wrap">
-        <div className="menuWrap">
-          <div className="iconText">
+      <div onClick={props.click} className={styles.wrap}>
+        <div className={styles.menuWrap}>
+          <div className={styles.iconText}>
             <Icon> {props.icon}</Icon>
-            <p className="tittle">{props.tittle}</p>
+            <p className={styles.tittle}>{props.tittle}</p>
           </div>
 
-          <div className="badge">{badge}</div>
+          <div className={styles.badge}>{badge}</div>
         </div>
       </div>
     </>

@@ -1,12 +1,16 @@
 import React from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link} from "react-router-dom";
 import NaviItem from "../../Shared/navItem/naviItem";
+import styles  from "../../App/Styles/roomList.module.css"
+import { hover } from "@testing-library/user-event/dist/hover";
 export default function RoomList({
   roomList,
   authUser,
   userLogo,
   link,
   onRoomSelect,
+  selectedRoom,
+  changeRoom
 }) {
   //console.log(roomList.current_users)
   return (
@@ -35,13 +39,22 @@ export default function RoomList({
                   />
                 </Link>
               ) : (
+                <label key={index}
+                  className={styles.checkBoxWrap}
+                  onClick={()=>{
+                    if (onRoomSelect) onRoomSelect(room.pk);
+                  }}>
+
                 <NaviItem
                   icon={<img src={avatar} alt={"avatar"} />}
                   tittle={capitalized}
-                  click={() => {
-                    if (onRoomSelect) onRoomSelect(room.pk);
-                  }}
                 />
+                <input type="checkbox"
+                   checked={selectedRoom === room.pk} // Отмечаем чекбокс, если это выбранный room
+                   onChange={() => changeRoom}
+                />
+                </label>
+
               )}
             </>
           );

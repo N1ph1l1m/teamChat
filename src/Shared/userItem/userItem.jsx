@@ -3,7 +3,7 @@ import Icon from "../icon/icon";
 import { BsFillBellFill } from "react-icons/bs";
 import { FaRegUserCircle } from "react-icons/fa";
 import { RiLogoutBoxLine } from "react-icons/ri";
-import '../../App/Styles/navItem.scss';
+import  styles from '../../App/Styles/navItem.module.css';
 import {useNavigate} from 'react-router-dom';
 import axios from "axios";
 function UserItem(props) {
@@ -51,16 +51,16 @@ function UserItem(props) {
   }
 
   return (
-    <div className="wrap">
-      <div className="menuWrap">
-        <div className="iconText">
+    <div className={styles.wrap}>
+      <div className={styles.menuWrap}>
+        <div className={styles.iconText}>
           <Icon>
             {props.icon}
           </Icon>
-          <p className="tittle">{props.tittle}</p>
+          <p className={styles.tittle}>{props.tittle}</p>
         </div>
 
-        <div className="bell">
+        <div className={styles.bell}>
           <Icon onClick={logOut}>
             <RiLogoutBoxLine    color="rgb(131, 130, 130)" size="25" />
           </Icon>

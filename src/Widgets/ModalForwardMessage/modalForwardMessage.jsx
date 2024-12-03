@@ -6,12 +6,8 @@ import Icon from "../../Shared/icon/icon";
 import { IoSend } from "react-icons/io5";
 import { IoIosClose } from "react-icons/io";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
-import ProgressBar from "../../Shared/progressBar/progressBar";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-import { FaRegTrashAlt } from "react-icons/fa";
-import { InputFileTypeIcons } from "../../Shared/FileTypeIcons/downloadFileTypeIcons";
-
 const ModalForwardMessage = ({
   title,
   isOpen,
