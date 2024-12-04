@@ -6,7 +6,7 @@
     left: 0;
     right: 0;
   }
-  
+
   .modalWrap {
     position: fixed;
     top: 50%;
@@ -20,8 +20,8 @@
     box-sizing: content-box;
     width: 400px;
   }
-  
-  
+
+
   .modalHeader{
     display: flex;
     justify-content: space-between;
@@ -29,32 +29,32 @@
     flex-direction: row;
     padding-left: 10px;
     padding-right: 10px;
-  
+
   }
-  
-  
+
+
   .modalTitle{
     font-size: 16px;
     color:rgb(116, 116, 116);
     font-weight: 800px ;
   }
-  
+
   .closeModel {
     margin-top: 10px;
     font-weight: 800px;
     cursor: pointer;
   }
-  
+
   .modalBody {
     flex-grow: 1;
     overflow-y: auto;
     position: relative;
-   
+
   }
   .modalBody::-webkit-scrollbar {
     display: none;
   }
-  
+
   .emojiWrap{
     width: 305px;
     position: absolute;
@@ -70,7 +70,7 @@
     border:1px solid rgb(133, 133, 133);
     border-radius:10px;
   }
-  
+
   .wrapContentModal {
     position: relative;
     display: flex;
@@ -79,13 +79,13 @@
     padding: 1px;
 
   }
-  
+
   .wrapRoomList{
     width: 350px;
     display: flex;
     flex-flow: wrap row;
     justify-content: center;
-    border:1px solid red;
+    /* border:1px solid red; */
   }
   .inputWrap {
     width: 98%;
@@ -100,9 +100,9 @@
   }
   .inputWrap  i :first-child{
     margin-left: 6px;
-  
+
   }
-  
+
   .inputWrapFiles{
     display: flex;
     justify-content: space-between;
@@ -113,15 +113,15 @@
     margin-bottom: 5px;
     border-radius:10px;
   }
-  
+
   .inputWrapFiles > i {
     margin-right: 10px;
   }
   /* .inputWrap  #documents{
     border:1px solid green;
-  
+
   } */
-  
+
   .inputWrapDocuments{
     width: 100%;
     display: flex;
@@ -137,12 +137,12 @@
     resize: none;
     outline: none;
     font-family: Arial, Helvetica, sans-serif;
-  
+
   }
   .inputWrap> i{
    cursor: pointer;
   }
-  
+
   .modalFooter {
     margin-top: 5px;
     height: 50px;
@@ -151,7 +151,7 @@
     align-items: center;
     flex-shrink: 0;
   }
-  
+
   .modalFooter button:last-child {
     margin-left: 10px;
   }

@@ -20,8 +20,6 @@ const ModalForwardMessage = ({
   isOpenEmoji,
   openEmoji,
   emojiEvent,
-  progressBar,
-  removeElement,
   roomList,
 }) => {
   return (

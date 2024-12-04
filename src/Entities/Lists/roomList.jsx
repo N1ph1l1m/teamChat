@@ -8,9 +8,8 @@ export default function RoomList({
   authUser,
   userLogo,
   link,
-  onRoomSelect,
-  selectedRoom,
-  changeRoom
+  selectedRooms,
+  handleRoomSelect
 }) {
 
 
@@ -30,6 +29,7 @@ export default function RoomList({
             );
             const avatar = otherUser ? otherUser.photo : userLogo;
             return link ? (
+              <div className={styles.roomListChats}>
               <Link key={room.pk} to={`chats/${room.pk}`}>
                 <NaviItem
                   icon={<img src={avatar} alt={"avatar"} />}
@@ -37,13 +37,12 @@ export default function RoomList({
                   badgeCount={room.message.length}
                 />
               </Link>
+              </div>
+
             ) : (
               <label
                 key={room.pk}
                 className={styles.checkBoxWrap}
-                onClick={() => {
-                  if (onRoomSelect) onRoomSelect(room.pk);
-                }}
               >
                 <NaviItem
                   icon={<img src={avatar} alt={"avatar"} />}
@@ -51,8 +50,10 @@ export default function RoomList({
                 />
                 <input
                   type="checkbox"
-                  checked={selectedRoom === room.pk}
-                  onChange={() => changeRoom}
+                  onChange={() => handleRoomSelect(room.pk)}
+                  checked={selectedRooms.includes(room.pk)}
+                  className={styles.checkboxRoomList}
+
                 />
               </label>
             );

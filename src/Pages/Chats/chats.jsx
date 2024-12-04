@@ -6,6 +6,12 @@ import Message from "../../Widgets/Message/message";
 import Icon from "../../Shared/icon/icon";
 import { BiMessageAltX } from "react-icons/bi";
 import { getData } from "../../Entities/api/getUserList";
+import { getRoomData } from "../../Entities/api/getRoomData";
+import {
+  createNewMessageForward,
+  sendForward,
+} from "../../Entities/api/forwardMessage";
+import { createReaction } from "../../Entities/api/ReactionToMessage";
 import styles from "../../App/Styles/chats.module.css";
 import ModalPhoto from "../../Widgets/modalPhoto/modalPhoto";
 import ModalForwardMessage from "../../Widgets/ModalForwardMessage/modalForwardMessage";
@@ -17,8 +23,10 @@ import userLogo from "../../App/images/userAvatar.png";
 function Chats() {
   const autUsr = localStorage.getItem("username");
   const { id } = useParams();
+  const TOKEN = localStorage.getItem("token").trim();
+  const ROOM_PK = id;
   const REQUEST_ID = 1;
-  const [authUserId,setAuthUserId]= useState("")
+  const [authUserId, setAuthUserId] = useState("");
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [sendImage, setSendImage] = useState("");
@@ -50,30 +58,9 @@ function Chats() {
   const [isSelectedMessage, setIsSelectedMessage] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState([]);
   const [isOpenModalForward, setOpenModalForward] = useState(false);
-  const [isSelectRoomSendForward, setSelectRoomSendForward] = useState();
+  const [isSelectRoomSendForward, setSelectRoomSendForward] = useState([]);
 
   useEffect(() => {
-    async function getRoomData() {
-      try {
-        // console.log("getRoomData");
-        const data = await axios.get(`http://127.0.0.1:8000/chat/rooms/${id}/`);
-        if (data) {
-          setRoomList(data.data);
-          data.data.current_users.map((user)=>{
-            if(user.username === autUsr  ){
-           setAuthUserId(user.id)
-            }else{
-              return null;
-            }
-          })
-          // console.log("setRoomList");
-          return data;
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
     async function fetchData() {
       try {
         // console.log("fentchData");
@@ -97,13 +84,10 @@ function Chats() {
       const data = await getData(`chat/room/message/`, setMessages);
       return data;
     }
-    const room_pk = id;
-    const token = localStorage.getItem("token").trim();
-
     function webSocket() {
       // console.log("websocket");
       const socket = new WebSocket(
-        `ws://localhost:8000/ws/chat/${room_pk}/?token=${token}`
+        `ws://localhost:8000/ws/chat/${ROOM_PK}/?token=${TOKEN}`
       );
       socket.onopen = function () {
         console.log("WebSocket открыт");
@@ -111,21 +95,21 @@ function Chats() {
 
         socket.send(
           JSON.stringify({
-            pk: room_pk,
+            pk: ROOM_PK,
             action: "join_room",
             request_id: REQUEST_ID,
           })
         );
         socket.send(
           JSON.stringify({
-            pk: room_pk,
+            pk: ROOM_PK,
             action: "retrieve",
             request_id: REQUEST_ID,
           })
         );
         socket.send(
           JSON.stringify({
-            pk: room_pk,
+            pk: ROOM_PK,
             action: "subscribe_to_messages_in_room",
             request_id: REQUEST_ID,
           })
@@ -187,6 +171,26 @@ function Chats() {
                         });
                     }
                   }
+                  if (updatedMessage.forwarded_messages) {
+                    updatedMessage.forwarded_messages =
+                      updatedMessage.forwarded_messages.map((image) => {
+                        if (
+                          image.original_message.user.photo &&
+                          !image.original_message.user.photo.startsWith("http")
+                        ) {
+                          image.original_message.user.photo = `http://127.0.0.1:8000${image.original_message.user.photo}`;
+                        }
+
+                        image.original_message.images.map((img) => {
+                          console.log(img);
+                          if (img.image && !img.image.startsWith("http")) {
+                            img.image = `http://127.0.0.1:8000${img.image}`;
+                          }
+                        });
+
+                        return image;
+                      });
+                  }
                   return updatedMessage;
                 }
                 return msg;
@@ -216,7 +220,12 @@ function Chats() {
     async function go() {
       fetchData();
       fetchDataRoomList();
-      const dataRoom = await getRoomData();
+      const dataRoom = await getRoomData(
+        setRoomList,
+        autUsr,
+        setAuthUserId,
+        id
+      );
       webSocket();
       showMessageAvatar(dataRoom);
       await getMessageData();
@@ -282,6 +291,7 @@ function Chats() {
       console.error(error);
     }
   };
+
   const handleInputDocuments = (e) => {
     try {
       if (e.target.files.length > 10) {
@@ -331,10 +341,9 @@ function Chats() {
     setProgressBar(0);
     setOpenModalForward(false);
     setSelectedMessage("");
-  }
-
-  function handleCancelPhoto() {
     setPhotoModal(false);
+    setIsSelectedMessage(false);
+    setSelectRoomSendForward("");
   }
 
   function updateProgress(loaded, total) {
@@ -493,7 +502,7 @@ function Chats() {
 
   const modalPh = (photoData) => {
     setCurrentPhotoId(photoData.id);
-    console.log(photoData);
+    // console.log(photoData);
     setModalPhoto(photoData);
     setPhotoModal(true);
   };
@@ -518,6 +527,7 @@ function Chats() {
   function openModelEmoji() {
     setModelEmoji(!isOpenModelEmoji);
   }
+
   function removeElementModal(inputPrew) {
     console.log("remove " + inputPrew);
   }
@@ -561,6 +571,7 @@ function Chats() {
     setSelectTypeFile(!selectTypeFile);
     setEmoji(false);
   }
+
   function showEmojiWindows() {
     setEmojiWindow(!emojiWindow);
   }
@@ -613,29 +624,15 @@ function Chats() {
   }
 
   async function handleEmojiSelect(selectReactionEmoji) {
-    const reactionData = {
-      id_user: authenticatedUser.id,
-      emoji: selectReactionEmoji,
-    };
-
     try {
-      const url = "http://127.0.0.1:8000/chat/reaction/";
-      const response = await axios.post(url, reactionData);
-      if (response.status === 201 || response.status === 200) {
-        const newReaction = {
-          id: response.data.id, // Получаем ID из ответа
-          emoji: response.data.emoji,
-          id_user: response.data.id_user,
-        };
+      const newReaction = await createReaction(
+        authenticatedUser,
+        selectReactionEmoji
+      );
+      if (newReaction) {
         setReactionEmoji(newReaction);
         await sendReaction(focusMessage, newReaction.id);
         showEmojiWindows();
-        return response;
-      } else {
-        console.error(
-          "Ошибка: Непредвиденный ответ от сервера",
-          response.status
-        );
       }
     } catch (error) {
       if (error.response) {
@@ -648,74 +645,33 @@ function Chats() {
     }
   }
 
-  async function createNewMessageForward(room,user,forward) {
-    try{
-          const selected = {
-            "room": room,
-            "user": user,
-            "forwarded_messages": forward
-          }
-
-          console.log(selected)
-          const url = "http://127.0.0.1:8000/chat/message-create/"
-          const response   = await  axios.post(url,selected)
-          console.log(response.id);
-      }catch(error){
-        if (error.response) {
-          console.error("Ошибка сервера:", error.response.data);
-        } else if (error.request) {
-          console.error("Ошибка сети. Сервер не отвечает:", error.request);
-        } else {
-          console.error("Неизвестная ошибка:", error.message);
-        }
-      }
-  }
   async function sendForwardMessage() {
     try {
-      console.log(authUserId);
-        const forwardedIds = [];
+      if (!isSelectRoomSendForward) return null;
+      // console.log(isSelectRoomSendForward)
+      for (const selectRoom of isSelectRoomSendForward) {
+        const forwardedIds = await sendForward(
+          selectedMessage,
+          authUserId,
+          selectRoom
+        );
 
-        for (const select of selectedMessage) {
-            const selected = {
-                "original_message": select.id,
-                "forwarded_by": authUserId,
-                "forwarded_to_room": isSelectRoomSendForward
-            };
-
-            console.log("Forwarding message:", selected);
-
-            const url = "http://127.0.0.1:8000/chat/forward-create/";
-            const response = await axios.post(url, selected);
-
-            if (response && response.data && response.data.id) {
-                console.log("Message forwarded with ID:", response.data.id);
-                forwardedIds.push(response.data.id);
-            } else {
-                console.error("Forward response does not contain id:", response);
-            }
-        }
-
-
-        // Отправляем информацию о пересланных сообщениях
-        await createNewMessageForward(isSelectRoomSendForward, authUserId, forwardedIds);
-
-        setIsSelectedMessage(false)
-        setSelectedMessage("");
-        setSelectRoomSendForward("")
-        setOpenModalForward(false)
-
+        await createNewMessageForward(selectRoom, authUserId, forwardedIds);
+      }
+      setIsSelectedMessage(false);
+      setSelectedMessage("");
+      setSelectRoomSendForward("");
+      setOpenModalForward(false);
     } catch (error) {
-        if (error.response) {
-            console.error("Ошибка сервера:", error.response.data);
-        } else if (error.request) {
-            console.error("Ошибка сети. Сервер не отвечает:", error.request);
-        } else {
-            console.error("Неизвестная ошибка:", error.message);
-        }
+      if (error.response) {
+        console.error("Ошибка сервера:", error.response.data);
+      } else if (error.request) {
+        console.error("Ошибка сети. Сервер не отвечает:", error.request);
+      } else {
+        console.error("Неизвестная ошибка:", error.message);
+      }
     }
-}
-
-
+  }
   const NoMessages = () => (
     <div className={styles.nullMessageWrap}>
       <Icon>
@@ -727,11 +683,10 @@ function Chats() {
 
   const handleCheckboxChangeMessage = (id) => {
     setSelectedMessage((prevSelectedUsers) => {
-
-       if (!Array.isArray(prevSelectedUsers)) {
-            console.error("prevSelectedUsers is not an array:", prevSelectedUsers);
-            return [{ id }];
-        }
+      if (!Array.isArray(prevSelectedUsers)) {
+        // console.error("prevSelectedUsers is not an array:", prevSelectedUsers);
+        return [{ id }];
+      }
 
       if (prevSelectedUsers.some((msg) => msg.id === id)) {
         return prevSelectedUsers.filter((msg) => msg.id !== id);
@@ -747,17 +702,18 @@ function Chats() {
         <button
           className={styles.forwardButton}
           onClick={() => {
-              console.log(authUserId)
+            // console.log(authUserId)
+            if (selectedMessage.length === 0) return null;
             setOpenModalForward(true);
           }}
         >
           Переслать
         </button>
-
         <button
           className={styles.forwardButton}
           onClick={() => {
             setIsSelectedMessage(false);
+            setSelectedMessage("");
           }}
         >
           Отмена
@@ -766,11 +722,16 @@ function Chats() {
     );
   };
   const handleRoomSelect = (roomPk) => {
-    console.log("Selected Room PK:", roomPk);
-    setSelectRoomSendForward(roomPk);
+    setSelectRoomSendForward((prevSelectedRooms) => {
+      if (prevSelectedRooms.includes(roomPk)) {
+        // Удаляем комнату из массива
+        return prevSelectedRooms.filter((pk) => pk !== roomPk);
+      } else {
+        // Добавляем комнату в массив
+        return [...prevSelectedRooms, roomPk];
+      }
+    });
   };
-
-
 
   const MessageGroup = ({
     msg,
@@ -821,8 +782,6 @@ function Chats() {
     );
   };
 
-
-
   const filteredMessages = messages.filter(
     (msg) => msg.room && msg.room.id === parseInt(id)
   );
@@ -859,9 +818,8 @@ function Chats() {
             authUser={autUsr}
             roomList={roomListForwardModal}
             userLogo={userLogo}
-            onRoomSelect={handleRoomSelect}
-            selectedRoom={isSelectRoomSendForward}
-            changeRoom={handleRoomSelect}
+            selectedRooms={isSelectRoomSendForward}
+            handleRoomSelect={handleRoomSelect}
           />
         }
       />
@@ -875,7 +833,7 @@ function Chats() {
             : null
         }
         isOpen={photoModal}
-        onCancel={handleCancelPhoto}
+        onCancel={handleCancelModal}
         nextPhoto={nextImg}
         prevPhoto={prevImg}
       />
@@ -910,13 +868,7 @@ function Chats() {
                   previousDate !== msg.created_at.substring(0, 10);
                 const photoData = msg.images.map((image) => image);
                 return (
-                  <label
-                    key={index}
-                    className={styles.selectedMessageWrap}
-                    onClick={(e) => {
-                      if (!isSelectedMessage) e.preventDefault();
-                    }}
-                  >
+                  <label key={index} className={styles.selectedMessageWrap}>
                     <MessageGroup
                       key={index}
                       msg={msg}
@@ -928,6 +880,9 @@ function Chats() {
                       localUser={autUsr}
                     />
                     <input
+                      onClick={(e) => {
+                        if (!isSelectedMessage) e.preventDefault();
+                      }}
                       type="checkbox"
                       onChange={() => handleCheckboxChangeMessage(msg.id)}
                       className={styles.checkboxMessage}

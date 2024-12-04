@@ -1,9 +1,16 @@
 .checkBoxWrap{
-    border:1px solid green;
     width: 100%;
     display: flex;
-    align-items:center
+    align-items:center;
+
 }
 .checkBoxWrap:hover{
+    background-color:rgba(116, 116, 116, 0.461);
+}
+.checkBoxWrap:nth-last-child(1){
+    margin-bottom:10px;
+}
+
+.roomListChats:hover{
     background-color:rgba(116, 116, 116, 0.461);
 }
