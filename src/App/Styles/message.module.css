@@ -5,8 +5,9 @@
   align-items: flex-end;
   margin-bottom: 10px;
   position: relative;
-  min-width: 550px;
-  max-width: 710px;
+  min-width: 750px;
+  max-width: 810px;
+  /* border:1px solid green; */
 }
 .messageAvatar {
   border: 1px solid black;

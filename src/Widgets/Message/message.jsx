@@ -46,7 +46,7 @@ export default function Message({
 
   const isForwardMessageNull = Array.isArray(isForwardMessage) && isForwardMessage.length === 0;
 
-  const onlyText = text && isPhotoNull && isDocumentNull && isForwardMessage;
+  const onlyText = text && isPhotoNull && isDocumentNull && isForwardMessageNull;
 
   const isForwardMessageArray =  Array.isArray(forwardMessage.forwarded_messages) &&  forwardMessage.forwarded_messages.length > 0;
 
@@ -55,6 +55,8 @@ export default function Message({
   const onlyDocuments = !text && Array.isArray(documents) && documents.length > 0;
 
    const TextDocuments = text && Array.isArray(documents) && documents.length > 0;
+
+  const ForwardText  = isForwardMessage && isForwardMessageArray && text;
 
   return (
     <>
@@ -94,6 +96,30 @@ export default function Message({
             <HeaderName username={username} />
             <ReplyMessage reply={reply} />
             <p>{text}</p>
+            <MessageFooter
+              time={time}
+              reactions={reactions}
+              avatar={avatar}
+              onDestroyReaction={onDestroyReaction}
+            />
+          </div>
+        )}
+
+        {ForwardText && (
+          <div className={styles.messageBubbleText}
+
+          >
+            <ForwardMessage
+              forwardMessage={forwardMessage}
+              photos={forwardMessage?.forwarded_messages?.flatMap((msg) =>
+                        msg.original_message?.images?.map((image) => image.image) || [])
+                      }
+
+            modalPhoto={modalPhoto}
+            photoData={photoData}
+            />
+              <ReplyMessage reply={reply} />
+              <p>{text}</p>
             <MessageFooter
               time={time}
               reactions={reactions}
@@ -193,6 +219,9 @@ export default function Message({
             </div>
           </div>
         )}
+
+
+
 
         <div className={styles.replyToMessageButton}>
           <Icon>

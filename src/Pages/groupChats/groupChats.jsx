@@ -6,14 +6,27 @@ import Message from "../../Widgets/Message/message";
 import Icon from "../../Shared/icon/icon";
 import { BiMessageAltX } from "react-icons/bi";
 import { getData } from "../../Entities/api/getUserList";
+import { getRoomData } from "../../Entities/api/getRoomData";
+import {
+  createNewMessageForward,
+  sendForward,
+} from "../../Entities/api/forwardMessage";
+import { createReaction } from "../../Entities/api/ReactionToMessage";
 import styles from "../../App/Styles/chats.module.css";
 import ModalPhoto from "../../Widgets/modalPhoto/modalPhoto";
 import ModalSendMessage from "../../Widgets/modalSendMessage/modalSendMessage";
-// import EmojiPicker from "emoji-picker-react";
+import ModalForwardMessage from "../../Widgets/ModalForwardMessage/modalForwardMessage";
+import {GroupRoomList} from "../../Entities/Lists/roomList";
+import userLogo from "../../App/images/userAvatar.png";
+
+
 function GroupChats() {
   const autUsr = localStorage.getItem("username");
+  const TOKEN = localStorage.getItem("token").trim();
   const { id } = useParams();
   const REQUEST_ID = 1;
+  const ROOM_PK = id;
+  const [authUserId, setAuthUserId] = useState("");
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [sendImage, setSendImage] = useState("");
@@ -22,6 +35,7 @@ function GroupChats() {
   const [isWebSocketOpen, setIsWebSocketOpen] = useState(false);
   const [chatSocket, setChatSocket] = useState(null);
   const [roomList, setRoomList] = useState(null);
+  const [roomListForwardModal, setRoomListForwardModal] = useState(null);
   const [inputPrew, setInputPrew] = useState({});
   const [otherUserAvatar, setOtherUserAvatar] = useState(null);
   const [authUser, setAuthUser] = useState([]);
@@ -41,21 +55,13 @@ function GroupChats() {
   const [emojiWindow, setEmojiWindow] = useState(false);
   const [selectReactionEmoji, setReactionEmoji] = useState([]);
   const [focusMessage, setFocusMessage] = useState();
+  const [isSelectedMessage, setIsSelectedMessage] = useState(false);
+  const [selectedMessage, setSelectedMessage] = useState([]);
+  const [isOpenModalForward, setOpenModalForward] = useState(false);
+  const [isSelectRoomSendForward, setSelectRoomSendForward] = useState([]);
 
   useEffect(() => {
-    async function getRoomData() {
-      try {
-        console.log("getRoomData");
-        const data = await axios.get(`http://127.0.0.1:8000/chat/rooms/${id}/`);
-        if (data) {
-          setRoomList(data.data);
-          // console.log("setRoomList");
-          return data;
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    }
+
 
     async function fetchData() {
       try {
@@ -67,18 +73,25 @@ function GroupChats() {
       }
     }
 
+    async function fetchDataRoomList() {
+      try {
+        const data = await getData("chat/rooms", setRoomListForwardModal);
+        return data;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     async function getMessageData() {
       // console.log("Message");
       const data = await getData(`chat/room/message/`, setMessages);
       return data;
     }
-    const room_pk = id;
-    const token = localStorage.getItem("token").trim();
 
     function webSocket() {
-      console.log("websocket");
+      // console.log("websocket");
       const socket = new WebSocket(
-        `ws://localhost:8000/ws/chat/${room_pk}/?token=${token}`
+        `ws://localhost:8000/ws/chat/${ROOM_PK}/?token=${TOKEN}`
       );
       socket.onopen = function () {
         console.log("WebSocket открыт");
@@ -86,21 +99,21 @@ function GroupChats() {
 
         socket.send(
           JSON.stringify({
-            pk: room_pk,
+            pk: ROOM_PK,
             action: "join_room",
             request_id: REQUEST_ID,
           })
         );
         socket.send(
           JSON.stringify({
-            pk: room_pk,
+            pk: ROOM_PK,
             action: "retrieve",
             request_id: REQUEST_ID,
           })
         );
         socket.send(
           JSON.stringify({
-            pk: room_pk,
+            pk: ROOM_PK,
             action: "subscribe_to_messages_in_room",
             request_id: REQUEST_ID,
           })
@@ -141,28 +154,46 @@ function GroupChats() {
                       }
                     );
                   }
-                  if(updatedMessage.images){
+                  if (updatedMessage.images) {
                     updatedMessage.images = updatedMessage.images.map(
                       (image) => {
-                       if (
-                          image.image &&
-                          !image.image.startsWith("http")
-                      ){
-                        image.image = `http://127.0.0.1:8000${image.image}`;
-                        }
-                        return image
-                      }
-                    )
-                  }
-                  if (updatedMessage.reply_to) {
-                    if (updatedMessage.reply_to.images) {
-                      updatedMessage.reply_to.images = updatedMessage.reply_to.images.map((image) => {
                         if (image.image && !image.image.startsWith("http")) {
                           image.image = `http://127.0.0.1:8000${image.image}`;
                         }
                         return image;
-                      });
+                      }
+                    );
+                  }
+                  if (updatedMessage.reply_to) {
+                    if (updatedMessage.reply_to.images) {
+                      updatedMessage.reply_to.images =
+                        updatedMessage.reply_to.images.map((image) => {
+                          if (image.image && !image.image.startsWith("http")) {
+                            image.image = `http://127.0.0.1:8000${image.image}`;
+                          }
+                          return image;
+                        });
                     }
+                  }
+                  if (updatedMessage.forwarded_messages) {
+                    updatedMessage.forwarded_messages =
+                      updatedMessage.forwarded_messages.map((image) => {
+                        if (
+                          image.original_message.user.photo &&
+                          !image.original_message.user.photo.startsWith("http")
+                        ) {
+                          image.original_message.user.photo = `http://127.0.0.1:8000${image.original_message.user.photo}`;
+                        }
+
+                        image.original_message.images.map((img) => {
+                          console.log(img);
+                          if (img.image && !img.image.startsWith("http")) {
+                            img.image = `http://127.0.0.1:8000${img.image}`;
+                          }
+                        });
+
+                        return image;
+                      });
                   }
                   return updatedMessage;
                 }
@@ -192,7 +223,13 @@ function GroupChats() {
 
     async function go() {
       fetchData();
-      const dataRoom = await getRoomData();
+      fetchDataRoomList();
+      const dataRoom = await getRoomData(
+        setRoomList,
+        autUsr,
+        setAuthUserId,
+        id
+      );
       webSocket();
       showMessageAvatar(dataRoom);
       await getMessageData();
@@ -302,14 +339,15 @@ function GroupChats() {
     }
   };
 
-  function handleCancelAddPhoto() {
+  function handleCancelModal() {
     setModel(false);
     setInputPrew("");
     setProgressBar(0);
-  }
-
-  function handleCancelPhoto() {
+    setOpenModalForward(false);
+    setSelectedMessage("");
     setPhotoModal(false);
+    setIsSelectedMessage(false);
+    setSelectRoomSendForward("");
   }
 
   function updateProgress(loaded, total) {
@@ -468,7 +506,7 @@ function GroupChats() {
 
   const modalPh = (photoData) => {
     setCurrentPhotoId(photoData.id);
-    console.log(photoData);
+    // console.log(photoData);
     setModalPhoto(photoData);
     setPhotoModal(true);
   };
@@ -588,29 +626,15 @@ function GroupChats() {
   }
 
   async function handleEmojiSelect(selectReactionEmoji) {
-    const reactionData = {
-      id_user: authenticatedUser.id,
-      emoji: selectReactionEmoji,
-    };
-
     try {
-      const url = "http://127.0.0.1:8000/chat/reaction/";
-      const response = await axios.post(url, reactionData);
-      if (response.status === 201 || response.status === 200) {
-        const newReaction = {
-          id: response.data.id, // Получаем ID из ответа
-          emoji: response.data.emoji,
-          id_user: response.data.id_user,
-        };
+      const newReaction = await createReaction(
+        authenticatedUser,
+        selectReactionEmoji
+      );
+      if (newReaction) {
         setReactionEmoji(newReaction);
         await sendReaction(focusMessage, newReaction.id);
         showEmojiWindows();
-        return response;
-      } else {
-        console.error(
-          "Ошибка: Непредвиденный ответ от сервера",
-          response.status
-        );
       }
     } catch (error) {
       if (error.response) {
@@ -622,6 +646,36 @@ function GroupChats() {
       }
     }
   }
+
+  async function sendForwardMessage() {
+    try {
+      if (!isSelectRoomSendForward) return null;
+      // console.log(isSelectRoomSendForward)
+      for (const selectRoom of isSelectRoomSendForward) {
+        const forwardedIds = await sendForward(
+          selectedMessage,
+          authUserId,
+          selectRoom
+        );
+
+        await createNewMessageForward(selectRoom, authUserId, forwardedIds,message);
+      }
+      setIsSelectedMessage(false);
+      setSelectedMessage("");
+      setSelectRoomSendForward("");
+      setOpenModalForward(false);
+      setMessage("")
+    } catch (error) {
+      if (error.response) {
+        console.error("Ошибка сервера:", error.response.data);
+      } else if (error.request) {
+        console.error("Ошибка сети. Сервер не отвечает:", error.request);
+      } else {
+        console.error("Неизвестная ошибка:", error.message);
+      }
+    }
+  }
+
   const NoMessages = () => (
     <div className={styles.nullMessageWrap}>
       <Icon>
@@ -631,12 +685,64 @@ function GroupChats() {
     </div>
   );
 
+  const handleCheckboxChangeMessage = (id) => {
+    setSelectedMessage((prevSelectedUsers) => {
+      if (!Array.isArray(prevSelectedUsers)) {
+        // console.error("prevSelectedUsers is not an array:", prevSelectedUsers);
+        return [{ id }];
+      }
+
+      if (prevSelectedUsers.some((msg) => msg.id === id)) {
+        return prevSelectedUsers.filter((msg) => msg.id !== id);
+      } else {
+        return [...prevSelectedUsers, { id }];
+      }
+    });
+  };
+  const ForwardMessageMenu = () => {
+    return (
+      <div className={styles.forwardMenuWrap}>
+        <button
+          className={styles.forwardButton}
+          onClick={() => {
+            // console.log(authUserId)
+            if (selectedMessage.length === 0) return null;
+            setOpenModalForward(true);
+          }}
+        >
+          Переслать
+        </button>
+        <button
+          className={styles.forwardButton}
+          onClick={() => {
+            setIsSelectedMessage(false);
+            setSelectedMessage("");
+          }}
+        >
+          Отмена
+        </button>
+      </div>
+    );
+  };
+
+  const handleRoomSelect = (roomPk) => {
+    setSelectRoomSendForward((prevSelectedRooms) => {
+      if (prevSelectedRooms.includes(roomPk)) {
+        // Удаляем комнату из массива
+        return prevSelectedRooms.filter((pk) => pk !== roomPk);
+      } else {
+        // Добавляем комнату в массив
+        return [...prevSelectedRooms, roomPk];
+      }
+    });
+  };
+
+
+
   const MessageGroup = ({
     msg,
     photoData,
     isNewDay,
-    authenticatedUser,
-    otherUserAvatar,
     localUser,
   }) => {
     const messageDate = msg.created_at.substring(0, 10);
@@ -649,7 +755,10 @@ function GroupChats() {
       <div>
         {isNewDay && <p className={styles.dataTimeMessage}>{messageDate}</p>}
         <Message
-          username={isAuthored ?  null : userNameMesage }
+          messageId={() => {
+            console.log(msg);
+          }}
+          username={isAuthored ? null : userNameMesage}
           sent={isAuthored}
           text={msg.text}
           time={messageTime}
@@ -663,12 +772,16 @@ function GroupChats() {
           hiddenMenu={hideMenu}
           replyMessage={() => repMessage(msg)}
           reply={msg}
+          forwardMessage={msg}
           setEmojiWindow={showEmojiWindows}
           emojiWindow={emojiWindow}
           reactions={msg}
           onEmojiSelect={handleEmojiSelect}
           authUsers={authUser}
           onDestroyReaction={deleteReaction}
+          onSelectMessage={() => {
+            setIsSelectedMessage(!isSelectedMessage);
+          }}
         />
       </div>
     );
@@ -677,11 +790,13 @@ function GroupChats() {
   const filteredMessages = messages.filter(
     (msg) => msg.room && msg.room.id === parseInt(id)
   );
+  const titleName = roomList ? formatRoomName(roomList.name) : "";
+  const forwardTitle = isSelectedMessage ? <ForwardMessageMenu /> : "";
   return (
     <>
       <ModalSendMessage
         title="Отправить сообщение "
-        onCancel={handleCancelAddPhoto}
+        onCancel={handleCancelModal}
         onSubmit={sendMess}
         inputPrewiew={inputPrew.preview}
         input={handleInputTextChange}
@@ -694,6 +809,25 @@ function GroupChats() {
         progressBar={progressBar}
         removeElement={removeElementModal}
       />
+   <ModalForwardMessage
+        isOpen={isOpenModalForward}
+        openEmoji={openModelEmoji}
+        isOpenEmoji={isOpenModelEmoji}
+        emojiEvent={inputEmoji}
+        input={handleInputTextChange}
+        keyDownSend={keyDownEvent}
+        onCancel={handleCancelModal}
+        onSubmit={sendForwardMessage}
+        roomList={
+          <GroupRoomList
+            // authUser={autUsr}
+            roomList={roomListForwardModal}
+            // userLogo={userLogo}
+            selectedRooms={isSelectRoomSendForward}
+            handleRoomSelect={handleRoomSelect}
+          />
+        }
+      />
       <ModalPhoto
         sizeGalary={modalPhoto.photoData}
         image={
@@ -704,12 +838,12 @@ function GroupChats() {
             : null
         }
         isOpen={photoModal}
-        onCancel={handleCancelPhoto}
+        onCancel={handleCancelModal}
         nextPhoto={nextImg}
         prevPhoto={prevImg}
       />
       <ChatArea
-        title={roomList ? formatRoomName(roomList.name) : ""}
+        title={forwardTitle ? forwardTitle : titleName}
         inputValue={message}
         input={handleInputTextChange}
         documents={handleInputDocuments}
@@ -737,16 +871,32 @@ function GroupChats() {
                   previousDate !== msg.created_at.substring(0, 10);
                 const photoData = msg.images.map((image) => image);
                 return (
-                  <MessageGroup
-                    key={index}
-                    msg={msg}
-                    previousDate={previousDate}
-                    photoData={photoData}
-                    isNewDay={isNewDay}
-                    authenticatedUser={authenticatedUser}
-                    otherUserAvatar={otherUserAvatar}
-                    localUser={autUsr}
-                  />
+                  <label key={index} className={styles.selectedMessageWrap}>
+                    <MessageGroup
+                      key={index}
+                      msg={msg}
+                      previousDate={previousDate}
+                      photoData={photoData}
+                      isNewDay={isNewDay}
+                      authenticatedUser={authenticatedUser}
+                      otherUserAvatar={otherUserAvatar}
+                      localUser={autUsr}
+                    />
+                    <input
+                      onClick={(e) => {
+                        if (!isSelectedMessage) e.preventDefault();
+                      }}
+                      type="checkbox"
+                      onChange={() => handleCheckboxChangeMessage(msg.id)}
+                      className={styles.checkboxMessage}
+                      id={msg.id}
+                      style={
+                        isSelectedMessage
+                          ? { display: "block" }
+                          : { display: "none" }
+                      }
+                    />
+                  </label>
                 );
               })
             )}

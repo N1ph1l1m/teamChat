@@ -2,16 +2,17 @@ import axios from "axios";
 
 
 
-export async function createNewMessageForward(room,user,forward) {
+export async function createNewMessageForward(room,user,forward,message) {
     try{
           const selected = {
             "room": room,
             "user": user,
-            "forwarded_messages": forward
+            "forwarded_messages": forward,
+            "text":message,
           }
           const url = "http://127.0.0.1:8000/chat/message-create/"
-          const response   = await  axios.post(url,selected)
-        //   console.log(response.id);
+           await  axios.post(url,selected)
+
       }catch(error){
         if (error.response) {
           console.error("Ошибка сервера:", error.response.data);

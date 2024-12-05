@@ -16,10 +16,9 @@ import styles from "../../App/Styles/chats.module.css";
 import ModalPhoto from "../../Widgets/modalPhoto/modalPhoto";
 import ModalForwardMessage from "../../Widgets/ModalForwardMessage/modalForwardMessage";
 import ModalSendMessage from "../../Widgets/modalSendMessage/modalSendMessage";
-import RoomList from "../../Entities/Lists/roomList";
+import {RoomList} from "../../Entities/Lists/roomList";
 import userLogo from "../../App/images/userAvatar.png";
 
-// import EmojiPicker from "emoji-picker-react";
 function Chats() {
   const autUsr = localStorage.getItem("username");
   const { id } = useParams();
@@ -656,12 +655,13 @@ function Chats() {
           selectRoom
         );
 
-        await createNewMessageForward(selectRoom, authUserId, forwardedIds);
+        await createNewMessageForward(selectRoom, authUserId, forwardedIds,message);
       }
       setIsSelectedMessage(false);
       setSelectedMessage("");
       setSelectRoomSendForward("");
       setOpenModalForward(false);
+      setMessage("")
     } catch (error) {
       if (error.response) {
         console.error("Ошибка сервера:", error.response.data);
@@ -721,6 +721,7 @@ function Chats() {
       </div>
     );
   };
+
   const handleRoomSelect = (roomPk) => {
     setSelectRoomSendForward((prevSelectedRooms) => {
       if (prevSelectedRooms.includes(roomPk)) {
@@ -839,7 +840,6 @@ function Chats() {
       />
 
       <ChatArea
-        // title={roomList ? formatRoomName(roomList.name) : ""}
         title={forwardTitle ? forwardTitle : titleName}
         inputValue={message}
         input={handleInputTextChange}

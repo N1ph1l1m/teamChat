@@ -18,7 +18,7 @@ import joinroom from "../../Entities/api/joinroom";
 import Badge from "../../Shared/badge/badge.jsx";
 import styles from "../../App/Styles/mainLayout.module.css";
 import userLogo from "../../App/images/userAvatar.png";
-import RoomList from "../../Entities/Lists/roomList.jsx";
+import { RoomList, GroupRoomList } from "../../Entities/Lists/roomList.jsx";
 
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
@@ -86,32 +86,32 @@ function MainLayout() {
   //   );
   // }
 
-  function GroupRoomList() {
-    return (
-      <>
-        {roomList
-          .filter((room) => room.current_users.length > 2)
-          .map((room) => {
-            const capitalized =
-              room.name.charAt(0).toUpperCase() + room.name.slice(1);
+  // function GroupRoomList() {
+  //   return (
+  //     <>
+  //       {roomList
+  //         .filter((room) => room.current_users.length > 2)
+  //         .map((room) => {
+  //           const capitalized =
+  //             room.name.charAt(0).toUpperCase() + room.name.slice(1);
 
-            return (
-              <Link
-                key={room.pk}
-                to={`grchats/${room.pk}`}
-                // onClick={() => CreateRoom(user.username)}
-              >
-                <NaviItem
-                  icon={<MdOutlineTaskAlt color="black" size="20" />}
-                  tittle={capitalized}
-                  badgeCount={room.message.length}
-                />
-              </Link>
-            );
-          })}
-      </>
-    );
-  }
+  //           return (
+  //             <Link
+  //               key={room.pk}
+  //               to={`grchats/${room.pk}`}
+  //               // onClick={() => CreateRoom(user.username)}
+  //             >
+  //               <NaviItem
+  //                 icon={<MdOutlineTaskAlt color="black" size="20" />}
+  //                 tittle={capitalized}
+  //                 badgeCount={room.message.length}
+  //               />
+  //             </Link>
+  //           );
+  //         })}
+  //     </>
+  //   );
+  // }
 
   function handleCancel() {
     setModalCreateGroup(false);
@@ -244,9 +244,9 @@ function MainLayout() {
                 content={
                   <RoomList
                     roomList={roomList}
+                    link
                     authUser={authUser}
                     userLogo={userLogo}
-                    link
                   />
                 }
               />
@@ -257,7 +257,12 @@ function MainLayout() {
                   getData("chat/rooms", setRoomList)
                 )}
                 plusClick={showModalGroupChat}
-                content={<>{GroupRoomList()}</>}
+                content={
+                  <GroupRoomList
+                    roomList={roomList}
+                    link
+                  />
+                }
               />
               <DropDown
                 title="Контакты"
