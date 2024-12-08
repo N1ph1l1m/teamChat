@@ -12,13 +12,13 @@ import { MessagePhoto } from "../../Shared/messagePhoto/messagePhoto";
 import { MessageDocuments } from "../../Shared/messageDocuments/messageDocuments";
 import ForwardMessage from "../../Shared/ForwardMessage/ForwardMessage";
 
-
 export default function Message({
   messageId,
   text,
   avatar,
   sent,
   time,
+  isRead,
   username,
   photos,
   documents,
@@ -44,20 +44,30 @@ export default function Message({
 
   const isDocumentNull = Array.isArray(documents) && documents.length === 0;
 
-  const isForwardMessageNull = Array.isArray(isForwardMessage) && isForwardMessage.length === 0;
+  const isForwardMessageNull =
+    Array.isArray(isForwardMessage) && isForwardMessage.length === 0;
 
-  const onlyText = text && isPhotoNull && isDocumentNull && isForwardMessageNull;
+  const onlyText =
+    text && isPhotoNull && isDocumentNull && isForwardMessageNull;
 
-  const isForwardMessageArray =  Array.isArray(forwardMessage.forwarded_messages) &&  forwardMessage.forwarded_messages.length > 0;
+  const isForwardMessageArray =
+    Array.isArray(forwardMessage.forwarded_messages) &&
+    forwardMessage.forwarded_messages.length > 0;
 
-  const onlyForward =  isForwardMessage && isForwardMessageArray && !text && isPhotoNull && isDocumentNull;
+  const onlyForward =
+    isForwardMessage &&
+    isForwardMessageArray &&
+    !text &&
+    isPhotoNull &&
+    isDocumentNull;
 
-  const onlyDocuments = !text && Array.isArray(documents) && documents.length > 0;
+  const onlyDocuments =
+    !text && Array.isArray(documents) && documents.length > 0;
 
-   const TextDocuments = text && Array.isArray(documents) && documents.length > 0;
+  const TextDocuments =
+    text && Array.isArray(documents) && documents.length > 0;
 
-  const ForwardText  = isForwardMessage && isForwardMessageArray && text;
-
+  const ForwardText = isForwardMessage && isForwardMessageArray && text;
   return (
     <>
       <div
@@ -75,12 +85,13 @@ export default function Message({
           <div className={styles.messageBubbleText}>
             <ForwardMessage
               forwardMessage={forwardMessage}
-              photos={forwardMessage?.forwarded_messages?.flatMap((msg) =>
-                        msg.original_message?.images?.map((image) => image.image) || [])
-                      }
-
-            modalPhoto={modalPhoto}
-            photoData={photoData}
+              photos={forwardMessage?.forwarded_messages?.flatMap(
+                (msg) =>
+                  msg.original_message?.images?.map((image) => image.image) ||
+                  []
+              )}
+              modalPhoto={modalPhoto}
+              photoData={photoData}
             />
             <MessageFooter
               time={time}
@@ -101,30 +112,32 @@ export default function Message({
               reactions={reactions}
               avatar={avatar}
               onDestroyReaction={onDestroyReaction}
+              isRead={isRead}
+              sent={sent}
             />
           </div>
         )}
 
         {ForwardText && (
-          <div className={styles.messageBubbleText}
-
-          >
+          <div className={styles.messageBubbleText}>
             <ForwardMessage
               forwardMessage={forwardMessage}
-              photos={forwardMessage?.forwarded_messages?.flatMap((msg) =>
-                        msg.original_message?.images?.map((image) => image.image) || [])
-                      }
-
-            modalPhoto={modalPhoto}
-            photoData={photoData}
+              photos={forwardMessage?.forwarded_messages?.flatMap(
+                (msg) =>
+                  msg.original_message?.images?.map((image) => image.image) ||
+                  []
+              )}
+              modalPhoto={modalPhoto}
+              photoData={photoData}
             />
-              <ReplyMessage reply={reply} />
-              <p>{text}</p>
+            <ReplyMessage reply={reply} />
+            <p>{text}</p>
             <MessageFooter
               time={time}
               reactions={reactions}
               avatar={avatar}
               onDestroyReaction={onDestroyReaction}
+              isRead={isRead}
             />
           </div>
         )}
@@ -139,6 +152,7 @@ export default function Message({
               reactions={reactions}
               avatar={avatar}
               onDestroyReaction={onDestroyReaction}
+              isRead={isRead}
             />
           </div>
         )}
@@ -154,30 +168,34 @@ export default function Message({
               reactions={reactions}
               avatar={avatar}
               onDestroyReaction={onDestroyReaction}
+              isRead={isRead}
             />
           </div>
         )}
 
-        {!text &&  Array.isArray(documents) &&
-          documents.length === 0  &&  isForwardMessageNull  && photos && (
-          <div className={styles.messageBublePhoto}>
-            <ReplyMessage reply={reply} />
-            <MessagePhoto
-              photos={photos}
-              modalPhoto={modalPhoto}
-              photoData={photoData}
-            />
-
-            <div className={styles.bubbleTimeWrapPhoto}>
-              <MessageFooter
-                reactions={reactions}
-                avatar={avatar}
-                onDestroyReaction={onDestroyReaction}
+        {!text &&
+          Array.isArray(documents) &&
+          documents.length === 0 &&
+          isForwardMessageNull &&
+          photos && (
+            <div className={styles.messageBublePhoto}>
+              <ReplyMessage reply={reply} />
+              <MessagePhoto
+                photos={photos}
+                modalPhoto={modalPhoto}
+                photoData={photoData}
               />
-              <span className={styles.bubbleTimeTextPhoto}>{time}</span>
+
+              <div className={styles.bubbleTimeWrapPhoto}>
+                <MessageFooter
+                  reactions={reactions}
+                  avatar={avatar}
+                  onDestroyReaction={onDestroyReaction}
+                />
+                <span className={styles.bubbleTimeTextPhoto}>{time}</span>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
         {text && Array.isArray(photos) && photos.length === 1 && (
           <div className={`${styles.messageBubbleAll} ${styles.one}`}>
@@ -219,9 +237,6 @@ export default function Message({
             </div>
           </div>
         )}
-
-
-
 
         <div className={styles.replyToMessageButton}>
           <Icon>

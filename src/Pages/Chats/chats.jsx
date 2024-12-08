@@ -16,7 +16,7 @@ import styles from "../../App/Styles/chats.module.css";
 import ModalPhoto from "../../Widgets/modalPhoto/modalPhoto";
 import ModalForwardMessage from "../../Widgets/ModalForwardMessage/modalForwardMessage";
 import ModalSendMessage from "../../Widgets/modalSendMessage/modalSendMessage";
-import {RoomList} from "../../Entities/Lists/roomList";
+import { RoomList } from "../../Entities/Lists/roomList";
 import userLogo from "../../App/images/userAvatar.png";
 
 function Chats() {
@@ -655,13 +655,18 @@ function Chats() {
           selectRoom
         );
 
-        await createNewMessageForward(selectRoom, authUserId, forwardedIds,message);
+        await createNewMessageForward(
+          selectRoom,
+          authUserId,
+          forwardedIds,
+          message
+        );
       }
       setIsSelectedMessage(false);
       setSelectedMessage("");
       setSelectRoomSendForward("");
       setOpenModalForward(false);
-      setMessage("")
+      setMessage("");
     } catch (error) {
       if (error.response) {
         console.error("Ошибка сервера:", error.response.data);
@@ -747,6 +752,8 @@ function Chats() {
     const isAuthored = msg.user.username === localUser;
     const userNameMesage =
       msg.user.username.charAt(0).toUpperCase() + msg.user.username.slice(1);
+
+    // console.log(isAuthored);
     return (
       <div>
         {isNewDay && <p className={styles.dataTimeMessage}>{messageDate}</p>}
@@ -774,6 +781,7 @@ function Chats() {
           reactions={msg}
           onEmojiSelect={handleEmojiSelect}
           authUsers={authUser}
+          isRead={msg.is_read}
           onDestroyReaction={deleteReaction}
           onSelectMessage={() => {
             setIsSelectedMessage(!isSelectedMessage);
