@@ -4,7 +4,6 @@ import styled from "styled-components";
 import NaviItem from "../../Shared/navItem/naviItem";
 import DropDown from "../../Shared/dropDown/dropDown";
 // import { GoPlus } from "react-icons/go";
-import { FaUsers } from "react-icons/fa";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { Link, Outlet } from "react-router-dom";
 import "../../App/Styles/link.scss";
@@ -19,7 +18,11 @@ import Badge from "../../Shared/badge/badge.jsx";
 import styles from "../../App/Styles/mainLayout.module.css";
 import userLogo from "../../App/images/userAvatar.png";
 import { RoomList, GroupRoomList } from "../../Entities/Lists/roomList.jsx";
-
+import Icon from "../../Shared/icon/icon.jsx";
+import { MdAddAPhoto } from "react-icons/md";
+import { FaFileImage } from "react-icons/fa";
+import { MdNoPhotography } from "react-icons/md";
+import { FaUsers } from "react-icons/fa";
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
   const [roomList, setRoomList] = useState([]);
@@ -27,6 +30,9 @@ function MainLayout() {
   const [groupName, setGroupName] = useState();
   const [selectedUsers, setSelectedUsers] = useState([]);
   const authUser = localStorage.getItem("username");
+  const [avatarGroup, setAvatarGroup] = useState("");
+  const [avatarPrew, setAvatarPrew] = useState("");
+  const [isDeleteAvatar, setDeleteAvatar] = useState(false);
 
   function UserList() {
     return (
@@ -55,67 +61,10 @@ function MainLayout() {
     );
   }
 
-  // function RoomList() {
-  //   //console.log(roomList.current_users)
-  //   return (
-  //     <>
-  //       {roomList
-  //         .filter((room) => room.name.includes(authUser))
-  //         .map((room) => {
-  //           const newName = room.name
-  //             .replace(authUser, "")
-  //             .replace(/^_+|_+$/g, "")
-  //             .trim();
-  //           const capitalized =
-  //             newName.charAt(0).toUpperCase() + newName.slice(1);
-  //           const otherUser = room.current_users.find(
-  //             (user) => user.username !== authUser
-  //           );
-  //           const avatar = otherUser ? otherUser.photo : userLogo;
-  //           return (
-  //             <Link key={room.pk} to={`chats/${room.pk}`}>
-  //               <NaviItem
-  //                 icon={<img src={avatar} alt={"avatar"} />}
-  //                 tittle={capitalized}
-  //                 badgeCount={room.message.length}
-  //               />
-  //             </Link>
-  //           );
-  //         })}
-  //     </>
-  //   );
-  // }
-
-  // function GroupRoomList() {
-  //   return (
-  //     <>
-  //       {roomList
-  //         .filter((room) => room.current_users.length > 2)
-  //         .map((room) => {
-  //           const capitalized =
-  //             room.name.charAt(0).toUpperCase() + room.name.slice(1);
-
-  //           return (
-  //             <Link
-  //               key={room.pk}
-  //               to={`grchats/${room.pk}`}
-  //               // onClick={() => CreateRoom(user.username)}
-  //             >
-  //               <NaviItem
-  //                 icon={<MdOutlineTaskAlt color="black" size="20" />}
-  //                 tittle={capitalized}
-  //                 badgeCount={room.message.length}
-  //               />
-  //             </Link>
-  //           );
-  //         })}
-  //     </>
-  //   );
-  // }
-
   function handleCancel() {
     setModalCreateGroup(false);
     setSelectedUsers([]);
+    setAvatarGroup("");
     setGroupName("");
   }
   function showModalGroupChat() {
@@ -141,11 +90,71 @@ function MainLayout() {
     });
   };
 
+  const handleAvatarGroup = (e) => {
+    let files = e.target.files[0];
+    setAvatarGroup(files);
+    console.log(files.name);
+    const reader = new FileReader();
+    reader.readAsDataURL(files);
+    reader.onload = () => {
+      console.log(avatarGroup.name);
+      setAvatarPrew(reader.result);
+    };
+    reader.onerror = () => {
+      console.log(reader.error);
+    };
+  };
+
   function formGroupChat() {
     return (
       <>
         <div className={styles.headerModel}>
-          <div className={styles.selectAvatar}></div>
+          {!avatarGroup ? (
+            <div
+              className={styles.selectAvatarWrap}
+              onMouseLeave={() => setDeleteAvatar(false)}
+            >
+              <input
+                className={styles.inputAvatar}
+                type="file"
+                id="avatarGroup"
+                name="avatarGroup"
+                accept="image/*"
+                onChange={handleAvatarGroup}
+              />
+              <label htmlFor="avatarGroup">
+                <Icon onClick={() => setAvatarGroup("")}>
+                  <MdAddAPhoto color="black" size="40" />
+                </Icon>
+              </label>
+            </div>
+          ) : (
+            <>
+              <div
+                className={styles.selectAvatarWrap}
+                onMouseEnter={() => setDeleteAvatar(true)}
+                onMouseLeave={() => setDeleteAvatar(false)}
+              >
+                {!isDeleteAvatar ? (
+                  <img
+                    src={avatarPrew}
+                    alt="ava"
+                    className={styles.inputAvatarWrap}
+                  />
+                ) : (
+                  <Icon
+                    onClick={() => {
+                      setAvatarGroup("");
+                      console.log("delete");
+                    }}
+                  >
+                    <MdNoPhotography color="rgb(131, 130, 130)" size="30" />
+                  </Icon>
+                )}
+              </div>
+            </>
+          )}
+
           <div className={styles.inputNameGroup}>
             <span className={styles.modalTitle}>Название группы</span>
             <input onChange={(e) => handleInputChangeName(e)} />
@@ -215,7 +224,8 @@ function MainLayout() {
           isOpen={isOpenModalCreateGroup}
           onCancel={handleCancel}
           onSubmit={() => {
-            CreateGroupRoom(groupName, selectedUsers);
+            // console.log(avatarGroup);
+            CreateGroupRoom(groupName, avatarGroup, selectedUsers);
             handleCancel();
           }}
           children={groupChat}
@@ -257,12 +267,7 @@ function MainLayout() {
                   getData("chat/rooms", setRoomList)
                 )}
                 plusClick={showModalGroupChat}
-                content={
-                  <GroupRoomList
-                    roomList={roomList}
-                    link
-                  />
-                }
+                content={<GroupRoomList roomList={roomList} link />}
               />
               <DropDown
                 title="Контакты"

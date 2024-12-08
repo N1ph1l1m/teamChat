@@ -28,12 +28,33 @@
   align-items: center;
   width: 400px;
   justify-content: flex-start;
+  /* border:1px solid red; */
 }
-.selectAvatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 50px;
-  border: 1px solid green;
+
+.selectAvatarWrap{
+  width: 65px;
+  height: 65px;
+  border-radius:50%;
+  border: 1px solid black;
+  margin: 0px auto;
+  display: flex;
+  align-items:center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.inputAvatarWrap{
+  /* border: 1px solid blue; */
+  height: 65px;
+  width: 65px;
+  border-radius:50%;
+}
+.inputAvatartWrap > label> span{
+  display: block;
+  font-size: 10px;
+}
+.inputAvatar{
+   display: none;
+
 }
 .inputNameGroup {
   min-height: 100px;
