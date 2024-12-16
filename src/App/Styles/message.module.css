@@ -88,7 +88,20 @@
   justify-content: flex-end;
   align-items: start;
 }
+
+.bubbleTimeWrapPhoto{
+  width: 60px;
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+} 
+
 .bubbleTimeTextPhoto {
+  display: block;
   color: white;
   background-color: rgba(0, 0, 0, 0.486);
   border-radius: 5px;
@@ -97,20 +110,15 @@
   font-weight: 600;
   height: 20px;
 }
-
+.messageFooterClass{
+  width: 20px;
+}
 
 .sent .received {
   display: flex;
   justify-content: flex-start;
 }
 
-.bubbleTimeWrapPhoto{
-  position: absolute;
-  bottom: 8px;
-  right: 15px;
-  display: flex;
-  align-items: flex-end;
-}
 
 
 .messageBubbleAll {

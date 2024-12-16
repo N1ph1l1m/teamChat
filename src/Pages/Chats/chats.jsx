@@ -7,6 +7,7 @@ import Icon from "../../Shared/icon/icon";
 import { BiMessageAltX } from "react-icons/bi";
 import { getData } from "../../Entities/api/getUserList";
 import { getRoomData } from "../../Entities/api/getRoomData";
+import { ReadMessageAll } from "../../Entities/api/ReadAllMessage";
 import {
   createNewMessageForward,
   sendForward,
@@ -36,6 +37,7 @@ function Chats() {
   const [roomList, setRoomList] = useState(null);
   const [roomListForwardModal, setRoomListForwardModal] = useState(null);
   const [inputPrew, setInputPrew] = useState({});
+  const [otherUserId, setOtherUserId] = useState(null);
   const [otherUserAvatar, setOtherUserAvatar] = useState(null);
   const [authUser, setAuthUser] = useState([]);
   const [modal, setModel] = useState(false);
@@ -63,7 +65,9 @@ function Chats() {
     async function fetchData() {
       try {
         // console.log("fentchData");
+
         const data = await getData("users/", setAuthUser);
+        console.log(data);
         return data;
       } catch (error) {
         console.error(error);
@@ -204,18 +208,23 @@ function Chats() {
       setChatSocket(socket);
     }
 
-    function showMessageAvatar(roomList) {
+    async function showMessageAvatar(roomList) {
       // console.log("avatar");
       if (roomList.data) {
         const otherUser = roomList.data.current_users.find(
           (user) => user.username !== autUsr
         );
+        await setOtherUserId(otherUser.id);
         if (otherUser) setOtherUserAvatar(otherUser.photo);
       } else {
         console.error("roomList или current_users отсутствуют или пусты");
       }
     }
 
+    async function ReadMessage() {
+      console.log(otherUserId);
+      await ReadMessageAll(otherUserId);
+    }
     async function go() {
       fetchData();
       fetchDataRoomList();
@@ -226,7 +235,8 @@ function Chats() {
         id
       );
       webSocket();
-      showMessageAvatar(dataRoom);
+      await showMessageAvatar(dataRoom);
+      await ReadMessage();
       await getMessageData();
     }
     go();
@@ -483,6 +493,7 @@ function Chats() {
       }
     } finally {
       setIsSending(false);
+      await ReadMessageAll(otherUserId);
     }
   }
 

@@ -10,6 +10,7 @@ import { HeaderName } from "../../Shared/HeaderNameMessage/HeaderNameMessage";
 import { MessageFooter } from "../MessageFooter/MessageFooter";
 import { MessagePhoto } from "../../Shared/messagePhoto/messagePhoto";
 import { MessageDocuments } from "../../Shared/messageDocuments/messageDocuments";
+import { ReadMessage } from "../../Entities/api/ReadMessage";
 import ForwardMessage from "../../Shared/ForwardMessage/ForwardMessage";
 
 export default function Message({
@@ -68,12 +69,22 @@ export default function Message({
     text && Array.isArray(documents) && documents.length > 0;
 
   const ForwardText = isForwardMessage && isForwardMessageArray && text;
+
+  function checkIsReadMessage() {
+    console.log();
+    if (!sent && !isRead) {
+      ReadMessage(forwardMessage.id);
+    }
+  }
+
   return (
     <>
       <div
         className={`${styles.message} ${sent ? styles.sent : styles.received}`}
         onMouseLeave={hiddenMenu}
-        // onClick={messageId}
+        onMouseEnter={() => {
+          checkIsReadMessage();
+        }}
       >
         <img
           className={styles.messageAvatar}
@@ -98,6 +109,8 @@ export default function Message({
               reactions={reactions}
               avatar={avatar}
               onDestroyReaction={onDestroyReaction}
+              isRead={isRead}
+              sent={sent}
             />
           </div>
         )}
@@ -138,6 +151,7 @@ export default function Message({
               avatar={avatar}
               onDestroyReaction={onDestroyReaction}
               isRead={isRead}
+              sent={sent}
             />
           </div>
         )}
@@ -153,6 +167,7 @@ export default function Message({
               avatar={avatar}
               onDestroyReaction={onDestroyReaction}
               isRead={isRead}
+              sent={sent}
             />
           </div>
         )}
@@ -169,6 +184,7 @@ export default function Message({
               avatar={avatar}
               onDestroyReaction={onDestroyReaction}
               isRead={isRead}
+              sent={sent}
             />
           </div>
         )}
@@ -186,14 +202,27 @@ export default function Message({
                 photoData={photoData}
               />
 
-              <div className={styles.bubbleTimeWrapPhoto}>
-                <MessageFooter
-                  reactions={reactions}
-                  avatar={avatar}
-                  onDestroyReaction={onDestroyReaction}
-                />
-                <span className={styles.bubbleTimeTextPhoto}>{time}</span>
-              </div>
+              {sent ? (
+                <div className={styles.bubbleTimeWrapPhoto}>
+                  <span className={styles.bubbleTimeTextPhoto}>{time}</span>
+                  <div className={styles.messageFooterClass}>
+                    <MessageFooter
+                      reactions={reactions}
+                      avatar={avatar}
+                      onDestroyReaction={onDestroyReaction}
+                      isRead={isRead}
+                      sent={sent}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div
+                  className={styles.bubbleTimeWrapPhoto}
+                  style={{ width: "40px" }}
+                >
+                  <span className={styles.bubbleTimeTextPhoto}>{time}</span>
+                </div>
+              )}
             </div>
           )}
 
@@ -213,6 +242,8 @@ export default function Message({
                 reactions={reactions}
                 avatar={avatar}
                 onDestroyReaction={onDestroyReaction}
+                isRead={isRead}
+                sent={sent}
               />
             </div>
           </div>
@@ -230,9 +261,12 @@ export default function Message({
               <ReplyMessage reply={reply} />
               <p>{text}</p>
               <MessageFooter
+                time={time}
                 reactions={reactions}
                 avatar={avatar}
                 onDestroyReaction={onDestroyReaction}
+                isRead={isRead}
+                sent={sent}
               />
             </div>
           </div>
