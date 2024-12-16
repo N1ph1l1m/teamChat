@@ -64,10 +64,7 @@ function Chats() {
   useEffect(() => {
     async function fetchData() {
       try {
-        // console.log("fentchData");
-
         const data = await getData("users/", setAuthUser);
-        console.log(data);
         return data;
       } catch (error) {
         console.error(error);
@@ -222,7 +219,7 @@ function Chats() {
     }
 
     async function ReadMessage() {
-      console.log(otherUserId);
+      // console.log(otherUserId);
       await ReadMessageAll(otherUserId);
     }
     async function go() {

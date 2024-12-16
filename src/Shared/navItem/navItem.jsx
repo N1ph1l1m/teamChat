@@ -1,5 +1,5 @@
 import React from "react";
-import styles from  "../../App/Styles/navItem.module.css";
+import styles from "../../App/Styles/navItem.module.css";
 import Badge from "../badge/badge";
 import Icon from "../icon/icon";
 

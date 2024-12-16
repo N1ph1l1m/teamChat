@@ -1,0 +1,102 @@
+.wrap{
+    display: flex;
+    flex-direction: row;
+    align-items:center;
+    justify-content: flex-start;
+    height: 70px;
+    width: 100%;
+    border-radius: 5px;
+    overflow: auto;
+    cursor: pointer;
+    border:1px solid red;
+
+}
+.wrap::-webkit-scrollbar{
+    display: none;
+  }
+
+
+.titleText{
+    /* border:1px solid green; */
+    padding: 5px;
+    width:78%;
+}
+
+.tittle{
+    color:black;
+    font-size: 16px;
+    display: inline;
+    font-weight:600;
+}
+
+.icon{
+    width: 20%;
+}
+ .icon img {
+    width: 100%; 
+    height: auto; 
+    max-width: 60px; 
+    max-height: 60px;
+    border-radius: 50%;
+    border: 1px solid black;
+
+  }
+
+.textMessage{
+font-size: 12px;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+width: 100%;
+color:black;
+}
+
+
+
+.headerTitle{
+display: flex;
+justify-content: space-between;
+align-items:flex-start;
+/* border:1px solid red; */
+height: 40px;
+text-decoration: none;
+}
+.headerTime{
+display: flex;
+flex-direction: row;
+height: 20px;
+width: 47px;
+/* border:1px solid green; */
+margin-top: 10px;
+align-items:center;
+}
+.timeMessage{
+      font-size: 12px;
+    color:rgb(73, 73, 73);
+    margin-left: 5px;
+}
+.badge{
+    width: 40px;
+}
+
+.bell{
+    padding: 10px;
+    height: 30px;
+    display: flex;
+    align-items:center;
+    justify-content: center;
+}
+
+.bell:hover{
+    background-color:purple;
+    border-radius: 5px;
+
+}
+.simpleTittle{
+    margin-left: 5px;
+    margin-top: -10px;
+    color:black;
+    font-size: 16px;
+    display: inline;
+    font-weight:600;
+}

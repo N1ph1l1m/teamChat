@@ -1,9 +1,7 @@
 import React from "react";
 import Nav from "../../Widgets/nav/nav";
-import styled from "styled-components";
-import NaviItem from "../../Shared/navItem/naviItem";
+import NaviItem from "../../Shared/roomListItem/roomListItem.jsx";
 import DropDown from "../../Shared/dropDown/dropDown";
-// import { GoPlus } from "react-icons/go";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { Link, Outlet } from "react-router-dom";
 import "../../App/Styles/link.scss";
@@ -20,9 +18,7 @@ import userLogo from "../../App/images/userAvatar.png";
 import { RoomList, GroupRoomList } from "../../Entities/Lists/roomList.jsx";
 import Icon from "../../Shared/icon/icon.jsx";
 import { MdAddAPhoto } from "react-icons/md";
-import { FaFileImage } from "react-icons/fa";
 import { MdNoPhotography } from "react-icons/md";
-import { FaUsers } from "react-icons/fa";
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
   const [roomList, setRoomList] = useState([]);
@@ -33,6 +29,10 @@ function MainLayout() {
   const [avatarGroup, setAvatarGroup] = useState("");
   const [avatarPrew, setAvatarPrew] = useState("");
   const [isDeleteAvatar, setDeleteAvatar] = useState(false);
+
+  // useEffect(() => {
+  //   getData("chat/rooms", setRoomList);
+  // }, [roomList]);
 
   function UserList() {
     return (
@@ -68,9 +68,7 @@ function MainLayout() {
     setGroupName("");
   }
   function showModalGroupChat() {
-    console.log("click");
     setModalCreateGroup(true);
-    return <></>;
   }
 
   const handleInputChangeName = (e) => {
@@ -233,21 +231,21 @@ function MainLayout() {
         <Nav
           navItem={
             <>
-              <Link to="/task" className="newLink">
+              {/* <Link to="/task" className="newLink">
                 <NaviItem
                   icon={<MdOutlineTaskAlt color="black" size="20" />}
                   tittle="Задачи"
                   badgeCount="3"
                 />
-              </Link>
+              </Link> */}
 
-              <Link to="/auto" className="newLink">
+              {/* <Link to="/auto" className="newLink">
                 <NaviItem
                   icon={<MdOutlineTaskAlt color="black" size="20" />}
                   tittle="Автоматизации"
                   badgeCount="20"
                 />
-              </Link>
+              </Link> */}
               <DropDown
                 title="Чаты"
                 onClick={() => getData("chat/rooms", setRoomList)}
