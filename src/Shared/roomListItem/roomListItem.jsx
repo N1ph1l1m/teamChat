@@ -2,6 +2,7 @@ import React from "react";
 import styles from "../../App/Styles/roomListItem.module.css";
 import Icon from "../icon/icon";
 import IsRead from "../isRead/isRead";
+import { BiSolidMessageRounded } from "react-icons/bi";
 
 function RoomListItem({
   click,
@@ -28,11 +29,36 @@ function RoomListItem({
             <p className={styles.timeMessage}>{timeMessage}</p>
           </div>
         ) : (
-          <div style={{ width: "30px" }} className={styles.headerTime}>
+          <div style={{ width: "42px" }} className={styles.headerTime}>
             <p className={styles.timeMessage}>{timeMessage}</p>
           </div>
         )}
       </>
+    );
+  };
+
+  const HeaderList = ({ text }) => {
+    const newMessage = user.username !== authUser && !is_read;
+    return (
+      <div className={styles.titleText}>
+        <div className={styles.headerTitle}>
+          <p className={styles.title}>{tittle}</p>
+          <HeaderTime />
+        </div>
+        <div
+          className={styles.textWrap}
+          style={{
+            backgroundColor: newMessage ? "rgba(128, 128, 128, 0.507)" : null,
+          }}
+        >
+          <p className={styles.textMessage}>{text}</p>
+          {newMessage ? (
+            <Icon style={{ display: "inline-block" }}>
+              <BiSolidMessageRounded size="20" color="rgba(0, 0, 255, 0.646)" />
+            </Icon>
+          ) : null}
+        </div>
+      </div>
     );
   };
   const isPhoto = Array.isArray(photo);
@@ -80,45 +106,21 @@ function RoomListItem({
 
         {simpleItem && <p className={styles.simpleTittle}>{tittle}</p>}
 
-        {textRender && (
-          <div className={styles.titleText}>
-            <div className={styles.headerTitle}>
-              <p className={styles.tittle}>{tittle}</p>
-              <HeaderTime />
-            </div>
-            <p className={styles.textMessage}>{text}</p>
-          </div>
-        )}
+        {textRender && <HeaderList text={text} />}
 
         {photoRender && (
-          <div className={styles.titleText}>
-            <div className={styles.headerTitle}>
-              <p className={styles.tittle}>{tittle}</p>
-              <HeaderTime />
-            </div>
-            <p className={styles.textMessage}>Фотография</p>
-          </div>
+          <HeaderList
+            text={isPhoto && photo.length > 1 ? "Фотографии" : "Фотография"}
+          />
         )}
 
         {documentRender && (
-          <div className={styles.titleText}>
-            <div className={styles.headerTitle}>
-              <p className={styles.tittle}>{tittle}</p>
-              <HeaderTime />
-            </div>
-            <p className={styles.textMessage}>Документ</p>
-          </div>
+          <HeaderList
+            text={isDocument && document.length > 1 ? "Документы" : "Документ"}
+          />
         )}
 
-        {forwardRender && (
-          <div className={styles.titleText}>
-            <div className={styles.headerTitle}>
-              <p className={styles.tittle}>{tittle}</p>
-              <HeaderTime />
-            </div>
-            <p className={styles.textMessage}>Пересланное сообщение </p>
-          </div>
-        )}
+        {forwardRender && <HeaderList text="Пересланное сообщение" />}
       </div>
     </>
   );

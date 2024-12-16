@@ -71,7 +71,6 @@ export default function Message({
   const ForwardText = isForwardMessage && isForwardMessageArray && text;
 
   function checkIsReadMessage() {
-    console.log();
     if (!sent && !isRead) {
       ReadMessage(forwardMessage.id);
     }

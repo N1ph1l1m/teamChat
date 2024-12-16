@@ -107,7 +107,7 @@ function ChatArea({
           replyMessage.length > 0 &&
           replyMessage.map((reply) => (
             <div
-            key={reply.id}
+              key={reply.id}
               className={styles.replyItems}
               style={
                 reply.user.username === autUsr
@@ -146,9 +146,7 @@ function ChatArea({
   return (
     <div className={styles.chatAreaWrap}>
       <div className={styles.chatHeader}>
-        <div className={styles.chatHeaderItem}>
-          <p>{title}</p>
-        </div>
+        <div className={styles.chatHeaderItem}>{title}</div>
         <div className={styles.messages}>
           {content}
           <div

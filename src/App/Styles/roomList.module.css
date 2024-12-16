@@ -1,16 +1,15 @@
-.checkBoxWrap{
-    width: 100%;
-    display: flex;
-    align-items:center;
+.checkBoxWrap {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.checkBoxWrap:hover {
+  background-color: rgba(116, 116, 116, 0.461);
+}
+.checkBoxWrap:nth-last-child(1) {
+  margin-bottom: 10px;
+}
 
-}
-.checkBoxWrap:hover{
-    background-color:rgba(116, 116, 116, 0.461);
-}
-.checkBoxWrap:nth-last-child(1){
-    margin-bottom:10px;
-}
-
-.roomListChats:hover{
-    background-color:rgba(116, 116, 116, 0.461);
+.roomListChats:hover {
+  background-color: rgba(116, 116, 116, 0.461);
 }

@@ -233,7 +233,7 @@ function Chats() {
       );
       webSocket();
       await showMessageAvatar(dataRoom);
-      await ReadMessage();
+      // await ReadMessage();
       await getMessageData();
     }
     go();
@@ -496,12 +496,15 @@ function Chats() {
 
   function formatRoomName(roomName) {
     try {
-      const username = autUsr;
-      const newName = roomName
-        .replace(username, "")
-        .replace(/^_+|_+$/g, "")
-        .trim();
-      return newName.charAt(0).toUpperCase() + newName.slice(1);
+      let nameRoom = "";
+      roomName.current_users
+        .filter((room) => room.id !== authUserId)
+        .map(
+          (room) =>
+            (nameRoom =
+              room.username.charAt(0).toUpperCase() + room.username.slice(1))
+        );
+      return nameRoom;
     } catch (error) {
       console.log(error);
     }
@@ -509,7 +512,6 @@ function Chats() {
 
   const modalPh = (photoData) => {
     setCurrentPhotoId(photoData.id);
-    // console.log(photoData);
     setModalPhoto(photoData);
     setPhotoModal(true);
   };
@@ -802,7 +804,7 @@ function Chats() {
   const filteredMessages = messages.filter(
     (msg) => msg.room && msg.room.id === parseInt(id)
   );
-  const titleName = roomList ? formatRoomName(roomList.name) : "";
+  const titleName = roomList ? formatRoomName(roomList) : "";
   const forwardTitle = isSelectedMessage ? <ForwardMessageMenu /> : "";
   return (
     <>

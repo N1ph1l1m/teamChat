@@ -1,6 +1,6 @@
 import React from "react";
 import Nav from "../../Widgets/nav/nav";
-import NaviItem from "../../Shared/roomListItem/roomListItem.jsx";
+import NaviItem from "../../Shared/navItem/navItem.jsx";
 import DropDown from "../../Shared/dropDown/dropDown";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { Link, Outlet } from "react-router-dom";
@@ -265,7 +265,9 @@ function MainLayout() {
                   getData("chat/rooms", setRoomList)
                 )}
                 plusClick={showModalGroupChat}
-                content={<GroupRoomList roomList={roomList} link />}
+                content={
+                  <GroupRoomList roomList={roomList} authUser={authUser} link />
+                }
               />
               <DropDown
                 title="Контакты"

@@ -15,9 +15,11 @@ export function RoomList({
   return (
     <>
       {roomList
-        .filter((room) => room.name.includes(authUser))
+        .filter(
+          (room) =>
+            room.name.includes(authUser) && room.current_users.length === 2
+        )
         .sort((a, b) => {
-          // Сортировка по времени последнего сообщения (в обратном порядке)
           const dateA = new Date(a.last_message?.created_at || 0);
           const dateB = new Date(b.last_message?.created_at || 0);
           return dateB - dateA;
@@ -85,7 +87,12 @@ export function GroupRoomList({
   return (
     <>
       {roomList
-        .filter((room) => room.current_users.length > 2)
+        .filter(
+          (room) =>
+            room.current_users.some((user) => user.username === authUser) &&
+            room.current_users.length > 2
+        )
+        //.filter((room) => )
         .map((room) => {
           const capitalized =
             room.name.charAt(0).toUpperCase() + room.name.slice(1);
