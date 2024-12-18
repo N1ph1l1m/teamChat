@@ -1,4 +1,5 @@
 import axios from "axios";
+
 export async function ReadMessageAll(id) {
   const reactionData = {
     id: id,
@@ -8,6 +9,7 @@ export async function ReadMessageAll(id) {
   try {
     const url = `http://127.0.0.1:8000/chat/message-read-all/${id}/`;
     const response = await axios.post(url, reactionData);
+    console.log(id);
     if (response.status === 201 || response.status === 200) {
     } else {
       console.error("Ошибка: Непредвиденный ответ от сервера", response.status);

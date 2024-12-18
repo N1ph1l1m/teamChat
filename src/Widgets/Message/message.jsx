@@ -237,6 +237,7 @@ export default function Message({
               <p>{text}</p>
               <ReplyMessage style={{ display: "block" }} reply={reply} />
               <MessageFooter
+                reply={reply}
                 time={time}
                 reactions={reactions}
                 avatar={avatar}

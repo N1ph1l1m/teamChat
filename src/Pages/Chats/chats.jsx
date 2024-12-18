@@ -12,6 +12,7 @@ import {
   createNewMessageForward,
   sendForward,
 } from "../../Entities/api/forwardMessage";
+import { UserProfile } from "../../Shared/UserProfile/UserProfile";
 import { createReaction } from "../../Entities/api/ReactionToMessage";
 import styles from "../../App/Styles/chats.module.css";
 import ModalPhoto from "../../Widgets/modalPhoto/modalPhoto";
@@ -233,7 +234,7 @@ function Chats() {
       );
       webSocket();
       await showMessageAvatar(dataRoom);
-      // await ReadMessage();
+      await ReadMessage();
       await getMessageData();
     }
     go();
@@ -491,22 +492,6 @@ function Chats() {
     } finally {
       setIsSending(false);
       await ReadMessageAll(otherUserId);
-    }
-  }
-
-  function formatRoomName(roomName) {
-    try {
-      let nameRoom = "";
-      roomName.current_users
-        .filter((room) => room.id !== authUserId)
-        .map(
-          (room) =>
-            (nameRoom =
-              room.username.charAt(0).toUpperCase() + room.username.slice(1))
-        );
-      return nameRoom;
-    } catch (error) {
-      console.log(error);
     }
   }
 
@@ -804,7 +789,11 @@ function Chats() {
   const filteredMessages = messages.filter(
     (msg) => msg.room && msg.room.id === parseInt(id)
   );
-  const titleName = roomList ? formatRoomName(roomList) : "";
+  const titleName = roomList ? (
+    <UserProfile room={roomList} authUserId={authUserId} />
+  ) : (
+    ""
+  );
   const forwardTitle = isSelectedMessage ? <ForwardMessageMenu /> : "";
   return (
     <>

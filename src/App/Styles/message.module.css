@@ -105,6 +105,8 @@
   padding: 3px;
   font-weight: 600;
   height: 20px;
+  margin-right: 10px;
+  z-index: 10;
 }
 .messageFooterClass {
   width: 20px;

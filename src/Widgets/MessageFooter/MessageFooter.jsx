@@ -22,7 +22,21 @@ export function MessageFooter({
       />
       <div className={styles.timeCheckWrap}>
         <span className={styles.bubbleTimeText}>{time}</span>
-        {sent ? <IsRead isRead={isRead} size={18} /> : null}
+        {time && sent ? <IsRead isRead={isRead} size={18} /> : null}
+        {!time && sent ? (
+          <IsRead
+            style={{
+              backgroundColor: "rgba(0, 0, 0, 0.486)",
+              marginRight: "10px",
+              height: "20px",
+              width: "30px",
+              padingLeft: "15px",
+              borderRadius: "5px",
+            }}
+            isRead={isRead}
+            size={18}
+          />
+        ) : null}
       </div>
     </div>
   );

@@ -1,0 +1,40 @@
+.userProfileWrap{
+display: flex;
+flex-direction: row;
+align-items:center;
+margin-left: 10px;
+position: relative;
+height: 100%;
+border:1px solid red;
+width: 100%;
+}
+.userAvatar{
+    /* min-width: 40px;
+    min-height: 40px; */
+    height: 80%;
+    border-radius:50%;
+    border:1px solid black;
+}
+.userTitle{
+    position: relative;
+
+    height: 50px;
+    width: 200px;
+    box-sizing:border-box;
+    /* overflow: hidden; */
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-around;
+    align-items:flex-start;
+    margin-left: 5px;
+}
+.titleUserName{
+    font-size: 18px;
+    margin: 0;
+}
+.statusOnline{
+    font-size: 12px;
+    margin: 0;
+    color:blue;
+}
