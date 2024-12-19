@@ -85,13 +85,16 @@ function Chats() {
       const data = await getData(`chat/room/message/`, setMessages);
       return data;
     }
+    let reconnectInterval = 1000;
     function webSocket() {
       // console.log("websocket");
-      const socket = new WebSocket(
-        `ws://localhost:8000/ws/chat/${ROOM_PK}/?token=${TOKEN}`
+      const socketUrl =   `ws://localhost:8000/ws/chat/${ROOM_PK}/?token=${TOKEN}`
+      let  socket = new WebSocket(
+        socketUrl
       );
       socket.onopen = function () {
         console.log("WebSocket открыт");
+        reconnectInterval = 1000;
         setIsWebSocketOpen(true);
 
         socket.send(
@@ -116,6 +119,16 @@ function Chats() {
           })
         );
       };
+      function reconnectWebSocket(){
+         socket = new WebSocket(socketUrl);
+      }
+      socket.onclose = function(event) {
+        console.log('Соединение закрыто. Попытка переподключиться...');
+        setTimeout(reconnectWebSocket(), reconnectInterval);
+
+
+        reconnectInterval = Math.min(reconnectInterval * 2, 5000);
+    };
 
       socket.onmessage = function async(e) {
         const data = JSON.parse(e.data);

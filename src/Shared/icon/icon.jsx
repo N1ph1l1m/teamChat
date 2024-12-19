@@ -10,6 +10,7 @@ const Icon = ({
   className, // передаваемые стили
   onClick,
   size,
+  style,
   disabled,
   ...attrs
 }) => {

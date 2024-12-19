@@ -12,6 +12,7 @@ import {
   createNewMessageForward,
   sendForward,
 } from "../../Entities/api/forwardMessage";
+import { GroupProfile } from "../../Shared/UserProfile/UserProfile";
 import { createReaction } from "../../Entities/api/ReactionToMessage";
 import styles from "../../App/Styles/chats.module.css";
 import ModalPhoto from "../../Widgets/modalPhoto/modalPhoto";
@@ -86,11 +87,13 @@ function GroupChats() {
       const data = await getData(`chat/room/message/`, setMessages);
       return data;
     }
+    let reconnectInterval = 1000;
 
     function webSocket() {
       // console.log("websocket");
-      const socket = new WebSocket(
-        `ws://localhost:8000/ws/chat/${ROOM_PK}/?token=${TOKEN}`
+      const socketUrl =   `ws://localhost:8000/ws/chat/${ROOM_PK}/?token=${TOKEN}`
+      let  socket = new WebSocket(
+        socketUrl
       );
       socket.onopen = function () {
         console.log("WebSocket открыт");
@@ -118,6 +121,16 @@ function GroupChats() {
           })
         );
       };
+      function reconnectWebSocket(){
+        socket = new WebSocket(socketUrl);
+     }
+     socket.onclose = function(event) {
+       console.log('Соединение закрыто. Попытка переподключиться...');
+       setTimeout(reconnectWebSocket(), reconnectInterval);
+
+
+       reconnectInterval = Math.min(reconnectInterval * 2, 5000);
+   };
 
       socket.onmessage = function async(e) {
         const data = JSON.parse(e.data);
@@ -493,18 +506,6 @@ function GroupChats() {
     }
   }
 
-  function formatRoomName(roomName) {
-    try {
-      const username = autUsr;
-      const newName = roomName
-        .replace(username, "")
-        .replace(/^_+|_+$/g, "")
-        .trim();
-      return newName.charAt(0).toUpperCase() + newName.slice(1);
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   const modalPh = (photoData) => {
     setCurrentPhotoId(photoData.id);
@@ -790,7 +791,11 @@ function GroupChats() {
   const filteredMessages = messages.filter(
     (msg) => msg.room && msg.room.id === parseInt(id)
   );
-  const titleName = roomList ? formatRoomName(roomList.name) : "";
+  const titleName = roomList ? (
+    <GroupProfile room={roomList} />
+  ) : (
+    ""
+  );
   const forwardTitle = isSelectedMessage ? <ForwardMessageMenu /> : "";
   return (
     <>

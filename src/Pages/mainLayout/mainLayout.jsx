@@ -5,7 +5,7 @@ import DropDown from "../../Shared/dropDown/dropDown";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { Link, Outlet } from "react-router-dom";
 import "../../App/Styles/link.scss";
-import { getData } from "../../Entities/api/getUserList";
+import { getData , getRoomLostWebSocket} from "../../Entities/api/getUserList";
 import { useState, useEffect } from "react";
 import withAuthentication from "../../App/Utils/withAuthentication";
 import CreateGroupRoom from "../../Entities/api/CreateGroupName.jsx";
@@ -19,6 +19,7 @@ import { RoomList, GroupRoomList } from "../../Entities/Lists/roomList.jsx";
 import Icon from "../../Shared/icon/icon.jsx";
 import { MdAddAPhoto } from "react-icons/md";
 import { MdNoPhotography } from "react-icons/md";
+
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
   const [roomList, setRoomList] = useState([]);
@@ -30,9 +31,6 @@ function MainLayout() {
   const [avatarPrew, setAvatarPrew] = useState("");
   const [isDeleteAvatar, setDeleteAvatar] = useState(false);
 
-  // useEffect(() => {
-  //   getData("chat/rooms", setRoomList);
-  // }, [roomList]);
 
   function UserList() {
     return (
@@ -87,6 +85,12 @@ function MainLayout() {
       }
     });
   };
+
+  async function getRoomList(){
+    const data = await  getData("chat/rooms", setRoomList) ;
+    return data;
+  }
+
 
   const handleAvatarGroup = (e) => {
     let files = e.target.files[0];
@@ -213,7 +217,7 @@ function MainLayout() {
     );
   }
 
-  const groupChat = formGroupChat();
+const groupChat = formGroupChat();
 
   return (
     <>
@@ -222,8 +226,7 @@ function MainLayout() {
           isOpen={isOpenModalCreateGroup}
           onCancel={handleCancel}
           onSubmit={() => {
-            // console.log(avatarGroup);
-            CreateGroupRoom(groupName, avatarGroup, selectedUsers);
+                        CreateGroupRoom(groupName, avatarGroup, selectedUsers);
             handleCancel();
           }}
           children={groupChat}
@@ -231,24 +234,10 @@ function MainLayout() {
         <Nav
           navItem={
             <>
-              {/* <Link to="/task" className="newLink">
-                <NaviItem
-                  icon={<MdOutlineTaskAlt color="black" size="20" />}
-                  tittle="Задачи"
-                  badgeCount="3"
-                />
-              </Link> */}
 
-              {/* <Link to="/auto" className="newLink">
-                <NaviItem
-                  icon={<MdOutlineTaskAlt color="black" size="20" />}
-                  tittle="Автоматизации"
-                  badgeCount="20"
-                />
-              </Link> */}
               <DropDown
                 title="Чаты"
-                onClick={() => getData("chat/rooms", setRoomList)}
+                onClick={getRoomList}
                 content={
                   <RoomList
                     roomList={roomList}
@@ -258,6 +247,7 @@ function MainLayout() {
                   />
                 }
               />
+
               <DropDown
                 title="Груповые чаты"
                 onClick={() => (

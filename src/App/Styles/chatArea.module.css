@@ -187,14 +187,26 @@
 .selectTypeFiles > label:hover {
   background-color: rgb(211, 211, 211);
 }
-@media screen and (max-height: 800px) {
+@media screen and (max-height: 840px) {
   .chatHeader {
-    height: 91%;
+    height: 90%;
   }
 }
 
 @media screen and (min-height: 850px) {
   .chatHeader {
-    height: 94.8%;
+    height: 93.1%;
+  }
+}
+
+@media screen and (max-height: 699px) {
+  .chatHeader {
+    height: 90%;
+    }
+}
+
+@media screen and (max-height: 499px) {
+  .chatHeader {
+    height: 87%;
   }
 }
