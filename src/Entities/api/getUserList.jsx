@@ -10,6 +10,18 @@ export async function getData(url, setData) {
   }
 }
 
+export async function getDataTest(url) {
+  let urls = "http://127.0.0.1:8000/" + url;
+
+try{
+  const response  = await axios.get(urls);
+  return response.data;
+}catch(error){
+  console.log(error)
+  return null
+}
+}
+
 
 export async function getRoomLostWebSocket(
   TOKEN,

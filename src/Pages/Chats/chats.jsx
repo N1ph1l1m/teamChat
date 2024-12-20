@@ -20,8 +20,10 @@ import ModalForwardMessage from "../../Widgets/ModalForwardMessage/modalForwardM
 import ModalSendMessage from "../../Widgets/modalSendMessage/modalSendMessage";
 import { RoomList } from "../../Entities/Lists/roomList";
 import userLogo from "../../App/images/userAvatar.png";
-
+import { useDispatch, useSelector } from "react-redux";
+import { addRoomList } from "../../Features/store_redux/recipe/recipe";
 function Chats() {
+  const dispatch = useDispatch();
   const autUsr = localStorage.getItem("username");
   const { id } = useParams();
   const TOKEN = localStorage.getItem("token").trim();
@@ -484,7 +486,7 @@ function Chats() {
 
         chatSocket.send(JSON.stringify(messageData));
       }
-
+      addRoomList(dispatch)
       setMessage("");
       setSendImage("");
       setInputPrew("");

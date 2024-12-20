@@ -19,10 +19,12 @@ import { RoomList, GroupRoomList } from "../../Entities/Lists/roomList.jsx";
 import Icon from "../../Shared/icon/icon.jsx";
 import { MdAddAPhoto } from "react-icons/md";
 import { MdNoPhotography } from "react-icons/md";
-
+import { useDispatch, useSelector } from "react-redux";
+import { addRoomList } from "../../Features/store_redux/recipe/recipe.jsx";
+import { getDataTest } from "../../Entities/api/getUserList";
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
-  const [roomList, setRoomList] = useState([]);
+  const [roomList2, setRoomList2] = useState([]);
   const [isOpenModalCreateGroup, setModalCreateGroup] = useState(false);
   const [groupName, setGroupName] = useState();
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -30,7 +32,26 @@ function MainLayout() {
   const [avatarGroup, setAvatarGroup] = useState("");
   const [avatarPrew, setAvatarPrew] = useState("");
   const [isDeleteAvatar, setDeleteAvatar] = useState(false);
+  const dispatch = useDispatch();
+  const roomList = useSelector(state =>state.roomList.roomList)
 
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+      try {
+        const newRoomList = await getDataTest("chat/rooms");
+        if (JSON.stringify(newRoomList) !== JSON.stringify(roomList)) {
+          dispatch({ type: "ADD_ROOMLIST", payload: newRoomList });
+          // console.log("Room list updated:", newRoomList);
+        } else {
+          // console.log("No changes in room list.");
+        }
+      } catch (error) {
+        // console.error("Error fetching room list:", error);
+      }
+    }, 5000);
+
+    return () => clearInterval(intervalId); // Очистка интервала при размонтировании
+  }, [roomList, dispatch]);
 
   function UserList() {
     return (
@@ -86,10 +107,10 @@ function MainLayout() {
     });
   };
 
-  async function getRoomList(){
-    const data = await  getData("chat/rooms", setRoomList) ;
-    return data;
-  }
+  // async function getRoomList(){
+  //   // const data = await  getData("chat/rooms", setRoomList) ;
+  //   return data;
+  // }
 
 
   const handleAvatarGroup = (e) => {
@@ -235,9 +256,16 @@ const groupChat = formGroupChat();
           navItem={
             <>
 
+          <Link to="/task" className="newLink">
+                {/* <NaviItem
+                  icon={<MdOutlineTaskAlt color="black" size="20" />}
+                  tittle="Задачи"
+                  // badgeCount={state}
+                /> */}
+              </Link>
               <DropDown
                 title="Чаты"
-                onClick={getRoomList}
+                onClick={()=>{addRoomList(dispatch)}}
                 content={
                   <RoomList
                     roomList={roomList}
@@ -251,8 +279,8 @@ const groupChat = formGroupChat();
               <DropDown
                 title="Груповые чаты"
                 onClick={() => (
-                  getData("users/", setUserList),
-                  getData("chat/rooms", setRoomList)
+                  getData("users/", setUserList)
+                  //getData("chat/rooms", setRoomList)
                 )}
                 plusClick={showModalGroupChat}
                 content={
