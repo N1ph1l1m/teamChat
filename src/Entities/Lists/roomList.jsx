@@ -24,7 +24,7 @@ export function RoomList({
           const dateB = new Date(b.last_message?.created_at || 0);
           return dateB - dateA;
         })
-        .map((room) => {
+        .map((room, index) => {
           const newName = room.name
             .replace(authUser, "")
             .replace(/^_+|_+$/g, "")
@@ -36,8 +36,10 @@ export function RoomList({
           );
 
           const avatar = otherUser ? otherUser.photo : userLogo;
+          const uniqueKey = `${room.pk}-${room.last_message?.created_at}`;
+
           return link ? (
-            <div className={styles.roomListChats}>
+            <div className={styles.roomListChats} key={uniqueKey}>
               <Link
                 key={room.pk}
                 to={`chats/${room.pk}`}
@@ -63,6 +65,15 @@ export function RoomList({
               <RoomListItem
                 icon={<img src={avatar} alt={"avatar"} />}
                 tittle={capitalized}
+                badgeCount={room.message.length}
+                text={room.last_message.text}
+                time={room.last_message.created_at}
+                is_read={room.last_message.is_read}
+                user={room.last_message.user}
+                authUser={authUser}
+                photo={room.last_message.images}
+                document={room.last_message.documents}
+                forwarded_messages={room.last_message.forwarded_messages}
               />
               <input
                 type="checkbox"
@@ -96,8 +107,11 @@ export function GroupRoomList({
         .map((room) => {
           const capitalized =
             room.name.charAt(0).toUpperCase() + room.name.slice(1);
+
+          const uniqueKey = `${room.pk}-${room.last_message?.created_at}`;
+
           return link ? (
-            <div className={styles.roomListChats}>
+            <div className={styles.roomListChats} key={uniqueKey}>
               <Link
                 key={room.pk}
                 to={`grchats/${room.pk}`}
@@ -124,6 +138,9 @@ export function GroupRoomList({
               <RoomListItem
                 icon={<MdOutlineTaskAlt color="black" size="20" />}
                 tittle={capitalized}
+                photo={room.last_message.images}
+                document={room.last_message.documents}
+                forwarded_messages={room.last_message.forwarded_messages}
               />
               <input
                 type="checkbox"

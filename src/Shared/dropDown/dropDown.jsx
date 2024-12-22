@@ -5,18 +5,15 @@ import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import styles from "../../App/Styles/dropDown.module.css";
 
-function DropDown(props) {
-  const [showIcons, setShowIcons] = useState(false);
+function DropDown({
+  isContent,
+  plusClick,
+  onClick,
+  title,
+  content,
+  switchDropDown,
+}) {
   const [isHovered, setIsHovered] = useState(false);
-
-  function switchDropDown() {
-    setShowIcons(!showIcons);
-  }
-  function showDrop() {
-    if (showIcons) {
-      return <div className="dropContent">{props.content}</div>;
-    }
-  }
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -33,7 +30,7 @@ function DropDown(props) {
             <BiDotsHorizontalRounded color="black" size="20" />
           </Icon>
           <Icon>
-            <GoPlus onClick={props.plusClick} color="black" size="20" />
+            <GoPlus onClick={plusClick} color="black" size="20" />
           </Icon>
         </div>
       );
@@ -49,30 +46,30 @@ function DropDown(props) {
     return text;
   };
 
-  const contentShow = showDrop();
+  // const contentShow = showDrop();
   const hoverIcon = showRightIcon();
   return (
     <div
-        className={styles.wrapDrop}
+      className={styles.wrapDrop}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onClick={showIcons === false ? props.onClick : null}
+      onClick={isContent === false ? onClick : null}
     >
       <div className={styles.dropItem}>
         <div className={styles.leftSide}>
           <Icon onClick={switchDropDown}>
-            {showIcons ? (
+            {isContent ? (
               <IoIosArrowDown color="black" size="20" />
             ) : (
               <IoIosArrowForward color="black" size="20" />
             )}
           </Icon>
-          <span className={styles.textDrop}> {truncateText(props.title, 16)}</span>
+          <span className={styles.textDrop}> {truncateText(title, 16)}</span>
           {/* <span className="textDrop"> {props.title}</span> */}
         </div>
         {hoverIcon}
       </div>
-      {contentShow}
+      {isContent ? <div className="dropContent">{content}</div> : null}
     </div>
   );
 }
