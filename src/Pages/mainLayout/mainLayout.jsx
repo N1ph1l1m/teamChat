@@ -269,11 +269,11 @@ function MainLayout() {
           navItem={
             <>
               <Link to="/task" className="newLink">
-                {/* <NaviItem
+                <NaviItem
                   icon={<MdOutlineTaskAlt color="black" size="20" />}
                   tittle="Задачи"
                   // badgeCount={state}
-                /> */}
+                />
               </Link>
               <DropDown
                 title="Чаты"

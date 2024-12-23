@@ -22,6 +22,8 @@ import { RoomList } from "../../Entities/Lists/roomList";
 import userLogo from "../../App/images/userAvatar.png";
 import { useDispatch, useSelector } from "react-redux";
 import { addRoomList } from "../../Features/store_redux/recipe/recipe";
+import { Loader } from "../../Shared/loader/loader";
+
 function Chats() {
   const dispatch = useDispatch();
   const autUsr = localStorage.getItem("username");
@@ -32,6 +34,7 @@ function Chats() {
   const [authUserId, setAuthUserId] = useState("");
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
+  const [isLoading,setIsLoading] = useState(true)
   const [sendImage, setSendImage] = useState("");
   const [sendingPhoto, setSendingPhoto] = useState([]);
   const [sendDocument, setSendDocument] = useState("");
@@ -83,7 +86,7 @@ function Chats() {
     }
 
     async function getMessageData() {
-      // console.log("Message");
+      console.log("Message");
       const data = await getData(`chat/room/message/`, setMessages);
       return data;
     }
@@ -254,6 +257,11 @@ function Chats() {
     }
     go();
   }, [id]);
+
+  useEffect(()=>{
+    const timeout = setTimeout(()=>setIsLoading(false),1400)
+    return ()=>clearTimeout(timeout)
+  },[messages])
 
   const handleInputTextChange = (e) => {
     e.preventDefault();
@@ -878,8 +886,17 @@ function Chats() {
         setSelect={selectTypeSendFile}
         content={
           <>
-            {filteredMessages.length === 0 ? (
-              <NoMessages />
+            {isLoading ? (
+              <Loader custom widthLoader={"70px"}
+                      heightLoader={"70px"}
+                      borderLoader={"10px solid #f3f3f3"}
+                      borderTopLoader={"10px solid  #3498db"}
+                    />
+            ):
+              filteredMessages.length === 0 ? (
+
+              <NoMessages/>
+
             ) : (
               filteredMessages.map((msg, index, arr) => {
                 const previousMessage = arr[index - 1];
