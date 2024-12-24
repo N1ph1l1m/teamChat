@@ -189,7 +189,7 @@ function ChatArea({
         </div>
 
         <Icon>
-          <IoSend onClick={sendmessage} color="#390cce" size="30" />
+          <IoSend onClick={sendmessage} color="#105c9f" size="30" />
         </Icon>
       </div>
     </div>

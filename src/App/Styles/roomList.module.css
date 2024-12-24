@@ -9,7 +9,10 @@
 .checkBoxWrap:nth-last-child(1) {
   margin-bottom: 10px;
 }
-
+.roomListChats{
+padding-left: 10px;
+padding-top: 5px;
+}
 .roomListChats:hover {
   background-color: rgba(116, 116, 116, 0.461);
 }

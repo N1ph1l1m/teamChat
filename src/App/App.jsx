@@ -1,4 +1,3 @@
-import "../App.scss";
 import Automatization from "../Widgets/Automatization/automatization";
 import Tasks from "../Pages/Tasks/tasks";
 import Chats from "../Pages/Chats/chats";

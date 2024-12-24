@@ -12,7 +12,6 @@ import CreateGroupRoom from "../../Entities/api/CreateGroupName.jsx";
 import CreateRoom from "../../Entities/api/createRoom";
 import ModalCreateGroup from "../../Widgets/modalCreateGroup/modalCreateGroup.jsx";
 import joinroom from "../../Entities/api/joinroom";
-import Badge from "../../Shared/badge/badge.jsx";
 import styles from "../../App/Styles/mainLayout.module.css";
 import userLogo from "../../App/images/userAvatar.png";
 import { RoomList, GroupRoomList } from "../../Entities/Lists/roomList.jsx";
@@ -22,6 +21,13 @@ import { MdNoPhotography } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { addRoomList } from "../../Features/store_redux/recipe/recipe.jsx";
 import { getDataTest } from "../../Entities/api/getUserList";
+import { GoPlus } from "react-icons/go";
+import MenuIcon from "../../Shared/menuIcons/menuIcons.jsx";
+import chat from "../../App/Icons/chat.png";
+import groupIcon from "../../App/Icons/groupChat.png";
+import contacts from "../../App/Icons/contacts.png"
+import Input from "../../Shared/input/input.jsx";
+import { current } from "@reduxjs/toolkit";
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
   // const [roomList, setRoomList] = useState([]);
@@ -31,15 +37,19 @@ function MainLayout() {
   const authUser = localStorage.getItem("username");
   const [avatarGroup, setAvatarGroup] = useState("");
   const [avatarPrew, setAvatarPrew] = useState("");
-  const [isContent, setShowContent] = useState(false);
-  const [isContentGroup, setShowContentGroup] = useState(false);
-  const [isContact, setContact] = useState(false);
   const [isDeleteAvatar, setDeleteAvatar] = useState(false);
-  const dispatch = useDispatch();
   const roomList = useSelector((state) => state.roomList.roomList);
+  const [chatList,setChatList] = useState(true);
+  const [chatGroupList,setChatGroupList] = useState(false);
+  const [contactsList,setContactsList] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!isContent) return;
+    addRoomList(dispatch);
+  }, []);
+
+  useEffect(() => {
+    if (!chatList) return;
 
     const timer = setInterval(async () => {
       try {
@@ -53,10 +63,10 @@ function MainLayout() {
     }, 5000);
 
     return () => clearInterval(timer);
-  }, [roomList, dispatch, isContent]);
+  }, [roomList, dispatch, chatList]);
 
   useEffect(() => {
-    if (!isContentGroup) return;
+    if (!chatGroupList) return;
 
     const timer = setInterval(async () => {
       try {
@@ -70,7 +80,64 @@ function MainLayout() {
     }, 5000);
 
     return () => clearInterval(timer);
-  }, [roomList, dispatch, isContentGroup]);
+  }, [roomList, dispatch, chatGroupList]);
+
+
+  // function linkToMessage(id){
+  //   let  user = userlist.find((user)=>user.id === id )
+  //   let authUsr = userlist.find((user)=>user.username === authUser )
+  //   // console.log(authUser)
+  //   // console.log(user.username)
+  //     roomList.filter((current)=>{
+  //     if(Array.isArray(current.current_users)){
+  //       return current.current_users.some((currentUser)=>currentUser.username === user.username   && currentUser.username === authUsr )
+  //     }})
+  //     .map((current)=>{
+  //       console.log(current);
+  //     })
+
+  // }
+
+  function linkToMessage(id) {
+    // Находим пользователя по id и авторизованного пользователя
+    const user = userlist.find((user) => user.id === id);
+    const authUsr = userlist.find((user) => user.username === authUser);
+
+    // Проверяем, существуют ли user и authUsr
+    if (!user) {
+      console.error("User not found");
+      return;
+    }
+    if (!authUsr) {
+      console.error("Authorized user not found");
+      return;
+    }
+
+    // Фильтруем комнаты, где только user и authUsr
+    const filteredRooms = roomList.filter((current) => {
+      if (Array.isArray(current.current_users)) {
+        const usernames = current.current_users.map((currentUser) => currentUser.username);
+
+        // Проверяем, что в массиве только user и authUsr
+        return (
+          usernames.length === 2 &&
+          usernames.includes(user.username) &&
+          usernames.includes(authUsr.username)
+        );
+
+      }
+      return false;
+    });
+
+    // Выводим отфильтрованные комнаты
+    filteredRooms.forEach((current) => {
+      console.log(current);
+    });
+  }
+
+
+
+
 
   function UserList() {
     return (
@@ -82,22 +149,25 @@ function MainLayout() {
             const upName =
               user.username.charAt(0).toUpperCase() + user.username.slice(1);
             return (
-              <>
-                <Link></Link>
+              < >
+                <Link   onClick={()=>{linkToMessage(user.id)}} >
                 <NaviItem
                   key={index}
                   icon={
                     <img src={user.photo} alt={`${user.username}'s avatar`} />
                   }
                   tittle={upName}
-                  badgeCount={user.id}
+                  // badgeCount={user.id}
                 />
+                </Link>
+
               </>
             );
           })}
       </>
     );
   }
+
 
   function handleCancel() {
     setModalCreateGroup(false);
@@ -253,6 +323,45 @@ function MainLayout() {
 
   const groupChat = formGroupChat();
 
+
+  const renderList = () =>{
+    const chatRender = chatList && !chatGroupList;
+    const groupRender = !chatList && chatGroupList;
+    const contactRender = !chatList && !chatGroupList && contactsList;
+    if(chatRender){
+      return(
+        <RoomList
+        roomList={roomList}
+        link
+        authUser={authUser}
+        userLogo={userLogo}
+      />
+      )
+    }
+    if(groupRender){
+      return(<>
+       <div className={styles.menuGroup}>
+        <input  placeholder="Поиск" type="text" className={styles.searchGroup} />
+          <button className={styles.createGroup} onClick={() => {
+                  getData("users/", setUserList);
+                  showModalGroupChat();
+                }}> <GoPlus  color="rgba(0, 0, 0, 0.283)" size="25" /> </button>
+       </div>
+          <GroupRoomList roomList={roomList} authUser={authUser} link />
+      </>
+
+      )
+    }
+    if(contactRender){
+      return(
+      <>
+        {UserList()}
+      </>
+      )
+    }
+
+
+  }
   return (
     <>
       <div className={styles.mainWrap}>
@@ -265,63 +374,44 @@ function MainLayout() {
           }}
           children={groupChat}
         />
+
+       <div className={styles.contentWrap}>
+       <div className={styles.navWrap}>
         <Nav
+          menuNav={<>
+            <MenuIcon icon={chat} title="Чаты"
+            handleClick = {()=> {
+              setChatList(true)
+              setChatGroupList(false)}}
+            />
+            <MenuIcon icon={groupIcon} title={"Группа"}
+                handleClick = {()=> {setChatList(false)
+                  setChatGroupList(true)}}
+            />
+            <MenuIcon icon={contacts} title={"Контакты"}
+                  handleClick = {()=>
+                  {
+                    getData("users/", setUserList)
+                    setChatList(false)
+                    setChatGroupList(false)
+                    setContactsList(true)
+                  }}
+            />
+          </>}
           navItem={
             <>
-              <Link to="/task" className="newLink">
-                <NaviItem
-                  icon={<MdOutlineTaskAlt color="black" size="20" />}
-                  tittle="Задачи"
-                  // badgeCount={state}
-                />
-              </Link>
-              <DropDown
-                title="Чаты"
-                switchDropDown={() => setShowContent(!isContent)}
-                onClick={() => {
-                  addRoomList(dispatch);
-                }}
-                isContent={isContent}
-                content={
-                  <RoomList
-                    roomList={roomList}
-                    link
-                    authUser={authUser}
-                    userLogo={userLogo}
-                  />
-                }
-              />
-
-              <DropDown
-                title="Груповые чаты"
-                switchDropDown={() => setShowContentGroup(!isContentGroup)}
-                onClick={() => {
-                  addRoomList(dispatch);
-                }}
-                isContent={isContentGroup}
-                plusClick={() => {
-                  getData("users/", setUserList);
-                  showModalGroupChat();
-                }}
-                content={
-                  <GroupRoomList roomList={roomList} authUser={authUser} link />
-                }
-              />
-              <DropDown
-                title="Контакты"
-                isContent={isContact}
-                switchDropDown={() => setContact(!isContact)}
-                onClick={() => getData("users/", setUserList)}
-                content={<>{UserList()}</>}
-              />
+            {renderList()}
             </>
           }
         />
+        </div>
+
         <div className={styles.mainOutletWrap}>
           <div className={styles.mainOutletItem}>
             <Outlet />
           </div>
         </div>
+       </div>
       </div>
     </>
   );

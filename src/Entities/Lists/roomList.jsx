@@ -4,6 +4,8 @@ import RoomListItem from "../../Shared/roomListItem/roomListItem";
 import styles from "../../App/Styles/roomList.module.css";
 import { MdOutlineTaskAlt } from "react-icons/md";
 
+import Icon from "../../Shared/icon/icon";
+
 export function RoomList({
   roomList,
   authUser,
@@ -94,6 +96,7 @@ export function GroupRoomList({
   selectedRooms,
   handleRoomSelect,
   authUser,
+  plusClick,
 }) {
   return (
     <>

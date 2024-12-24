@@ -237,10 +237,7 @@ function Chats() {
       }
     }
 
-    async function ReadMessage() {
-      // console.log(otherUserId);
-      await ReadMessageAll(otherUserId);
-    }
+
     async function go() {
       fetchData();
       fetchDataRoomList();
@@ -252,14 +249,18 @@ function Chats() {
       );
       webSocket();
       await showMessageAvatar(dataRoom);
-      await ReadMessage();
       await getMessageData();
+
     }
     go();
   }, [id]);
-
+  async function ReadMessage() {
+    await ReadMessageAll(otherUserId);
+  }
   useEffect(()=>{
     const timeout = setTimeout(()=>setIsLoading(false),1400)
+
+    ReadMessage();
     return ()=>clearTimeout(timeout)
   },[messages])
 

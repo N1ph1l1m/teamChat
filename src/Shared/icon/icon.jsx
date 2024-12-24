@@ -7,7 +7,7 @@ import "./icon.scss";
 
 const Icon = ({
   name,
-  className, // передаваемые стили
+  className,
   onClick,
   size,
   style,

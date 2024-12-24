@@ -1,0 +1,28 @@
+.wrapMenuIcon{
+    position: relative;
+    padding: 0px;
+    width: 60px;
+    height: 54px;
+    display: flex;
+    flex-direction: column;
+    margin-right: 15px;
+    align-items:center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    border-top-left-radius: 20px;
+    cursor: pointer;
+
+}
+.headerMenuIcon{
+    width: 36px;
+    height: 36px;
+    /* border:1px solid red; */
+}
+.iconTitle{
+    color:black;
+    font-size: 12px;
+    margin: 0px;
+    padding: 0px;
+    margin-bottom: 20px;
+    /* border:1px solid green; */
+}

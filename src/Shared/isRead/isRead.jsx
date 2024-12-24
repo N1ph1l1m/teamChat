@@ -8,7 +8,7 @@ export default function IsRead({ isRead, size, style }) {
       <Icon>
         <IoCheckmarkDoneSharp
           size={size}
-          color={isRead === false ? "gray" : "blue"}
+          color={isRead === false ? "gray" : "#105c9f"}
         />
       </Icon>
     </div>
