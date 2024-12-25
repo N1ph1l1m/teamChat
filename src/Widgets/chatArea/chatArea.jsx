@@ -1,12 +1,9 @@
 import React from "react";
-//import Message from "../../Shared/Message/message";
-//import MessageInput from "../../Shared/inputMessage/messageInput";
 import { IoSend } from "react-icons/io5";
 import styles from "../../App/Styles/chatArea.module.css";
 import Icon from "../../Shared/icon/icon";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
-// import EmojiPicker from "emoji-picker-react";
-import data from "@emoji-mart/data";
+import { emojiBd} from "../../App/Parameters/DataEmoji"
 import Picker from "@emoji-mart/react";
 import { IoIosClose } from "react-icons/io";
 import { FaFile, FaFileImage, FaPaperclip } from "react-icons/fa";
@@ -154,7 +151,7 @@ function ChatArea({
             style={isOpenEmoji ? { display: "block" } : { display: "none" }}
           >
             <Picker
-              data={data}
+              data={emojiBd.data}
               theme={"ligth"}
               onEmojiSelect={emojiEvent}
               locale={"ru"}

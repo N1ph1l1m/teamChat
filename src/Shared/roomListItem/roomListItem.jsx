@@ -4,7 +4,7 @@ import Icon from "../icon/icon";
 import IsRead from "../isRead/isRead";
 import { BiSolidMessageRounded } from "react-icons/bi";
 
-function RoomListItem({
+export function RoomListItem({
   click,
   tittle,
   icon,
@@ -16,6 +16,7 @@ function RoomListItem({
   photo,
   document,
   forwarded_messages,
+  simple,
 }) {
   const HeaderTime = () => {
     const isRead =
@@ -37,28 +38,34 @@ function RoomListItem({
     );
   };
 
-  const HeaderList = ({ text }) => {
+  const HeaderList = ({ text}) => {
     const newMessage = user.username !== authUser && !is_read;
-    return (
-      <div className={styles.titleText}>
+    return ( <>
+      {
+        <div className={styles.titleText}>
         <div className={styles.headerTitle}>
-          <p className={styles.title}>{tittle}</p>
-          <HeaderTime />
-        </div>
-        <div
-          className={styles.textWrap}
-          style={{
-            backgroundColor: newMessage ? "rgba(128, 128, 128, 0.507)" : null,
-          }}
-        >
-          <p className={styles.textMessage}>{text}</p>
-          {newMessage ? (
-            <Icon style={{ display: "inline-block" }}>
-              <BiSolidMessageRounded size="20" color="rgba(0, 0, 255, 0.646)" />
-            </Icon>
-          ) : null}
-        </div>
+          <p className={styles.title}> {tittle}</p>
+
+
+        <HeaderTime />
       </div>
+         <div
+        className={styles.textWrap}
+        style={{
+          backgroundColor: newMessage ? "rgba(128, 128, 128, 0.507)" : null,
+        }}
+      >
+        <p className={styles.textMessage}>{text}</p>
+        {newMessage ? (
+          <Icon style={{ display: "inline-block" }}>
+            <BiSolidMessageRounded size="20" color="rgba(0, 0, 255, 0.646)" />
+          </Icon>
+        ) : null}
+      </div>
+    </div>
+      }
+    </>
+
     );
   };
   const isPhoto = Array.isArray(photo);
@@ -97,6 +104,8 @@ function RoomListItem({
   const simpleItem =
     !text && isPhotoNull && isDocumentNull && isForwardMessageNull;
 
+
+
   return (
     <>
       <div onClick={click} className={styles.wrap}>
@@ -126,4 +135,15 @@ function RoomListItem({
   );
 }
 
-export default RoomListItem;
+export const SimpleItem = () =>{
+  return (
+  <>
+   <div  className={styles.wrap}>
+      <div className={styles.simpleIcon}></div>
+      <div className={styles.simpleWrapText}>
+       <div className={styles.simpleTittleItem}></div>
+        <div className={styles.simpleTextItem}></div>
+      </div>
+  </div>
+  </>)
+}

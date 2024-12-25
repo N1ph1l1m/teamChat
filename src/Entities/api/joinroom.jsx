@@ -1,7 +1,7 @@
 function joinRoom(pk) {
   const room_pk = pk;
   const request_id = 1;
-  const token = localStorage.getItem("token").trim(); // Убедитесь, что токен без пробелов
+  const token = localStorage.getItem("token").trim();
   const chatSocket = new WebSocket(
     `ws://localhost:8000/ws/chat/${room_pk}/?token=${token}`
   );

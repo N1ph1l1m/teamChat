@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import RoomListItem from "../../Shared/roomListItem/roomListItem";
+import {RoomListItem , SimpleItem} from "../../Shared/roomListItem/roomListItem";
 import styles from "../../App/Styles/roomList.module.css";
 import { MdOutlineTaskAlt } from "react-icons/md";
+import NaviItem from "../../Shared/navItem/navItem";
 
-import Icon from "../../Shared/icon/icon";
 
 export function RoomList({
   roomList,
@@ -19,7 +19,8 @@ export function RoomList({
       {roomList
         .filter(
           (room) =>
-            room.name.includes(authUser) && room.current_users.length === 2
+            room.name.includes(authUser) && room.current_users.length === 2 &&
+            room.message.length > 0
         )
         .sort((a, b) => {
           const dateA = new Date(a.last_message?.created_at || 0);
@@ -64,18 +65,9 @@ export function RoomList({
             </div>
           ) : (
             <label key={room.pk} className={styles.checkBoxWrap}>
-              <RoomListItem
+              <NaviItem
                 icon={<img src={avatar} alt={"avatar"} />}
                 tittle={capitalized}
-                badgeCount={room.message.length}
-                text={room.last_message.text}
-                time={room.last_message.created_at}
-                is_read={room.last_message.is_read}
-                user={room.last_message.user}
-                authUser={authUser}
-                photo={room.last_message.images}
-                document={room.last_message.documents}
-                forwarded_messages={room.last_message.forwarded_messages}
               />
               <input
                 type="checkbox"
@@ -90,6 +82,26 @@ export function RoomList({
   );
 }
 
+export function RoomListLoading() {
+  const RoomListLoading = () => {
+    const elements = [];
+    for (let i = 0; i < 12; i++) {
+      elements.push(
+        <div key={i} className={styles.roomListChats}>
+          <SimpleItem
+
+          />
+          {/* <p>Text</p> */}
+        </div>
+      );
+    }
+    return elements;
+  };
+
+  return <>{RoomListLoading()}</>;
+}
+
+
 export function GroupRoomList({
   roomList,
   link,
@@ -99,14 +111,13 @@ export function GroupRoomList({
   plusClick,
 }) {
   return (
-    <>
+    <div className={styles.groupListWrap}>
       {roomList
         .filter(
           (room) =>
             room.current_users.some((user) => user.username === authUser) &&
             room.current_users.length > 2
         )
-        //.filter((room) => )
         .map((room) => {
           const capitalized =
             room.name.charAt(0).toUpperCase() + room.name.slice(1);
@@ -119,9 +130,8 @@ export function GroupRoomList({
                 key={room.pk}
                 to={`grchats/${room.pk}`}
                 style={{ textDecoration: "none" }}
-                // onClick={() => CreateRoom(user.username)}
               >
-                <RoomListItem
+                 <RoomListItem
                   icon={<img src={room.photo_room} alt="groupPhoto" />}
                   tittle={capitalized}
                   badgeCount={room.message.length}
@@ -134,6 +144,7 @@ export function GroupRoomList({
                   document={room.last_message.documents}
                   forwarded_messages={room.last_message.forwarded_messages}
                 />
+
               </Link>
             </div>
           ) : (
@@ -154,6 +165,6 @@ export function GroupRoomList({
             </label>
           );
         })}
-    </>
+    </div>
   );
 }

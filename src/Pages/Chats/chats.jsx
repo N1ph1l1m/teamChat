@@ -258,10 +258,18 @@ function Chats() {
     await ReadMessageAll(otherUserId);
   }
   useEffect(()=>{
-    const timeout = setTimeout(()=>setIsLoading(false),1400)
+    if(messages.length === 0 ){
+      const timeout = setTimeout(()=>setIsLoading(false),10)
+      ReadMessage();
+      return ()=>clearTimeout(timeout)
+    }
+    if(messages.length > 0){
+      const timeout = setTimeout(()=>setIsLoading(true),100)
+      ReadMessage();
+      return ()=>clearTimeout(timeout)
+    }
 
-    ReadMessage();
-    return ()=>clearTimeout(timeout)
+
   },[messages])
 
   const handleInputTextChange = (e) => {
@@ -887,18 +895,18 @@ function Chats() {
         setSelect={selectTypeSendFile}
         content={
           <>
-            {isLoading ? (
+            {
+               isLoading  &&  filteredMessages.length  === 0 ? (
+              <NoMessages/>
+            ) :
+              filteredMessages.length  === 0  ?  (
               <Loader custom widthLoader={"70px"}
                       heightLoader={"70px"}
                       borderLoader={"10px solid #f3f3f3"}
                       borderTopLoader={"10px solid  #3498db"}
                     />
-            ):
-              filteredMessages.length === 0 ? (
-
-              <NoMessages/>
-
-            ) : (
+              )
+             : (
               filteredMessages.map((msg, index, arr) => {
                 const previousMessage = arr[index - 1];
                 const previousDate = previousMessage

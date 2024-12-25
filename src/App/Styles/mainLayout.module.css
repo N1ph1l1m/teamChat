@@ -29,7 +29,7 @@
   width: 25%;
   height: 97%;
   min-width: 20%;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
   display: flex;
   flex-direction: column;
   /* padding: 10px; */
@@ -243,6 +243,12 @@
 
   border:0px solid transparent;
 }
+
+.userListWrap , .groupListWrap{
+  padding-left: 10px;
+  padding-top: 5px;
+}
+
 
 @media (max-height: 720px) {
   .wrapCheckBox {

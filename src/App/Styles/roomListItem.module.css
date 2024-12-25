@@ -25,7 +25,7 @@
   font-size: 14px;
   display: inline;
   font-weight: 600;
-  
+
 }
 
 .icon {
@@ -38,6 +38,42 @@
   height: 55px;
   border-radius: 50%;
   border: 1px solid black;
+}
+
+.simpleIcon{
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: 1px solid black;
+  background-color:rgba(128, 128, 128, 0.402);
+}
+.simpleWrapText{
+  width: 100%;
+  height: 50px;
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+
+  }
+
+
+
+.simpleTittleItem , .simpleTextItem{
+  width: 50px;
+  height: 10px;
+  margin-left: 9px;
+  margin-top: -10px;
+  color: black;
+  font-size: 16px;
+  display: inline;
+  font-weight: 600;
+  border:1px solid black;
+  border-radius:10px;
+  background-color:rgba(128, 128, 128, 0.402);
+}
+.simpleTextItem{
+width: 80px;
 }
 
 .headerTitle {

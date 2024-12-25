@@ -1,7 +1,5 @@
 import React from "react";
 import Icon from "../icon/icon";
-import { BsFillBellFill } from "react-icons/bs";
-import { FaRegUserCircle } from "react-icons/fa";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import  styles from '../../App/Styles/navItem.module.css';
 import {useNavigate} from 'react-router-dom';
