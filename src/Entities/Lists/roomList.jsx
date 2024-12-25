@@ -88,10 +88,7 @@ export function RoomListLoading() {
     for (let i = 0; i < 12; i++) {
       elements.push(
         <div key={i} className={styles.roomListChats}>
-          <SimpleItem
-
-          />
-          {/* <p>Text</p> */}
+          <SimpleItem />
         </div>
       );
     }

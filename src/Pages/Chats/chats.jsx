@@ -268,8 +268,6 @@ function Chats() {
       ReadMessage();
       return ()=>clearTimeout(timeout)
     }
-
-
   },[messages])
 
   const handleInputTextChange = (e) => {

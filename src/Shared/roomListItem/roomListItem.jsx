@@ -104,8 +104,6 @@ export function RoomListItem({
   const simpleItem =
     !text && isPhotoNull && isDocumentNull && isForwardMessageNull;
 
-
-
   return (
     <>
       <div onClick={click} className={styles.wrap}>

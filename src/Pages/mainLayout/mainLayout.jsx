@@ -348,7 +348,7 @@ const UserList = () => {
       );
     }
     if (contactRender) {
-      return <UserList />;
+      return (<> { userlist &&  userlist.length === 0 ? <RoomListLoading/> :<UserList />} </>)
     }
   };
 

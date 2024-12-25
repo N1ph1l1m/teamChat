@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "../../App/Styles/menuIcon.module.css"
 export default function MenuIcon({icon,title,handleClick}){
     return (

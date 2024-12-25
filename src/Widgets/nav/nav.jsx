@@ -1,4 +1,3 @@
-import React from "react";
 import { getData } from "../../Entities/api/getUserList";
 import { useEffect, useState } from "react";
 import UserItem from "../../Shared/userItem/userItem";
