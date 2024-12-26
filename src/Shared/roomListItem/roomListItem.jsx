@@ -38,34 +38,38 @@ export function RoomListItem({
     );
   };
 
-  const HeaderList = ({ text}) => {
+  const HeaderList = ({ text }) => {
     const newMessage = user.username !== authUser && !is_read;
-    return ( <>
-      {
-        <div className={styles.titleText}>
-        <div className={styles.headerTitle}>
-          <p className={styles.title}> {tittle}</p>
+    return (
+      <>
+        {
+          <div className={styles.titleText}>
+            <div className={styles.headerTitle}>
+              <p className={styles.title}> {tittle}</p>
 
-
-        <HeaderTime />
-      </div>
-         <div
-        className={styles.textWrap}
-        style={{
-          backgroundColor: newMessage ? "rgba(128, 128, 128, 0.507)" : null,
-        }}
-      >
-        <p className={styles.textMessage}>{text}</p>
-        {newMessage ? (
-          <Icon style={{ display: "inline-block" }}>
-            <BiSolidMessageRounded size="20" color="rgba(0, 0, 255, 0.646)" />
-          </Icon>
-        ) : null}
-      </div>
-    </div>
-      }
-    </>
-
+              <HeaderTime />
+            </div>
+            <div
+              className={styles.textWrap}
+              style={{
+                backgroundColor: newMessage
+                  ? "rgba(128, 128, 128, 0.507)"
+                  : null,
+              }}
+            >
+              <p className={styles.textMessage}>{text}</p>
+              {newMessage ? (
+                <Icon style={{ display: "inline-block" }}>
+                  <BiSolidMessageRounded
+                    size="20"
+                    color="rgba(0, 0, 255, 0.646)"
+                  />
+                </Icon>
+              ) : null}
+            </div>
+          </div>
+        }
+      </>
     );
   };
   const isPhoto = Array.isArray(photo);
@@ -80,12 +84,33 @@ export function RoomListItem({
   const textRender =
     text && isPhotoNull && isDocumentNull && isForwardMessageNull;
 
+  const textPhoto =
+    text &&
+    isPhoto &&
+    photo.length > 0 &&
+    isDocumentNull &&
+    isForwardMessageNull;
+
+  const textDocuments =
+    text &&
+    isPhotoNull &&
+    isDocument &&
+    document.length > 0 &&
+    isForwardMessageNull;
+
   const photoRender =
     !text &&
     isPhoto &&
     photo.length > 0 &&
     isDocumentNull &&
     isForwardMessageNull;
+
+  const textForward =
+    text &&
+    isPhotoNull &&
+    isDocumentNull &&
+    isForwardMessage &&
+    forwarded_messages.length > 0;
 
   const documentRender =
     !text &&
@@ -115,6 +140,10 @@ export function RoomListItem({
 
         {textRender && <HeaderList text={text} />}
 
+        {textPhoto && <HeaderList text={text} />}
+
+        {textDocuments && <HeaderList text={text} />}
+
         {photoRender && (
           <HeaderList
             text={isPhoto && photo.length > 1 ? "Фотографии" : "Фотография"}
@@ -128,20 +157,23 @@ export function RoomListItem({
         )}
 
         {forwardRender && <HeaderList text="Пересланное сообщение" />}
+
+        {textForward && <HeaderList text="Пересланное сообщение" />}
       </div>
     </>
   );
 }
 
-export const SimpleItem = () =>{
+export const SimpleItem = () => {
   return (
-  <>
-   <div  className={styles.wrap}>
-      <div className={styles.simpleIcon}></div>
-      <div className={styles.simpleWrapText}>
-       <div className={styles.simpleTittleItem}></div>
-        <div className={styles.simpleTextItem}></div>
+    <>
+      <div className={styles.wrap}>
+        <div className={styles.simpleIcon}></div>
+        <div className={styles.simpleWrapText}>
+          <div className={styles.simpleTittleItem}></div>
+          <div className={styles.simpleTextItem}></div>
+        </div>
       </div>
-  </div>
-  </>)
-}
+    </>
+  );
+};

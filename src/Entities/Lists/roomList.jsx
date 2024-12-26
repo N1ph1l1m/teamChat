@@ -12,8 +12,17 @@ export function RoomList({
   userLogo,
   link,
   selectedRooms,
-  handleRoomSelect,
+  setSelectRoomSendForwad,
 }) {
+  const handlerRoomSelect = (roomPk , setSelectRoomSendForward) => {
+    setSelectRoomSendForward((prevSelectedRooms) => {
+      if (prevSelectedRooms.includes(roomPk)) {
+        return prevSelectedRooms.filter((pk) => pk !== roomPk);
+      } else {
+        return [...prevSelectedRooms, roomPk];
+      }
+    });
+  };
   return (
     <>
       {roomList
@@ -37,7 +46,6 @@ export function RoomList({
           const otherUser = room.current_users.find(
             (user) => user.username !== authUser
           );
-
           const avatar = otherUser ? otherUser.photo : userLogo;
           const uniqueKey = `${room.pk}-${room.last_message?.created_at}`;
 
@@ -71,7 +79,7 @@ export function RoomList({
               />
               <input
                 type="checkbox"
-                onChange={() => handleRoomSelect(room.pk)}
+                onChange={() => handlerRoomSelect(room.pk,setSelectRoomSendForwad)}
                 checked={selectedRooms.includes(room.pk)}
                 className={styles.checkboxRoomList}
               />

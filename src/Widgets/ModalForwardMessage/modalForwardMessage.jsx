@@ -19,9 +19,18 @@ const ModalForwardMessage = ({
   keyDownSend,
   isOpenEmoji,
   openEmoji,
-  emojiEvent,
+  setMessage,
   roomList,
 }) => {
+  function inputEmoji(emojiObject) {
+    const sys = emojiObject.unified.split("_");
+    const codeArray = [];
+    sys.forEach((el) => codeArray.push("0x" + el));
+    let emoji = String.fromCodePoint(...codeArray);
+
+
+   setMessage((prevInput) => prevInput + emoji);
+  }
   return (
     <>
       {isOpen && (
@@ -35,7 +44,7 @@ const ModalForwardMessage = ({
                 <Picker
                   data={data}
                   theme={"ligth"}
-                  onEmojiSelect={emojiEvent}
+                  onEmojiSelect={inputEmoji}
                   previewPosition={"none"}
                   searchPosition={"none"}
                 />

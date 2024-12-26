@@ -2,23 +2,23 @@ import styles from "../../App/Styles/navItem.module.css";
 import Badge from "../badge/badge";
 import Icon from "../icon/icon";
 
-function NaviItem(props) {
+function NaviItem({badgeCount,click , icon , tittle}) {
   function numBadge() {
-    if (props.badgeCount > 0) {
-      return <Badge className="background" value={props.badgeCount} inline />;
+    if (badgeCount > 0) {
+      return <Badge className="background" value={badgeCount} inline />;
     } else {
-      <Badge value={props.badgeCount} inline />;
+      <Badge value={badgeCount} inline />;
     }
   }
 
   const badge = numBadge();
   return (
     <>
-      <div onClick={props.click} className={styles.wrap}>
+      <div onClick={click} className={styles.wrap}>
         <div className={styles.menuWrap}>
           <div className={styles.iconText}>
-            <Icon> {props.icon}</Icon>
-            <p className={styles.tittle}>{props.tittle}</p>
+            <Icon> {icon}</Icon>
+            <p className={styles.tittle}>{tittle}</p>
           </div>
 
           <div className={styles.badge}>{badge}</div>

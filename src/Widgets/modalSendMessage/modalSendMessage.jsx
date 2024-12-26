@@ -24,10 +24,19 @@ const ModalSendMessage = ({
   keyDownSend,
   isOpenEmoji,
   openEmoji,
-  emojiEvent,
+  setMessage,
   progressBar,
   removeElement,
 }) => {
+  function inputEmoji(emojiObject) {
+    const sys = emojiObject.unified.split("_");
+    const codeArray = [];
+    sys.forEach((el) => codeArray.push("0x" + el));
+    let emoji = String.fromCodePoint(...codeArray);
+
+
+   setMessage((prevInput) => prevInput + emoji);
+  }
 
   return (
     <>
@@ -41,7 +50,7 @@ const ModalSendMessage = ({
               <Picker
               data={data}
               theme={"ligth"}
-              onEmojiSelect={emojiEvent}
+              onEmojiSelect={inputEmoji}
               previewPosition={"none"}
               searchPosition={"none"}
               />

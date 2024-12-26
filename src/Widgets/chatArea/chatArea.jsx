@@ -17,12 +17,12 @@ function ChatArea({
   sendmessage,
   isOpenEmoji,
   openEmoji,
-  emojiEvent,
   selectTypeFile,
   setSelect,
   keyDownSend,
   replyMessage,
   closeReplyMenu,
+  setMessage
 }) {
   const autUsr = localStorage.getItem("username");
   function renderSelectTypeFile() {
@@ -139,6 +139,16 @@ function ChatArea({
   const showSelectTypeFile = renderSelectTypeFile();
   const showReplyMessage = renderReplyMessage();
 
+ function inputEmoji(emojiObject) {
+    const sys = emojiObject.unified.split("_");
+    const codeArray = [];
+    sys.forEach((el) => codeArray.push("0x" + el));
+    let emoji = String.fromCodePoint(...codeArray);
+
+
+   setMessage((prevInput) => prevInput + emoji);
+  }
+
   return (
     <div className={styles.chatAreaWrap}>
       <div className={styles.chatHeader}>
@@ -152,7 +162,7 @@ function ChatArea({
             <Picker
               data={emojiBd.data}
               theme={"ligth"}
-              onEmojiSelect={emojiEvent}
+              onEmojiSelect={inputEmoji}
               locale={"ru"}
               searchPosition={"none"}
             />

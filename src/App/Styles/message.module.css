@@ -7,7 +7,6 @@
   position: relative;
   min-width: 750px;
   max-width: 810px;
-  /* border:1px solid green; */
 }
 .messageAvatar {
   border: 1px solid black;
@@ -231,4 +230,16 @@
 }
 .messageBubbleAll img:last-child {
   border-radius: 0px;
+}
+
+
+@media screen and (max-width:1150px) {
+  .message{
+    min-width:600px ;
+  }
+}
+@media screen and (max-width:951px) {
+  .message{
+    min-width:400px ;
+  }
 }
