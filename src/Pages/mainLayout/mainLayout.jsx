@@ -22,12 +22,14 @@ import MenuIcon from "../../Shared/menuIcons/menuIcons.jsx";
 import chat from "../../App/Icons/chat.png";
 import groupIcon from "../../App/Icons/groupChat.png";
 import contacts from "../../App/Icons/contacts.png";
+import { NoMessages } from "../../Shared/NoMessages/NoMessages.jsx";
 import { Parameters } from "../../App/Parameters/Parametrs.js";
 
 
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
   // const [roomList, setRoomList] = useState([]);
+    const [isLoading,setIsLoading] = useState(true)
   const [isOpenModalCreateGroup, setModalCreateGroup] = useState(false);
   const [groupName, setGroupName] = useState();
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -80,6 +82,19 @@ function MainLayout() {
 
     return () => clearInterval(timer);
   }, [roomList, dispatch, chatGroupList]);
+
+    useEffect(()=>{
+      if(roomList.length === 0 ){
+        const timeout = setTimeout(()=>setIsLoading(false),10)
+
+        return ()=>clearTimeout(timeout)
+      }
+      if(roomList.length > 0){
+        const timeout = setTimeout(()=>setIsLoading(true),100)
+
+        return ()=>clearTimeout(timeout)
+      }
+    },[roomList])
 
 
 function linkToMessage(id, navigate) {
@@ -305,10 +320,19 @@ const UserList = () => {
     const chatRender = chatList && !chatGroupList;
     const groupRender = !chatList && chatGroupList;
     const contactRender = !chatList && !chatGroupList && contactsList;
+  const filterRoomList = roomList.filter((room)=>
+    room.current_users && room.current_users.length === 2 &&
+ Array.isArray(room.message) &&
+            room.message.length !== 0
+      )
 
     if (chatRender) {
       return (
-        <> { roomList  && roomList.length === 0  ?  <RoomListLoading/> :
+        <> {
+
+         isLoading  &&  roomList.length === 0  ?  <RoomListLoading/> :
+        isLoading && filterRoomList.length === 0    ? <div style={{display:"flex"}} ><NoMessages
+          text={"Чатов нет"}/></div>  :
           <RoomList
           roomList={roomList}
           link

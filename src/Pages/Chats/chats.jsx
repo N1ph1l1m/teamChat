@@ -563,7 +563,7 @@ function Chats() {
           <>
             {
                isLoading  &&  filteredMessages.length  === 0 ? (
-              <NoMessages/>
+              <NoMessages text = {'Сообщений пока нет'}/>
             ) :
               filteredMessages.length  === 0  ?  (
               <Loader custom widthLoader={"70px"}

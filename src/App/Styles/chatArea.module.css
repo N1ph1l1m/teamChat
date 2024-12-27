@@ -4,7 +4,6 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  /* justify-content: space-around; */
   position: relative;
   box-sizing: border-box;
 }
@@ -16,13 +15,12 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  /* border:3px solid blue; */
 }
 .chatHeaderItem {
   background-color:#ffffff;
   height: 80px;
   border-top-right-radius: 10px;
-  border-bottom:1px solid black;
+  border-bottom:1px solid rgba(0, 0, 0, 0.283);
   display:flex;
   justify-content: flex-start;
   align-items: center;

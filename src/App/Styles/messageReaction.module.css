@@ -11,12 +11,11 @@
     flex-flow: nowrap row;
     margin-right: 10px;
     cursor: pointer;
-    /* display: none; */
     }
   .reactionEmoji{
     font-size:20px;
     height:20px;
-      /* border:1px solid black; */
+
 
   }
   .avatarReacter{

@@ -70,9 +70,20 @@
 }
 
 .messageBublePhoto {
+
   display: flex;
   justify-content: flex-end;
   flex-direction: row;
+  align-items: flex-end;
+  position: relative;
+  height: auto;
+}
+
+.messageBublePhotoCheck{
+  overflow: hidden;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
   align-items: flex-end;
   position: relative;
   height: auto;
@@ -85,27 +96,43 @@
 }
 
 .bubbleTimeWrapPhoto {
-  width: 60px;
   position: absolute;
   bottom: 8px;
-  right: 10px;
+  right: 5px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-direction: row;
-}
+  width: 67px;
 
+
+}
 .bubbleTimeTextPhoto {
   display: block;
   color: white;
-  background-color: rgba(0, 0, 0, 0.486);
+  background-color: rgb(0, 0, 0);
   border-radius: 5px;
   font-size: 12px;
   padding: 3px;
   font-weight: 600;
   height: 20px;
   margin-right: 10px;
+  z-index: 4;
+}
+
+.bubbleTimeTextPhotoCheck {
+  position: absolute;
+  display: block;
+  color: white;
+  background-color: rgb(0, 0, 0);
+  border-radius: 5px;
+  font-size: 12px;
+  padding: 3px;
+  font-weight: 600;
+  height: 20px;
   z-index: 10;
+  bottom:10px;
+  right: 10px;
 }
 .messageFooterClass {
   width: 20px;

@@ -192,7 +192,7 @@ export default function Message({
           Array.isArray(documents) &&
           documents.length === 0 &&
           isForwardMessageNull &&
-          photos && (
+          photos &&  sent && (
             <div className={styles.messageBublePhoto}>
               <ReplyMessage reply={reply} />
               <MessagePhoto
@@ -200,12 +200,13 @@ export default function Message({
                 modalPhoto={modalPhoto}
                 photoData={photoData}
               />
-
-              {sent ? (
-                <div className={styles.bubbleTimeWrapPhoto}>
+               <div className={styles.bubbleTimeWrapPhoto}>
                   <span className={styles.bubbleTimeTextPhoto}>{time}</span>
                   <div className={styles.messageFooterClass}>
                     <MessageFooter
+                      reactionStyle={{position:"absolute" , right:"60px",
+                      width:"10px",display:"flex",justifyContent:"flex-end",
+                    top:"-11px",}}
                       reactions={reactions}
                       avatar={avatar}
                       onDestroyReaction={onDestroyReaction}
@@ -214,16 +215,34 @@ export default function Message({
                     />
                   </div>
                 </div>
-              ) : (
-                <div
-                  className={styles.bubbleTimeWrapPhoto}
-                  style={{ width: "40px" }}
-                >
-                  <span className={styles.bubbleTimeTextPhoto}>{time}</span>
-                </div>
-              )}
             </div>
           )}
+
+          {!text && Array.isArray(documents) &&  documents.length === 0 &&
+          isForwardMessageNull &&
+          photos &&  !sent  && (
+
+            <div className={styles.messageBublePhotoCheck}
+              >
+              <ReplyMessage reply={reply} />
+              <MessagePhoto
+                photos={photos}
+                modalPhoto={modalPhoto}
+                photoData={photoData}
+              />
+              <MessageFooter
+              style={{position:"absolute" ,bottom:"3px"}}
+              reactions={reactions}
+              avatar={avatar}
+              onDestroyReaction={onDestroyReaction}
+              isRead={isRead}
+              sent={sent}
+          />
+           <span className={styles.bubbleTimeTextPhotoCheck}>{time}</span>
+            </div>
+          )}
+
+
 
         {text && Array.isArray(photos) && photos.length === 1 && (
           <div className={`${styles.messageBubbleAll} ${styles.one}`}>

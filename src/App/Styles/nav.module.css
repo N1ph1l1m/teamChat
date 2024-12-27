@@ -39,8 +39,10 @@ height: 100%;
     margin-bottom: 15px;
 }
 .navItem{
+    position: relative;
     /* border: 1px solid red; */
     /* padding-left: 10px;
     padding-top: 5px; */
     width: 100%;
+    justify-self: start;
 }
