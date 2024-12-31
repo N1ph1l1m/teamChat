@@ -1,27 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import axios from "axios";
 import styles from "../../App/Styles/chats.module.css";
-import {Parameters} from "../../App/Parameters/Parametrs"
+import { Parameters } from "../../App/Parameters/Parametrs";
 import userLogo from "../../App/images/userAvatar.png";
 import ChatArea from "../../Widgets/chatArea/chatArea";
 import Message from "../../Widgets/Message/message";
 import { NoMessages } from "../../Shared/NoMessages/NoMessages";
 import { getRoomData } from "../../Entities/api/getRoomData";
 import { ReadMessageAll } from "../../Entities/api/ReadAllMessage";
-import {createNewMessageForward, sendForward,}from "../../Entities/api/forwardMessage";
-import { sendReaction } from  "../../Entities/api/ReactionSendDel";
+import {
+  createNewMessageForward,
+  sendForward,
+} from "../../Entities/api/forwardMessage";
+import { sendReaction } from "../../Entities/api/ReactionSendDel";
 import { UserProfile } from "../../Shared/UserProfile/UserProfile";
 import { createReaction } from "../../Entities/api/ReactionToMessage";
 import ModalPhoto from "../../Widgets/modalPhoto/modalPhoto";
 import ModalForwardMessage from "../../Widgets/ModalForwardMessage/modalForwardMessage";
 import ModalSendMessage from "../../Widgets/modalSendMessage/modalSendMessage";
 import { RoomList } from "../../Entities/Lists/roomList";
-import { addRoomList } from "../../Features/store_redux/recipe/recipe";
+import { addRoomList } from "../../store/actions/addRoomList";
 import { Loader } from "../../Shared/loader/loader";
-import { handlerInputTextChange, handlerInputImages, handlerInputDocuments} from "../../Features/inputHandlerEvents/handlersChat"
-import { fetchData, fetchDataRoomList, getMessageData, showMessageAvatar,  webSocket } from "../../Features/getServerData/getServerData";
+import {
+  handlerInputTextChange,
+  handlerInputImages,
+  handlerInputDocuments,
+} from "../../Features/inputHandlerEvents/handlersChat";
+import {
+  fetchData,
+  fetchDataRoomList,
+  getMessageData,
+  showMessageAvatar,
+  webSocket,
+} from "../../Features/getServerData/getServerData";
 import ForwardMessageMenu from "../../Shared/ForwardMessageMenu/ForwardMessageMenu";
 
 function Chats() {
@@ -31,7 +44,7 @@ function Chats() {
   const [authUserId, setAuthUserId] = useState("");
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
-  const [isLoading,setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true);
   const [sendImage, setSendImage] = useState("");
   const [sendDocument, setSendDocument] = useState("");
   const [isWebSocketOpen, setIsWebSocketOpen] = useState(false);
@@ -62,7 +75,7 @@ function Chats() {
   const [isSelectRoomSendForward, setSelectRoomSendForward] = useState([]);
 
   useEffect(() => {
-       let reconnectInterval = 1000;
+    let reconnectInterval = 1000;
 
     async function go() {
       fetchData(setAuthUser);
@@ -73,33 +86,42 @@ function Chats() {
         setAuthUserId,
         id
       );
-      await showMessageAvatar(dataRoom,Parameters.authUser,setOtherUserId,setOtherUserAvatar);
+      await showMessageAvatar(
+        dataRoom,
+        Parameters.authUser,
+        setOtherUserId,
+        setOtherUserAvatar
+      );
       await getMessageData(setMessages);
-      webSocket(ROOM_PK, Parameters.token,
+      webSocket(
+        ROOM_PK,
+        Parameters.token,
         reconnectInterval,
         setIsWebSocketOpen,
         Parameters.request_id,
         setMessages,
-        setChatSocket);
-       }
+        setChatSocket
+      );
+    }
     go();
   }, [id]);
 
   async function ReadMessage() {
     await ReadMessageAll(otherUserId);
   }
-  useEffect(()=>{
-    if(messages.length === 0 ){
-      const timeout = setTimeout(()=>setIsLoading(false),10)
+
+  useEffect(() => {
+    if (messages.length === 0) {
+      const timeout = setTimeout(() => setIsLoading(false), 10);
       ReadMessage();
-      return ()=>clearTimeout(timeout)
+      return () => clearTimeout(timeout);
     }
-    if(messages.length > 0){
-      const timeout = setTimeout(()=>setIsLoading(true),100)
+    if (messages.length > 0) {
+      const timeout = setTimeout(() => setIsLoading(true), 100);
       ReadMessage();
-      return ()=>clearTimeout(timeout)
+      return () => clearTimeout(timeout);
     }
-  },[messages])
+  }, [messages]);
 
   function handleCancelModal() {
     setModel(false);
@@ -110,6 +132,36 @@ function Chats() {
     setPhotoModal(false);
     setIsSelectedMessage(false);
     setSelectRoomSendForward("");
+  }
+
+  function checkAnonimusUser(messageData) {
+    try {
+      if (!chatSocket || chatSocket.readyState !== WebSocket.OPEN) {
+        throw new Error("WebSocket is not open.");
+      }
+      chatSocket.send(JSON.stringify(messageData));
+    } catch (error) {
+      const urls = "http://127.0.0.1:8000/chat/tokens/";
+      axios
+        .get(urls)
+        .then((response) => {
+          let data = response.data;
+          data
+            .filter((user) => user.user === authUserId)
+            .map((user) => {
+              if (user.key !== Parameters.token) console.log("Смена токена");
+              localStorage.setItem("token", user.key);
+              Parameters.token = user.key;
+              window.location.reload();
+            });
+        })
+        .catch((err) => {
+          console.error(
+            "Error fetching token:",
+            err.response?.data || err.message
+          );
+        });
+    }
   }
 
   async function sendMess() {
@@ -123,7 +175,6 @@ function Chats() {
       if (sendImage) {
         if (Array.isArray(sendImage) && sendImage.length > 0) {
           const uploadPromises = Array.from(sendImage).map(async (img) => {
-            // console.log("Отправка изображения");
             const formData = new FormData();
             formData.append("image", img);
 
@@ -133,7 +184,6 @@ function Chats() {
                 "Content-Type": "multipart/form-data",
               },
             });
-
 
             return response.data.id;
           });
@@ -150,10 +200,8 @@ function Chats() {
           action: "create_message",
           request_id: Parameters.request_id,
         };
-
-        chatSocket.send(JSON.stringify(messageData));
+        checkAnonimusUser(messageData);
       } else if (sendDocument) {
-
         if (Array.isArray(sendDocument) && sendDocument.length > 0) {
           const uploadPromises = Array.from(sendDocument).map(
             async (documents) => {
@@ -189,7 +237,7 @@ function Chats() {
           action: "create_message",
           request_id: Parameters.request_id,
         };
-        chatSocket.send(JSON.stringify(messageData));
+        checkAnonimusUser(messageData);
       } else {
         if (!isWebSocketOpen || !chatSocket) {
           console.log("WebSocket не открыт. Сообщение не отправлено.");
@@ -203,13 +251,13 @@ function Chats() {
           images: imageData || [],
           documents: documentsData || [],
           action: "create_message",
-          request_id:Parameters.request_id,
+          request_id: Parameters.request_id,
           reply_to: replyMessage ? replyMessage : null,
         };
 
-        chatSocket.send(JSON.stringify(messageData));
+        checkAnonimusUser(messageData);
       }
-      addRoomList(dispatch)
+      addRoomList(dispatch);
       setMessage("");
       setSendImage("");
       setInputPrew("");
@@ -251,7 +299,6 @@ function Chats() {
     if (!currentPhotoId > 0) return;
     setCurrentPhotoId(currentPhotoId - 1);
   };
-
 
   function removeElementModal(inputPrew) {
     console.log("remove " + inputPrew);
@@ -303,7 +350,6 @@ function Chats() {
   const userAuth = Parameters.authUser;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
 
-
   async function deleteReaction(reactionId, messageId, requestion) {
     try {
       if (!reactionId) return null;
@@ -315,7 +361,7 @@ function Chats() {
           request_id: Parameters.request_id,
           action: "delete_reaction",
         };
-        chatSocket.send(JSON.stringify(messageData));
+        checkAnonimusUser(messageData);
         const url = `http://127.0.0.1:8000/chat/reaction/destroy/${reactionId}/`;
         const response = await axios.delete(url);
         if (response.status === 204) {
@@ -354,10 +400,8 @@ function Chats() {
   }
 
   async function sendForwardMessage() {
-    // console.log("sendForwardMessage")
     try {
       if (!isSelectRoomSendForward) return null;
-      // console.log(isSelectRoomSendForward)
       for (const selectRoom of isSelectRoomSendForward) {
         const forwardedIds = await sendForward(
           selectedMessage,
@@ -401,32 +445,6 @@ function Chats() {
       }
     });
   };
-
-  // const ForwardMessageMenu = () => {
-  //   return (
-  //     <div className={styles.forwardMenuWrap}>
-  //       <button
-  //         className={styles.forwardButton}
-  //         onClick={() => {
-  //           if (selectedMessage.length === 0) return null;
-  //           setOpenModalForward(true);
-  //         }}
-  //       >
-  //         Переслать
-  //       </button>
-  //       <button
-  //         className={styles.forwardButton}
-  //         onClick={() => {
-  //           setIsSelectedMessage(false);
-  //           setSelectedMessage("");
-  //         }}
-  //       >
-  //         Отмена
-  //       </button>
-  //     </div>
-  //   );
-  // };
-
 
   const MessageGroup = ({
     msg,
@@ -487,13 +505,16 @@ function Chats() {
   ) : (
     ""
   );
-  const forwardTitle = isSelectedMessage ?
-  <ForwardMessageMenu
-    selectedMessage={ selectedMessage}
-    setOpenModalForward={setOpenModalForward}
-    setIsSelectedMessage={setIsSelectedMessage}
-    setSelectedMessage={setSelectedMessage}
-  /> : "";
+  const forwardTitle = isSelectedMessage ? (
+    <ForwardMessageMenu
+      selectedMessage={selectedMessage}
+      setOpenModalForward={setOpenModalForward}
+      setIsSelectedMessage={setIsSelectedMessage}
+      setSelectedMessage={setSelectedMessage}
+    />
+  ) : (
+    ""
+  );
   return (
     <>
       <ModalSendMessage
@@ -505,14 +526,18 @@ function Chats() {
         inputValue={message}
         keyDownSend={keyDownEvent}
         isOpen={modal}
-        openEmoji={()=>{ setModelEmoji(!isOpenModelEmoji)}}
+        openEmoji={() => {
+          setModelEmoji(!isOpenModelEmoji);
+        }}
         isOpenEmoji={isOpenModelEmoji}
         progressBar={progressBar}
         removeElement={removeElementModal}
       />
       <ModalForwardMessage
         isOpen={isOpenModalForward}
-        openEmoji={()=>{ setModelEmoji(!isOpenModelEmoji)}}
+        openEmoji={() => {
+          setModelEmoji(!isOpenModelEmoji);
+        }}
         isOpenEmoji={isOpenModelEmoji}
         setMessage={setMessage}
         input={handlerInputTextChange(setMessage)}
@@ -525,7 +550,7 @@ function Chats() {
             roomList={roomListForwardModal}
             userLogo={userLogo}
             selectedRooms={isSelectRoomSendForward}
-            setSelectRoomSendForwad  =  {setSelectRoomSendForward}
+            setSelectRoomSendForwad={setSelectRoomSendForward}
           />
         }
       />
@@ -548,10 +573,23 @@ function Chats() {
         title={forwardTitle ? forwardTitle : titleName}
         inputValue={message}
         input={handlerInputTextChange(setMessage)}
-        documents={handlerInputDocuments(setModel,setSendDocument,setSelectTypeFile,setInputPrew)}
-        images={handlerInputImages(setModel,setSendImage,setSelectTypeFile,setInputPrew,inputPrew)}
+        documents={handlerInputDocuments(
+          setModel,
+          setSendDocument,
+          setSelectTypeFile,
+          setInputPrew
+        )}
+        images={handlerInputImages(
+          setModel,
+          setSendImage,
+          setSelectTypeFile,
+          setInputPrew,
+          inputPrew
+        )}
         sendmessage={sendMess}
-        openEmoji={()=>{ setEmoji(!isOpenEmoji)}}
+        openEmoji={() => {
+          setEmoji(!isOpenEmoji);
+        }}
         isOpenEmoji={isOpenEmoji}
         setMessage={setMessage}
         keyDownSend={keyDownEvent}
@@ -561,18 +599,17 @@ function Chats() {
         setSelect={selectTypeSendFile}
         content={
           <>
-            {
-               isLoading  &&  filteredMessages.length  === 0 ? (
-              <NoMessages text = {'Сообщений пока нет'}/>
-            ) :
-              filteredMessages.length  === 0  ?  (
-              <Loader custom widthLoader={"70px"}
-                      heightLoader={"70px"}
-                      borderLoader={"10px solid #f3f3f3"}
-                      borderTopLoader={"10px solid  #3498db"}
-                    />
-              )
-             : (
+            {isLoading && filteredMessages.length === 0 ? (
+              <NoMessages text={"Сообщений пока нет"} />
+            ) : filteredMessages.length === 0 ? (
+              <Loader
+                custom
+                widthLoader={"70px"}
+                heightLoader={"70px"}
+                borderLoader={"10px solid #f3f3f3"}
+                borderTopLoader={"10px solid  #3498db"}
+              />
+            ) : (
               filteredMessages.map((msg, index, arr) => {
                 const previousMessage = arr[index - 1];
                 const previousDate = previousMessage

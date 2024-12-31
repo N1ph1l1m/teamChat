@@ -23,7 +23,7 @@ export async function showMessageAvatar(
   setOtherUserId,
   setOtherUserAvatar
 ) {
-  // console.log("avatar");
+  console.log("avatar");
   if (roomList.data) {
     const otherUser = roomList.data.current_users.find(
       (user) => user.username !== autUsr

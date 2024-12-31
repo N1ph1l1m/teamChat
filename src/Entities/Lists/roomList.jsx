@@ -1,10 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import {RoomListItem , SimpleItem} from "../../Shared/roomListItem/roomListItem";
+import {
+  RoomListItem,
+  SimpleItem,
+} from "../../Shared/roomListItem/roomListItem";
 import styles from "../../App/Styles/roomList.module.css";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import NaviItem from "../../Shared/navItem/navItem";
-
 
 export function RoomList({
   roomList,
@@ -14,7 +16,7 @@ export function RoomList({
   selectedRooms,
   setSelectRoomSendForwad,
 }) {
-  const handlerRoomSelect = (roomPk , setSelectRoomSendForward) => {
+  const handlerRoomSelect = (roomPk, setSelectRoomSendForward) => {
     setSelectRoomSendForward((prevSelectedRooms) => {
       if (prevSelectedRooms.includes(roomPk)) {
         return prevSelectedRooms.filter((pk) => pk !== roomPk);
@@ -28,7 +30,8 @@ export function RoomList({
       {roomList
         .filter(
           (room) =>
-            room.name.includes(authUser) && room.current_users.length === 2 &&
+            room.name.includes(authUser) &&
+            room.current_users.length === 2 &&
             room.message.length > 0
         )
         .sort((a, b) => {
@@ -79,7 +82,9 @@ export function RoomList({
               />
               <input
                 type="checkbox"
-                onChange={() => handlerRoomSelect(room.pk,setSelectRoomSendForwad)}
+                onChange={() =>
+                  handlerRoomSelect(room.pk, setSelectRoomSendForwad)
+                }
                 checked={selectedRooms.includes(room.pk)}
                 className={styles.checkboxRoomList}
               />
@@ -106,15 +111,24 @@ export function RoomListLoading() {
   return <>{RoomListLoading()}</>;
 }
 
-
 export function GroupRoomList({
   roomList,
+  authUser,
+  userLogo,
   link,
   selectedRooms,
-  handleRoomSelect,
-  authUser,
-  plusClick,
+  setSelectRoomSendForwad,
 }) {
+  const handlerRoomSelect = (roomPk, setSelectRoomSendForward) => {
+    setSelectRoomSendForward((prevSelectedRooms) => {
+      if (prevSelectedRooms.includes(roomPk)) {
+        return prevSelectedRooms.filter((pk) => pk !== roomPk);
+      } else {
+        return [...prevSelectedRooms, roomPk];
+      }
+    });
+  };
+
   return (
     <div className={styles.groupListWrap}>
       {roomList
@@ -123,10 +137,16 @@ export function GroupRoomList({
             room.current_users.some((user) => user.username === authUser) &&
             room.current_users.length > 2
         )
+        .sort((a, b) => {
+          const dateA = new Date(a.last_message?.created_at || 0);
+          const dateB = new Date(b.last_message?.created_at || 0);
+          return dateB - dateA;
+        })
         .map((room) => {
           const capitalized =
             room.name.charAt(0).toUpperCase() + room.name.slice(1);
 
+          const avatar = room.photo_room;
           const uniqueKey = `${room.pk}-${room.last_message?.created_at}`;
 
           return link ? (
@@ -136,7 +156,7 @@ export function GroupRoomList({
                 to={`grchats/${room.pk}`}
                 style={{ textDecoration: "none" }}
               >
-                 <RoomListItem
+                <RoomListItem
                   icon={<img src={room.photo_room} alt="groupPhoto" />}
                   tittle={capitalized}
                   badgeCount={room.message.length}
@@ -149,21 +169,19 @@ export function GroupRoomList({
                   document={room.last_message.documents}
                   forwarded_messages={room.last_message.forwarded_messages}
                 />
-
               </Link>
             </div>
           ) : (
             <label key={room.pk} className={styles.checkBoxWrap}>
-              <RoomListItem
-                icon={<MdOutlineTaskAlt color="black" size="20" />}
+              <NaviItem
+                icon={<img src={avatar} alt={"avatar"} />}
                 tittle={capitalized}
-                photo={room.last_message.images}
-                document={room.last_message.documents}
-                forwarded_messages={room.last_message.forwarded_messages}
               />
               <input
                 type="checkbox"
-                onChange={() => handleRoomSelect(room.pk)}
+                onChange={() =>
+                  handlerRoomSelect(room.pk, setSelectRoomSendForwad)
+                }
                 checked={selectedRooms.includes(room.pk)}
                 className={styles.checkboxRoomList}
               />

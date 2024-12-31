@@ -1,7 +1,7 @@
 import React from "react";
 import Nav from "../../Widgets/nav/nav";
 import NaviItem from "../../Shared/navItem/navItem.jsx";
-import { Link, Outlet,  useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import "../../App/Styles/link.scss";
 import { getData } from "../../Entities/api/getUserList";
 import { useState, useEffect } from "react";
@@ -10,12 +10,16 @@ import CreateRoom from "../../Entities/api/createRoom";
 import ModalCreateGroup from "../../Widgets/modalCreateGroup/modalCreateGroup.jsx";
 import styles from "../../App/Styles/mainLayout.module.css";
 import userLogo from "../../App/images/userAvatar.png";
-import { RoomList,RoomListLoading, GroupRoomList } from "../../Entities/Lists/roomList.jsx";
+import {
+  RoomList,
+  RoomListLoading,
+  GroupRoomList,
+} from "../../Entities/Lists/roomList.jsx";
 import Icon from "../../Shared/icon/icon.jsx";
 import { MdAddAPhoto } from "react-icons/md";
 import { MdNoPhotography } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { addRoomList } from "../../Features/store_redux/recipe/recipe.jsx";
+import { addRoomList } from "../../store/actions/addRoomList.jsx";
 import { getDataTest } from "../../Entities/api/getUserList";
 import { GoPlus } from "react-icons/go";
 import MenuIcon from "../../Shared/menuIcons/menuIcons.jsx";
@@ -25,11 +29,9 @@ import contacts from "../../App/Icons/contacts.png";
 import { NoMessages } from "../../Shared/NoMessages/NoMessages.jsx";
 import { Parameters } from "../../App/Parameters/Parametrs.js";
 
-
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
-  // const [roomList, setRoomList] = useState([]);
-    const [isLoading,setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true);
   const [isOpenModalCreateGroup, setModalCreateGroup] = useState(false);
   const [groupName, setGroupName] = useState();
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -47,17 +49,12 @@ function MainLayout() {
     addRoomList(dispatch);
   }, []);
 
-
-
   useEffect(() => {
     if (!chatList) return;
 
     const timer = setInterval(async () => {
       try {
-        const newRoomList = await getDataTest("chat/rooms");
-        if (JSON.stringify(newRoomList) !== JSON.stringify(roomList)) {
-          dispatch({ type: "ADD_ROOMLIST", payload: newRoomList });
-        }
+        addRoomList(dispatch);
       } catch (error) {
         console.error("Ошибка при загрузке списка комнат:", error);
       }
@@ -83,86 +80,89 @@ function MainLayout() {
     return () => clearInterval(timer);
   }, [roomList, dispatch, chatGroupList]);
 
-    useEffect(()=>{
-      if(roomList.length === 0 ){
-        const timeout = setTimeout(()=>setIsLoading(false),10)
+  useEffect(() => {
+    if (roomList.length === 0) {
+      const timeout = setTimeout(() => setIsLoading(false), 10);
 
-        return ()=>clearTimeout(timeout)
-      }
-      if(roomList.length > 0){
-        const timeout = setTimeout(()=>setIsLoading(true),100)
-
-        return ()=>clearTimeout(timeout)
-      }
-    },[roomList])
-
-
-function linkToMessage(id, navigate) {
-  const user = userlist.find((user) => user.id === id);
-  const authUsr = userlist.find((user) => user.username === Parameters.authUser);
-
-  if (!user) {
-    console.error("User not found");
-    return;
-  }
-  if (!authUsr) {
-    console.error("Authorized user not found");
-    return;
-  }
-
-  const filteredRooms = roomList.filter((current) => {
-    if (Array.isArray(current.current_users)) {
-      const usernames = current.current_users.map(
-        (currentUser) => currentUser.username
-      );
-
-      return (
-        usernames.length === 2 &&
-        usernames.includes(user.username) &&
-        usernames.includes(authUsr.username)
-      );
+      return () => clearTimeout(timeout);
     }
-    return false;
-  });
+    if (roomList.length > 0) {
+      const timeout = setTimeout(() => setIsLoading(true), 100);
 
-  if (filteredRooms && filteredRooms.length === 0) {
-    CreateRoom(user.username);
-    return;
+      return () => clearTimeout(timeout);
+    }
+  }, [roomList]);
+
+  function linkToMessage(id, navigate) {
+    const user = userlist.find((user) => user.id === id);
+    const authUsr = userlist.find(
+      (user) => user.username === Parameters.authUser
+    );
+
+    if (!user) {
+      console.error("User not found");
+      return;
+    }
+    if (!authUsr) {
+      console.error("Authorized user not found");
+      return;
+    }
+
+    const filteredRooms = roomList.filter((current) => {
+      if (Array.isArray(current.current_users)) {
+        const usernames = current.current_users.map(
+          (currentUser) => currentUser.username
+        );
+
+        return (
+          usernames.length === 2 &&
+          usernames.includes(user.username) &&
+          usernames.includes(authUsr.username)
+        );
+      }
+      return false;
+    });
+
+    if (filteredRooms && filteredRooms.length === 0) {
+      CreateRoom(user.username);
+      return;
+    }
+
+    if (filteredRooms.length === 1) {
+      navigate(`/chats/${filteredRooms[0].pk}`);
+    }
   }
 
-  if (filteredRooms.length === 1) {
-    navigate(`/chats/${filteredRooms[0].pk}`);
-  }
-}
+  const UserList = () => {
+    const navigate = useNavigate();
 
-const UserList = () => {
-  const navigate = useNavigate();
-
-  return (
-    <>
-      {userlist
-        .filter((user) => user.username !== Parameters.authUser)
-        .map((user, index) => {
-          const upName =
-            user.username.charAt(0).toUpperCase() + user.username.slice(1);
-          return (
-            <div
-              className={styles.userListWrap}
-              key={index}
-              onClick={() => {
-                linkToMessage(user.id, navigate);
-              }}
-            >
-              <NaviItem
-                icon={<img src={user.photo} alt={`${user.username}'s avatar`} />}
-                tittle={upName}
-              />
-            </div>
-          );
-        })}
-    </>
-  );
-};
+    return (
+      <>
+        {userlist
+          .filter((user) => user.username !== Parameters.authUser)
+          .map((user, index) => {
+            const upName =
+              user.username.charAt(0).toUpperCase() + user.username.slice(1);
+            return (
+              <div
+                className={styles.userListWrap}
+                key={index}
+                onClick={() => {
+                  linkToMessage(user.id, navigate);
+                }}
+              >
+                <NaviItem
+                  icon={
+                    <img src={user.photo} alt={`${user.username}'s avatar`} />
+                  }
+                  tittle={upName}
+                />
+              </div>
+            );
+          })}
+      </>
+    );
+  };
 
   function handleCancel() {
     setModalCreateGroup(false);
@@ -320,59 +320,80 @@ const UserList = () => {
     const chatRender = chatList && !chatGroupList;
     const groupRender = !chatList && chatGroupList;
     const contactRender = !chatList && !chatGroupList && contactsList;
-  const filterRoomList = roomList.filter((room)=>
-    room.current_users && room.current_users.length === 2 &&
- Array.isArray(room.message) &&
-            room.message.length !== 0
-      )
+    const filterRoomList = roomList.filter(
+      (room) =>
+        room.current_users &&
+        room.current_users.length === 2 &&
+        Array.isArray(room.message) &&
+        room.message.length !== 0
+    );
 
     if (chatRender) {
       return (
-        <> {
-
-         isLoading  &&  roomList.length === 0  ?  <RoomListLoading/> :
-        isLoading && filterRoomList.length === 0    ? <div style={{display:"flex"}} ><NoMessages
-          text={"Чатов нет"}/></div>  :
-          <RoomList
-          roomList={roomList}
-          link
-          authUser={Parameters.authUser}
-          userLogo={userLogo}/>
-        }
+        <>
+          {" "}
+          {isLoading && roomList.length === 0 ? (
+            <RoomListLoading />
+          ) : isLoading && filterRoomList.length === 0 ? (
+            <div style={{ display: "flex" }}>
+              <NoMessages text={"Чатов нет"} />
+            </div>
+          ) : (
+            <RoomList
+              roomList={roomList}
+              link
+              authUser={Parameters.authUser}
+              userLogo={userLogo}
+            />
+          )}
         </>
       );
     }
     if (groupRender) {
       return (
         <>
-
           <>
-          <div className={styles.menuGroup}>
-            <input
-              placeholder="Поиск"
-              type="text"
-              className={styles.searchGroup}
-            />
-            <button
-              className={styles.createGroup}
-              onClick={() => {
-                getData("users/", setUserList);
-                showModalGroupChat();
-              }}
-            >
-              {" "}
-              <GoPlus color="rgba(0, 0, 0, 0.283)" size="25" />{" "}
-            </button>
-          </div>
-          {    roomList  && roomList.length === 0  ?  <RoomListLoading/> :< GroupRoomList roomList={roomList} authUser={Parameters.authUser} link />}
+            <div className={styles.menuGroup}>
+              <input
+                placeholder="Поиск"
+                type="text"
+                className={styles.searchGroup}
+              />
+              <button
+                className={styles.createGroup}
+                onClick={() => {
+                  getData("users/", setUserList);
+                  showModalGroupChat();
+                }}
+              >
+                {" "}
+                <GoPlus color="rgba(0, 0, 0, 0.283)" size="25" />{" "}
+              </button>
+            </div>
+            {roomList && roomList.length === 0 ? (
+              <RoomListLoading />
+            ) : (
+              <GroupRoomList
+                roomList={roomList}
+                authUser={Parameters.authUser}
+                link
+              />
+            )}
           </>
-
-
         </>
       );
     }
     if (contactRender) {
-      return (<> { userlist &&  userlist.length === 0 ? <RoomListLoading/> :<UserList />} </>)
+      return (
+        <>
+          {" "}
+          {userlist && userlist.length === 0 ? (
+            <RoomListLoading />
+          ) : (
+            <UserList />
+          )}{" "}
+        </>
+      );
     }
   };
 
