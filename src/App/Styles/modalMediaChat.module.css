@@ -1,0 +1,108 @@
+.modalOverlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+  }
+  
+  .modalWrap {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    max-height: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-radius: 10px;
+    box-sizing: content-box;
+    overflow: hidden;
+  }
+  
+  .modalBody {
+    width: 630px;
+    height:1000px;
+    overflow-y: auto;
+  }
+  .modalBody::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .menuWrap{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items:center;
+ 
+    border-bottom:1px solid #8f8f8f;
+
+  }
+
+.menuItem {
+    background-color: transparent;
+    border: none;
+    padding: 10px;
+    color: white;
+    position: relative;
+    gap: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color:black;
+    margin-bottom: 5px;
+    margin-right: 10px;
+  }
+
+.menuActive{
+    color:#105c9f;
+    font-weight: bold;
+}
+
+.mediaContent{
+    padding: 0px 10px ;
+    display:flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.groupPhoto{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0px;
+    
+
+}
+.mediaImgWrap{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.mediaImg{
+    width: 200px;
+    height: 200px;
+    margin-bottom: 1px;
+    margin-right: 1px;
+}
+  .modalFooter {
+    margin-top: 5px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    flex-shrink: 0;
+  }
+  
+  .modalFooter button:last-child {
+    margin-left: 10px;
+  }
+  .modalButton{
+    background-color: #390cce;
+    padding: 10px;
+  }
+  

@@ -784,7 +784,7 @@ function GroupChats() {
           <>
             {isLoading && filteredMessages.length === 0 ? (
               <NoMessages text={"Сообщений пока нет"} />
-            ) : filteredMessages.length === 0 ? (
+            ) : filteredMessages.length === 0 && isLoading ? (
               <Loader
                 custom
                 widthLoader={"70px"}

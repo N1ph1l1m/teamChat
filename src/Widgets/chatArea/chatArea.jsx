@@ -2,7 +2,7 @@ import { IoSend } from "react-icons/io5";
 import styles from "../../App/Styles/chatArea.module.css";
 import Icon from "../../Shared/icon/icon";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
-import { emojiBd} from "../../App/Parameters/DataEmoji"
+import { emojiBd } from "../../App/Parameters/DataEmoji";
 import Picker from "@emoji-mart/react";
 import { IoIosClose } from "react-icons/io";
 import { FaFile, FaFileImage, FaPaperclip } from "react-icons/fa";
@@ -22,7 +22,7 @@ function ChatArea({
   keyDownSend,
   replyMessage,
   closeReplyMenu,
-  setMessage
+  setMessage,
 }) {
   const autUsr = localStorage.getItem("username");
   function renderSelectTypeFile() {
@@ -139,14 +139,13 @@ function ChatArea({
   const showSelectTypeFile = renderSelectTypeFile();
   const showReplyMessage = renderReplyMessage();
 
- function inputEmoji(emojiObject) {
+  function inputEmoji(emojiObject) {
     const sys = emojiObject.unified.split("_");
     const codeArray = [];
     sys.forEach((el) => codeArray.push("0x" + el));
     let emoji = String.fromCodePoint(...codeArray);
 
-
-   setMessage((prevInput) => prevInput + emoji);
+    setMessage((prevInput) => prevInput + emoji);
   }
 
   return (

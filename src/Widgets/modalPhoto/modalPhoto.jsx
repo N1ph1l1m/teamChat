@@ -29,26 +29,29 @@ const ModalPhoto = ({
                     size="50"
                   />
                 </Icon>
-                <Icon>
-                  <IoIosArrowBack
-                    size="50"
-                    className={styles.arrowBack}
-                    color="rgb(199, 198, 198)"
-                    onClick={() => prevPhoto()}
-                  />
-                </Icon>
+                {prevPhoto ? (
+                  <Icon>
+                    <IoIosArrowBack
+                      size="50"
+                      className={styles.arrowBack}
+                      color="rgb(199, 198, 198)"
+                      onClick={() => prevPhoto()}
+                    />
+                  </Icon>
+                ) : null}
                 <div className={styles.modalWrap}>
                   <img className={styles.modalPhoto} src={image} alt="img" />
                 </div>
-                <Icon>
-                  <IoIosArrowForward
-                    size="50"
-                    color="rgb(199, 198, 198)"
-                    className={styles.arrowForwad}
-                    onClick={() => nextPhoto()}
-
-                  />
-                </Icon>
+                {nextPhoto ? (
+                  <Icon>
+                    <IoIosArrowForward
+                      size="50"
+                      color="rgb(199, 198, 198)"
+                      className={styles.arrowForwad}
+                      onClick={() => nextPhoto()}
+                    />
+                  </Icon>
+                ) : null}
               </div>
             </Portal>
           )}

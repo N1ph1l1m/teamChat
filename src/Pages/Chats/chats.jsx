@@ -36,7 +36,7 @@ import {
   webSocket,
 } from "../../Features/getServerData/getServerData";
 import ForwardMessageMenu from "../../Shared/ForwardMessageMenu/ForwardMessageMenu";
-
+import ModalMediaChat from "../../Widgets/modalMediaChat/modalMediaChat";
 function Chats() {
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -57,6 +57,7 @@ function Chats() {
   const [authUser, setAuthUser] = useState([]);
   const [modal, setModel] = useState(false);
   const [photoModal, setPhotoModal] = useState(false);
+  const [mediaChatModal, setMediaChatModal] = useState(false);
   const [modalPhoto, setModalPhoto] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [currentPhotoId, setCurrentPhotoId] = useState(0);
@@ -112,6 +113,7 @@ function Chats() {
 
   useEffect(() => {
     if (messages.length === 0) {
+      console.log(isLoading);
       const timeout = setTimeout(() => setIsLoading(false), 10);
       ReadMessage();
       return () => clearTimeout(timeout);
@@ -132,6 +134,7 @@ function Chats() {
     setPhotoModal(false);
     setIsSelectedMessage(false);
     setSelectRoomSendForward("");
+    setMediaChatModal(false);
   }
 
   function checkAnonimusUser(messageData) {
@@ -501,7 +504,13 @@ function Chats() {
     (msg) => msg.room && msg.room.id === parseInt(id)
   );
   const titleName = roomList ? (
-    <UserProfile room={roomList} authUserId={authUserId} />
+    <UserProfile
+      room={roomList}
+      authUserId={authUserId}
+      setModal={() => {
+        setMediaChatModal(true);
+      }}
+    />
   ) : (
     ""
   );
@@ -569,6 +578,12 @@ function Chats() {
         prevPhoto={prevImg}
       />
 
+      <ModalMediaChat
+        isOpen={mediaChatModal}
+        onCancel={handleCancelModal}
+        media={filteredMessages}
+      />
+
       <ChatArea
         title={forwardTitle ? forwardTitle : titleName}
         inputValue={message}
@@ -601,7 +616,7 @@ function Chats() {
           <>
             {isLoading && filteredMessages.length === 0 ? (
               <NoMessages text={"Сообщений пока нет"} />
-            ) : filteredMessages.length === 0 ? (
+            ) : filteredMessages.length === 0 && !isLoading ? (
               <Loader
                 custom
                 widthLoader={"70px"}

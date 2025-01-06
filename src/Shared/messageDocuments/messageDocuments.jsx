@@ -4,7 +4,7 @@ import { DownloadFileTypeIcons } from "../FileTypeIcons/downloadFileTypeIcons";
 
 export function MessageDocuments({ documents }) {
   if (!documents) return null;
-
+  // console.log(documents);
   return (
     <>
       {documents.map((document, index) => (

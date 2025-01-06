@@ -1,9 +1,7 @@
 import React from "react";
 import Portal from "./portal";
 import PropTypes from "prop-types";
-
 import styles from "../../App/Styles/modalCreateGroupChat.module.css";
-import Icon from "../../Shared/icon/icon";
 import Button from "../../Shared/button/button";
 
 const ModalCreateGroup = ({ title, isOpen, onCancel, onSubmit, children }) => {

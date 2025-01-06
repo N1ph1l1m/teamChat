@@ -58,7 +58,7 @@ function MainLayout() {
       } catch (error) {
         console.error("Ошибка при загрузке списка комнат:", error);
       }
-    }, 5000);
+    }, 60000);
 
     return () => clearInterval(timer);
   }, [roomList, dispatch, chatList]);
@@ -68,14 +68,11 @@ function MainLayout() {
 
     const timer = setInterval(async () => {
       try {
-        const newRoomList = await getDataTest("chat/rooms");
-        if (JSON.stringify(newRoomList) !== JSON.stringify(roomList)) {
-          dispatch({ type: "ADD_ROOMLIST", payload: newRoomList });
-        }
+        addRoomList(dispatch);
       } catch (error) {
         console.error("Ошибка при загрузке списка комнат:", error);
       }
-    }, 5000);
+    }, 60000);
 
     return () => clearInterval(timer);
   }, [roomList, dispatch, chatGroupList]);
@@ -83,7 +80,6 @@ function MainLayout() {
   useEffect(() => {
     if (roomList.length === 0) {
       const timeout = setTimeout(() => setIsLoading(false), 10);
-
       return () => clearTimeout(timeout);
     }
     if (roomList.length > 0) {
@@ -91,6 +87,7 @@ function MainLayout() {
 
       return () => clearTimeout(timeout);
     }
+    addRoomList(dispatch);
   }, [roomList]);
 
   function linkToMessage(id, navigate) {
@@ -335,7 +332,7 @@ function MainLayout() {
           {isLoading && roomList.length === 0 ? (
             <RoomListLoading />
           ) : isLoading && filterRoomList.length === 0 ? (
-            <div style={{ display: "flex" }}>
+            <div className={styles.noMessageWrap}>
               <NoMessages text={"Чатов нет"} />
             </div>
           ) : (
