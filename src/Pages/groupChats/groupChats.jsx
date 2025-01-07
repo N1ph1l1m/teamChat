@@ -89,135 +89,135 @@ function GroupChats() {
     }
     let reconnectInterval = 1000;
 
-    function webSocket() {
-      // console.log("websocket");
-      const socketUrl = `ws://localhost:8000/ws/chat/${ROOM_PK}/?token=${TOKEN}`;
-      let socket = new WebSocket(socketUrl);
-      socket.onopen = function () {
-        console.log("WebSocket открыт");
-        setIsWebSocketOpen(true);
+    // function webSocket() {
 
-        socket.send(
-          JSON.stringify({
-            pk: ROOM_PK,
-            action: "join_room",
-            request_id: REQUEST_ID,
-          })
-        );
-        socket.send(
-          JSON.stringify({
-            pk: ROOM_PK,
-            action: "retrieve",
-            request_id: REQUEST_ID,
-          })
-        );
-        socket.send(
-          JSON.stringify({
-            pk: ROOM_PK,
-            action: "subscribe_to_messages_in_room",
-            request_id: REQUEST_ID,
-          })
-        );
-      };
-      function reconnectWebSocket() {
-        socket = new WebSocket(socketUrl);
-      }
-      socket.onclose = function (event) {
-        console.log("Соединение закрыто. Попытка переподключиться...");
-        setTimeout(reconnectWebSocket(), reconnectInterval);
+    //   const socketUrl = `ws://localhost:8000/ws/chat/${ROOM_PK}/?token=${TOKEN}`;
+    //   let socket = new WebSocket(socketUrl);
+    //   socket.onopen = function () {
+    //     console.log("WebSocket открыт");
+    //     setIsWebSocketOpen(true);
 
-        reconnectInterval = Math.min(reconnectInterval * 2, 5000);
-      };
+    //     socket.send(
+    //       JSON.stringify({
+    //         pk: ROOM_PK,
+    //         action: "join_room",
+    //         request_id: REQUEST_ID,
+    //       })
+    //     );
+    //     socket.send(
+    //       JSON.stringify({
+    //         pk: ROOM_PK,
+    //         action: "retrieve",
+    //         request_id: REQUEST_ID,
+    //       })
+    //     );
+    //     socket.send(
+    //       JSON.stringify({
+    //         pk: ROOM_PK,
+    //         action: "subscribe_to_messages_in_room",
+    //         request_id: REQUEST_ID,
+    //       })
+    //     );
+    //   };
+    //   function reconnectWebSocket() {
+    //     socket = new WebSocket(socketUrl);
+    //   }
+    //   socket.onclose = function (event) {
+    //     console.log("Соединение закрыто. Попытка переподключиться...");
+    //     setTimeout(reconnectWebSocket(), reconnectInterval);
 
-      socket.onmessage = function async(e) {
-        const data = JSON.parse(e.data);
-        switch (data.action) {
-          case "create":
-            setMessages((prevMessages) => {
-              const messageExists = prevMessages.some(
-                (msg) => msg.id === data.data.id
-              );
-              getMessageData();
-              if (!messageExists) {
-                return [...prevMessages, data.data];
-              }
-              return prevMessages;
-            });
+    //     reconnectInterval = Math.min(reconnectInterval * 2, 5000);
+    //   };
 
-            break;
-          case "update":
-            setMessages((prevMessages) => {
-              const updatedMessages = prevMessages.map((msg) => {
-                if (msg.id === data.data.id) {
-                  const updatedMessage = { ...msg, ...data.data };
-                  if (updatedMessage.reactions) {
-                    updatedMessage.reactions = updatedMessage.reactions.map(
-                      (reaction) => {
-                        if (
-                          reaction.id_user.photo &&
-                          !reaction.id_user.photo.startsWith("http")
-                        ) {
-                          reaction.id_user.photo = `http://127.0.0.1:8000${reaction.id_user.photo}`;
-                        }
-                        return reaction;
-                      }
-                    );
-                  }
-                  if (updatedMessage.images) {
-                    updatedMessage.images = updatedMessage.images.map(
-                      (image) => {
-                        if (image.image && !image.image.startsWith("http")) {
-                          image.image = `http://127.0.0.1:8000${image.image}`;
-                        }
-                        return image;
-                      }
-                    );
-                  }
+    //   socket.onmessage = function async(e) {
+    //     const data = JSON.parse(e.data);
+    //     switch (data.action) {
+    //       case "create":
+    //         setMessages((prevMessages) => {
+    //           const messageExists = prevMessages.some(
+    //             (msg) => msg.id === data.data.id
+    //           );
+    //           getMessageData();
+    //           if (!messageExists) {
+    //             return [...prevMessages, data.data];
+    //           }
+    //           return prevMessages;
+    //         });
 
-                  if (updatedMessage.reply_to) {
-                    if (updatedMessage.reply_to.images) {
-                      updatedMessage.reply_to.images =
-                        updatedMessage.reply_to.images.map((image) => {
-                          if (image.image && !image.image.startsWith("http")) {
-                            image.image = `http://127.0.0.1:8000${image.image}`;
-                          }
-                          return image;
-                        });
-                    }
-                  }
-                  if (updatedMessage.forwarded_messages) {
-                    updatedMessage.forwarded_messages =
-                      updatedMessage.forwarded_messages.map((image) => {
-                        if (
-                          image.original_message.user.photo &&
-                          !image.original_message.user.photo.startsWith("http")
-                        ) {
-                          image.original_message.user.photo = `http://127.0.0.1:8000${image.original_message.user.photo}`;
-                        }
+    //         break;
+    //       case "update":
+    //         setMessages((prevMessages) => {
+    //           const updatedMessages = prevMessages.map((msg) => {
+    //             if (msg.id === data.data.id) {
+    //               const updatedMessage = { ...msg, ...data.data };
+    //               if (updatedMessage.reactions) {
+    //                 updatedMessage.reactions = updatedMessage.reactions.map(
+    //                   (reaction) => {
+    //                     if (
+    //                       reaction.id_user.photo &&
+    //                       !reaction.id_user.photo.startsWith("http")
+    //                     ) {
+    //                       reaction.id_user.photo = `http://127.0.0.1:8000${reaction.id_user.photo}`;
+    //                     }
+    //                     return reaction;
+    //                   }
+    //                 );
+    //               }
+    //               if (updatedMessage.images) {
+    //                 updatedMessage.images = updatedMessage.images.map(
+    //                   (image) => {
+    //                     if (image.image && !image.image.startsWith("http")) {
+    //                       image.image = `http://127.0.0.1:8000${image.image}`;
+    //                     }
+    //                     return image;
+    //                   }
+    //                 );
+    //               }
 
-                        image.original_message.images.map((img) => {
-                          console.log(img);
-                          if (img.image && !img.image.startsWith("http")) {
-                            img.image = `http://127.0.0.1:8000${img.image}`;
-                          }
-                        });
+    //               if (updatedMessage.reply_to) {
+    //                 if (updatedMessage.reply_to.images) {
+    //                   updatedMessage.reply_to.images =
+    //                     updatedMessage.reply_to.images.map((image) => {
+    //                       if (image.image && !image.image.startsWith("http")) {
+    //                         image.image = `http://127.0.0.1:8000${image.image}`;
+    //                       }
+    //                       return image;
+    //                     });
+    //                 }
+    //               }
+    //               if (updatedMessage.forwarded_messages) {
+    //                 updatedMessage.forwarded_messages =
+    //                   updatedMessage.forwarded_messages.map((image) => {
+    //                     if (
+    //                       image.original_message.user.photo &&
+    //                       !image.original_message.user.photo.startsWith("http")
+    //                     ) {
+    //                       image.original_message.user.photo = `http://127.0.0.1:8000${image.original_message.user.photo}`;
+    //                     }
 
-                        return image;
-                      });
-                  }
-                  return updatedMessage;
-                }
-                return msg;
-              });
-              return updatedMessages;
-            });
-            break;
-          default:
-            break;
-        }
-      };
-      setChatSocket(socket);
-    }
+    //                     image.original_message.images.map((img) => {
+    //                       console.log(img);
+    //                       if (img.image && !img.image.startsWith("http")) {
+    //                         img.image = `http://127.0.0.1:8000${img.image}`;
+    //                       }
+    //                     });
+
+    //                     return image;
+    //                   });
+    //               }
+    //               return updatedMessage;
+    //             }
+    //             return msg;
+    //           });
+    //           return updatedMessages;
+    //         });
+    //         break;
+    //       default:
+    //         break;
+    //     }
+    //   };
+    //   setChatSocket(socket);
+    // }
 
     async function go() {
       fetchData(setAuthUser);
@@ -242,7 +242,8 @@ function GroupChats() {
         setIsWebSocketOpen,
         Parameters.request_id,
         setMessages,
-        setChatSocket
+        setChatSocket,
+        dispatch
       );
     }
 

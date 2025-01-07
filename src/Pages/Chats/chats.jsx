@@ -101,7 +101,8 @@ function Chats() {
         setIsWebSocketOpen,
         Parameters.request_id,
         setMessages,
-        setChatSocket
+        setChatSocket,
+        dispatch
       );
     }
     go();

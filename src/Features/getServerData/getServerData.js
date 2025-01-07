@@ -1,4 +1,6 @@
 import { getData } from "../../Entities/api/getUserList";
+import { addRoomList } from "../../store/actions/addRoomList";
+import { useDispatch, useSelector } from "react-redux";
 
 export async function fetchData(setAuthUser) {
   try {
@@ -28,7 +30,7 @@ export async function showMessageAvatar(
     const otherUser = roomList.data.current_users.find(
       (user) => user.username !== autUsr
     );
-    await setOtherUserId(otherUser.id);
+    setOtherUserId(otherUser.id);
     if (otherUser) setOtherUserAvatar(otherUser.photo);
   } else {
     console.error("roomList или current_users отсутствуют или пусты");
@@ -39,6 +41,32 @@ export async function getMessageData(setMessages) {
   return await getData(`chat/room/message/`, setMessages);
 }
 
+// export function GlobalWebSocket(token) {
+//   const socketUrl = `ws://localhost:8000/ws/chat/?token=${token}`;
+//   let socket = new WebSocket(socketUrl);
+
+//   socket.onopen = () => {
+//     console.log("Global WebSocket открыт");
+//     socket.send(
+//       JSON.stringify({
+//         action: "subscribe_to_global_notifications",
+//         request_id: 1,
+//       })
+//     );
+//   };
+
+//   socket.onclose = function (event) {
+//     console.log(
+//       `Соединение global WebSocket  закрыто. Попытка переподключиться...`
+//     );
+//   };
+
+//   socket.onmessage = (event) => {
+//     addRoomList(dispatch);
+//   };
+//   return socket;
+// }
+
 export function webSocket(
   ROOM_PK,
   TOKEN,
@@ -46,7 +74,8 @@ export function webSocket(
   setIsWebSocketOpen,
   REQUEST_ID,
   setMessages,
-  setChatSocket
+  setChatSocket,
+  dispatch
 ) {
   // console.log("websocket");
   const socketUrl = `ws://localhost:8000/ws/chat/${ROOM_PK}/?token=${TOKEN}`;
@@ -100,6 +129,7 @@ export function webSocket(
           if (!messageExists) {
             return [...prevMessages, data.data];
           }
+          addRoomList(dispatch);
           return prevMessages;
         });
 

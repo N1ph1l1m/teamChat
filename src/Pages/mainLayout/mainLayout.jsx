@@ -20,6 +20,7 @@ import { MdAddAPhoto } from "react-icons/md";
 import { MdNoPhotography } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { addRoomList } from "../../store/actions/addRoomList.jsx";
+import { SearchPanel } from "../../Shared/searchPanel/searchPanel.jsx";
 import { getDataTest } from "../../Entities/api/getUserList";
 import { GoPlus } from "react-icons/go";
 import MenuIcon from "../../Shared/menuIcons/menuIcons.jsx";
@@ -28,6 +29,7 @@ import groupIcon from "../../App/Icons/groupChat.png";
 import contacts from "../../App/Icons/contacts.png";
 import { NoMessages } from "../../Shared/NoMessages/NoMessages.jsx";
 import { Parameters } from "../../App/Parameters/Parametrs.js";
+import { GlobalWebSocket } from "../../Features/getServerData/getServerData.js";
 
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
@@ -42,40 +44,49 @@ function MainLayout() {
   const [chatList, setChatList] = useState(true);
   const [chatGroupList, setChatGroupList] = useState(false);
   const [contactsList, setContactsList] = useState(false);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
     addRoomList(dispatch);
   }, []);
 
+  function GlobalWebSocket(token) {
+    const socketUrl = `ws://localhost:8000/ws/chat/?token=${token}`;
+    let socket = new WebSocket(socketUrl);
+
+    socket.onopen = () => {
+      console.log("Global WebSocket открыт");
+      socket.send(
+        JSON.stringify({
+          action: "subscribe_to_global_notifications",
+          request_id: 1,
+        })
+      );
+    };
+
+    socket.onclose = function (event) {
+      console.log(
+        `Соединение global WebSocket  закрыто. Попытка переподключиться...`
+      );
+    };
+
+    socket.onmessage = (event) => {
+      addRoomList(dispatch);
+    };
+    return socket;
+  }
+
   useEffect(() => {
     if (!chatList) return;
 
-    const timer = setInterval(async () => {
-      try {
-        addRoomList(dispatch);
-      } catch (error) {
-        console.error("Ошибка при загрузке списка комнат:", error);
-      }
-    }, 60000);
-
-    return () => clearInterval(timer);
-  }, [roomList, dispatch, chatList]);
+    GlobalWebSocket(Parameters.token);
+  }, [chatList]);
 
   useEffect(() => {
     if (!chatGroupList) return;
 
-    const timer = setInterval(async () => {
-      try {
-        addRoomList(dispatch);
-      } catch (error) {
-        console.error("Ошибка при загрузке списка комнат:", error);
-      }
-    }, 60000);
-
-    return () => clearInterval(timer);
-  }, [roomList, dispatch, chatGroupList]);
+    GlobalWebSocket(Parameters.token);
+  }, [chatGroupList]);
 
   useEffect(() => {
     if (roomList.length === 0) {
@@ -91,6 +102,10 @@ function MainLayout() {
   }, [roomList]);
 
   function linkToMessage(id, navigate) {
+    // console.log("Called linkToMessage with id:", id);
+    // console.log("Room list:", roomList);
+    // console.log("User list:", userlist);
+
     const user = userlist.find((user) => user.id === id);
     const authUsr = userlist.find(
       (user) => user.username === Parameters.authUser
@@ -110,7 +125,7 @@ function MainLayout() {
         const usernames = current.current_users.map(
           (currentUser) => currentUser.username
         );
-
+        // console.log("Usernames in room:", usernames);
         return (
           usernames.length === 2 &&
           usernames.includes(user.username) &&
@@ -120,12 +135,16 @@ function MainLayout() {
       return false;
     });
 
+    console.log("Filtered rooms:", filteredRooms);
+
     if (filteredRooms && filteredRooms.length === 0) {
+      console.log("No rooms found, creating a new room...");
       CreateRoom(user.username);
       return;
     }
 
     if (filteredRooms.length === 1) {
+      console.log("Navigating to room:", filteredRooms[0].pk);
       navigate(`/chats/${filteredRooms[0].pk}`);
     }
   }
@@ -328,7 +347,7 @@ function MainLayout() {
     if (chatRender) {
       return (
         <>
-          {" "}
+          <SearchPanel />
           {isLoading && roomList.length === 0 ? (
             <RoomListLoading />
           ) : isLoading && filterRoomList.length === 0 ? (
@@ -350,23 +369,12 @@ function MainLayout() {
       return (
         <>
           <>
-            <div className={styles.menuGroup}>
-              <input
-                placeholder="Поиск"
-                type="text"
-                className={styles.searchGroup}
-              />
-              <button
-                className={styles.createGroup}
-                onClick={() => {
-                  getData("users/", setUserList);
-                  showModalGroupChat();
-                }}
-              >
-                {" "}
-                <GoPlus color="rgba(0, 0, 0, 0.283)" size="25" />{" "}
-              </button>
-            </div>
+            <SearchPanel
+              createGroup={() => {
+                getData("users/", setUserList);
+                showModalGroupChat();
+              }}
+            />
             {roomList && roomList.length === 0 ? (
               <RoomListLoading />
             ) : (
@@ -383,7 +391,7 @@ function MainLayout() {
     if (contactRender) {
       return (
         <>
-          {" "}
+          <SearchPanel />
           {userlist && userlist.length === 0 ? (
             <RoomListLoading />
           ) : (
