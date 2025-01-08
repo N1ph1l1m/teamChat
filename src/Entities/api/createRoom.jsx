@@ -18,7 +18,8 @@ import axios from 'axios';
     )
         .then((response) => {
             if (response.status === 200 || response.status === 201 ) {
-                localStorage.setItem('requestApi', JSON.stringify(response.data));
+                // localStorage.setItem('requestApi', JSON.stringify(response.data));
+              console.log(response.data)
 
             } else {
                 console.log("Error: " + response.data.detail);

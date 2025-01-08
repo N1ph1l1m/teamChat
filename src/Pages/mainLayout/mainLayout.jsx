@@ -50,68 +50,27 @@ function MainLayout() {
     addRoomList(dispatch);
   }, []);
 
-  function GlobalWebSocket(token) {
-    const socketUrl = `ws://localhost:8000/ws/chat/?token=${token}`;
-    let socket = new WebSocket(socketUrl);
-
-    socket.onopen = () => {
-      console.log("Global WebSocket открыт");
-      socket.send(
-        JSON.stringify({
-          action: "subscribe_to_global_notifications",
-          request_id: 1,
-        })
-      );
-    };
-
-    socket.onclose = function (event) {
-      console.log(
-        `Соединение global WebSocket  закрыто. Попытка переподключиться...`
-      );
-    };
-
-    socket.onmessage = (event) => {
-      addRoomList(dispatch);
-    };
-    return socket;
-  }
-
   useEffect(() => {
     if (!chatList) return;
-
-    GlobalWebSocket(Parameters.token);
+    GlobalWebSocket(Parameters.token , dispatch);
   }, [chatList]);
 
   useEffect(() => {
     if (!chatGroupList) return;
-
-    GlobalWebSocket(Parameters.token);
+    GlobalWebSocket(Parameters.token , dispatch);
   }, [chatGroupList]);
 
-  useEffect(() => {
-    if (roomList.length === 0) {
-      const timeout = setTimeout(() => setIsLoading(false), 10);
-      return () => clearTimeout(timeout);
-    }
-    if (roomList.length > 0) {
-      const timeout = setTimeout(() => setIsLoading(true), 100);
 
-      return () => clearTimeout(timeout);
-    }
-    addRoomList(dispatch);
-  }, [roomList]);
 
   function linkToMessage(id, navigate) {
-    // console.log("Called linkToMessage with id:", id);
-    // console.log("Room list:", roomList);
-    // console.log("User list:", userlist);
+    const contact = userlist.find((user) => user.id === id );
 
-    const user = userlist.find((user) => user.id === id);
     const authUsr = userlist.find(
       (user) => user.username === Parameters.authUser
     );
+    console.log(authUsr.username)
 
-    if (!user) {
+    if (!contact) {
       console.error("User not found");
       return;
     }
@@ -120,26 +79,15 @@ function MainLayout() {
       return;
     }
 
-    const filteredRooms = roomList.filter((current) => {
-      if (Array.isArray(current.current_users)) {
-        const usernames = current.current_users.map(
-          (currentUser) => currentUser.username
-        );
-        // console.log("Usernames in room:", usernames);
-        return (
-          usernames.length === 2 &&
-          usernames.includes(user.username) &&
-          usernames.includes(authUsr.username)
-        );
-      }
-      return false;
-    });
-
-    console.log("Filtered rooms:", filteredRooms);
+    const filteredRooms = roomList.filter((current) =>
+      current.current_users.length === 2 &&
+     current.current_users.some(user => user.username === contact.username )
+     && current.current_users.some(user => user.username === authUsr.username )
+    );
 
     if (filteredRooms && filteredRooms.length === 0) {
       console.log("No rooms found, creating a new room...");
-      CreateRoom(user.username);
+      CreateRoom(contact.username);
       return;
     }
 
@@ -221,8 +169,7 @@ function MainLayout() {
       console.log(reader.error);
     };
   };
-
-  const FormGroupChat = () => {
+const FormGroupChat = () => {
     return (
       <>
         <div className={styles.headerModel}>

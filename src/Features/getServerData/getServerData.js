@@ -41,31 +41,31 @@ export async function getMessageData(setMessages) {
   return await getData(`chat/room/message/`, setMessages);
 }
 
-// export function GlobalWebSocket(token) {
-//   const socketUrl = `ws://localhost:8000/ws/chat/?token=${token}`;
-//   let socket = new WebSocket(socketUrl);
+export function GlobalWebSocket(token, dispatch) {
+  const socketUrl = `ws://localhost:8000/ws/chat/?token=${token}`;
+  let socket = new WebSocket(socketUrl);
 
-//   socket.onopen = () => {
-//     console.log("Global WebSocket открыт");
-//     socket.send(
-//       JSON.stringify({
-//         action: "subscribe_to_global_notifications",
-//         request_id: 1,
-//       })
-//     );
-//   };
+  socket.onopen = () => {
+    console.log("Global WebSocket открыт");
+    socket.send(
+      JSON.stringify({
+        action: "subscribe_to_global_notifications",
+        request_id: 1,
+      })
+    );
+  };
 
-//   socket.onclose = function (event) {
-//     console.log(
-//       `Соединение global WebSocket  закрыто. Попытка переподключиться...`
-//     );
-//   };
+  socket.onclose = function (event) {
+    console.log(
+      `Соединение global WebSocket  закрыто. Попытка переподключиться...`
+    );
+  };
 
-//   socket.onmessage = (event) => {
-//     addRoomList(dispatch);
-//   };
-//   return socket;
-// }
+  socket.onmessage = (event) => {
+    addRoomList(dispatch);
+  };
+  return socket;
+}
 
 export function webSocket(
   ROOM_PK,
@@ -129,7 +129,6 @@ export function webSocket(
           if (!messageExists) {
             return [...prevMessages, data.data];
           }
-          addRoomList(dispatch);
           return prevMessages;
         });
 
