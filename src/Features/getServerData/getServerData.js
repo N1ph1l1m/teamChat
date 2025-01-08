@@ -62,6 +62,7 @@ export function GlobalWebSocket(token, dispatch) {
   };
 
   socket.onmessage = (event) => {
+    console.log("dispatch - global web");
     addRoomList(dispatch);
   };
   return socket;
@@ -74,8 +75,7 @@ export function webSocket(
   setIsWebSocketOpen,
   REQUEST_ID,
   setMessages,
-  setChatSocket,
-  dispatch
+  setChatSocket
 ) {
   // console.log("websocket");
   const socketUrl = `ws://localhost:8000/ws/chat/${ROOM_PK}/?token=${TOKEN}`;

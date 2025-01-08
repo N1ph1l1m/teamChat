@@ -6,7 +6,7 @@ import "../../App/Styles/link.scss";
 import { getData } from "../../Entities/api/getUserList";
 import { useState, useEffect } from "react";
 import CreateGroupRoom from "../../Entities/api/CreateGroupName.jsx";
-import CreateRoom from "../../Entities/api/createRoom";
+import { linkToMessage } from "../../Entities/api/createNavigateRoom.jsx";
 import ModalCreateGroup from "../../Widgets/modalCreateGroup/modalCreateGroup.jsx";
 import styles from "../../App/Styles/mainLayout.module.css";
 import userLogo from "../../App/images/userAvatar.png";
@@ -47,55 +47,20 @@ function MainLayout() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log("dispatch - main layout");
     addRoomList(dispatch);
+    getData("users/", setUserList);
   }, []);
 
   useEffect(() => {
     if (!chatList) return;
-    GlobalWebSocket(Parameters.token , dispatch);
+    GlobalWebSocket(Parameters.token, dispatch);
   }, [chatList]);
 
   useEffect(() => {
     if (!chatGroupList) return;
-    GlobalWebSocket(Parameters.token , dispatch);
+    GlobalWebSocket(Parameters.token, dispatch);
   }, [chatGroupList]);
-
-
-
-  function linkToMessage(id, navigate) {
-    const contact = userlist.find((user) => user.id === id );
-
-    const authUsr = userlist.find(
-      (user) => user.username === Parameters.authUser
-    );
-    console.log(authUsr.username)
-
-    if (!contact) {
-      console.error("User not found");
-      return;
-    }
-    if (!authUsr) {
-      console.error("Authorized user not found");
-      return;
-    }
-
-    const filteredRooms = roomList.filter((current) =>
-      current.current_users.length === 2 &&
-     current.current_users.some(user => user.username === contact.username )
-     && current.current_users.some(user => user.username === authUsr.username )
-    );
-
-    if (filteredRooms && filteredRooms.length === 0) {
-      console.log("No rooms found, creating a new room...");
-      CreateRoom(contact.username);
-      return;
-    }
-
-    if (filteredRooms.length === 1) {
-      console.log("Navigating to room:", filteredRooms[0].pk);
-      navigate(`/chats/${filteredRooms[0].pk}`);
-    }
-  }
 
   const UserList = () => {
     const navigate = useNavigate();
@@ -112,7 +77,13 @@ function MainLayout() {
                 className={styles.userListWrap}
                 key={index}
                 onClick={() => {
-                  linkToMessage(user.id, navigate);
+                  linkToMessage(
+                    userlist,
+                    user.id,
+                    Parameters,
+                    roomList,
+                    navigate
+                  );
                 }}
               >
                 <NaviItem
@@ -169,7 +140,7 @@ function MainLayout() {
       console.log(reader.error);
     };
   };
-const FormGroupChat = () => {
+  const FormGroupChat = () => {
     return (
       <>
         <div className={styles.headerModel}>
@@ -287,6 +258,9 @@ const FormGroupChat = () => {
       (room) =>
         room.current_users &&
         room.current_users.length === 2 &&
+        room.current_users.some(
+          (user) => user.username === Parameters.authUser
+        ) &&
         Array.isArray(room.message) &&
         room.message.length !== 0
     );
@@ -299,7 +273,16 @@ const FormGroupChat = () => {
             <RoomListLoading />
           ) : isLoading && filterRoomList.length === 0 ? (
             <div className={styles.noMessageWrap}>
-              <NoMessages text={"Чатов нет"} />
+              <NoMessages
+                text={
+                  <>
+                    Сообщений нет. <br />
+                    Перейдите во вкладку 'Контанты' для начала диалога с
+                    пользователями `
+                  </>
+                }
+                icon
+              />
             </div>
           ) : (
             <RoomList
@@ -387,7 +370,7 @@ const FormGroupChat = () => {
                     icon={contacts}
                     title={"Контакты"}
                     handleClick={() => {
-                      getData("users/", setUserList);
+                      // getData("users/", setUserList);
                       setChatList(false);
                       setChatGroupList(false);
                       setContactsList(true);

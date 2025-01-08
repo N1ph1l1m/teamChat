@@ -101,8 +101,7 @@ function Chats() {
         setIsWebSocketOpen,
         Parameters.request_id,
         setMessages,
-        setChatSocket,
-        dispatch
+        setChatSocket
       );
     }
     go();
@@ -261,7 +260,8 @@ function Chats() {
 
         checkAnonimusUser(messageData);
       }
-      addRoomList(dispatch);
+
+      // addRoomList(dispatch);
       setMessage("");
       setSendImage("");
       setInputPrew("");
