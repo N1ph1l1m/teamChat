@@ -1,3 +1,11 @@
+.headerNav{
+    height: 97vh;
+    overflow: scroll;
+}
+.headerNav::-webkit-scrollbar{
+    display: none;
+}
+
 .menuWrap{
 display: flex;
 flex-direction: row;
@@ -11,6 +19,7 @@ height: 100%;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     padding: 10px;
+
 }
 .menuItems{
     display: flex;
@@ -19,29 +28,25 @@ height: 100%;
     flex-wrap: wrap;
     width: 99%;
 }
-.headerNav{
-    height: 97vh;
+
+.navItem{
+    position: relative;
+    height: 90%;
     overflow: scroll;
+    width: 100%;
+    justify-self: start;
+    border:1px solid red;
 }
-.headerNav::-webkit-scrollbar{
+.navItem::-webkit-scrollbar{
     display: none;
 }
 
-.footerNav{
-    margin-top: 10px;
-
+.footerWrap{
+ height: 10%;
 }
 
 .navTitle{
     color: black;
     font-size: 16px;
     margin-bottom: 15px;
-}
-.navItem{
-    position: relative;
-    /* border: 1px solid red; */
-    /* padding-left: 10px;
-    padding-top: 5px; */
-    width: 100%;
-    justify-self: start;
 }

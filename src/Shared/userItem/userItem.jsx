@@ -1,7 +1,8 @@
 import React from "react";
 import Icon from "../icon/icon";
 import { RiLogoutBoxLine } from "react-icons/ri";
-import  styles from '../../App/Styles/navItem.module.css';
+// import  styles from '../../App/Styles/navItem.module.css';
+import styles from '../../App/Styles/userAuth.module.css'
 import {useNavigate} from 'react-router-dom';
 import axios from "axios";
 function UserItem(props) {
@@ -55,10 +56,10 @@ function UserItem(props) {
           <Icon>
             {props.icon}
           </Icon>
-          <p className={styles.tittle}>{props.tittle}</p>
+          <p className={styles.title}>{props.title}</p>
         </div>
 
-        <div className={styles.bell}>
+        <div className={styles.logOut}>
           <Icon onClick={logOut}>
             <RiLogoutBoxLine    color="rgb(131, 130, 130)" size="25" />
           </Icon>

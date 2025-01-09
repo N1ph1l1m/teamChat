@@ -27,7 +27,7 @@ function Nav(props) {
             <div className={styles.footerWrap}>
               {authenticatedUser && (
                 <UserItem
-                  tittle={authenticatedUser.username}
+                  title={authenticatedUser.username}
                   icon={
                     <img src={avatarUser} alt={authenticatedUser.username} />
                   }

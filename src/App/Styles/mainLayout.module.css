@@ -21,12 +21,11 @@
   flex-direction: row;
   width: 100%;
   height: 100%;
-  
+
 
 }
 
 .navWrap{
-  /* border:1px solid red; */
   width: 25%;
   height: 97%;
   min-width: 20%;
@@ -56,156 +55,17 @@
   align-items: start;
 }
 
-.headerModel {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 400px;
-  justify-content: flex-start;
-  /* border:1px solid red; */
-}
 
-.selectAvatarWrap{
-  width: 65px;
-  height: 65px;
-  border-radius:50%;
-  border: 1px solid black;
-  margin: 0px auto;
-  display: flex;
-  align-items:center;
-  justify-content: center;
-  margin-bottom: 10px;
-}
-.inputAvatarWrap{
-  /* border: 1px solid blue; */
-  height: 65px;
-  width: 65px;
-  border-radius:50%;
-}
-.inputAvatartWrap > label> span{
-  display: block;
-  font-size: 10px;
-}
-.inputAvatar{
-   display: none;
 
-}
-.inputNameGroup {
-  min-height: 100px;
-  background-color: white;
-  padding: 5px;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 25px;
-}
 
-.inputNameGroup input {
-  height: 30px;
-  width: 100%;
-  border: none;
-  resize: none;
-  outline: none;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
-  border-bottom: 1px solid gray;
-}
 .modalTitle {
   font-weight: bold;
   text-align: start;
   font-size: 16px;
 }
 
-.selectedUsers {
-  display: inline-block;
-  min-height: 36px;
-  padding: 0px;
-  width: 300px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
 
-.userBadge {
-  width: 90px;
-  height: 31px;
-  border: 1px solid black;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: start;
-  border-radius: 20px;
-  background-color: rgb(240, 235, 235);
-  border-left: 0px;
-  margin-right: 5px;
-  margin-top: 5px;
-}
-.liAvatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 50px;
-  border: 1px solid green;
-  margin-right: 5px;
-}
-.selectedUsersItems {
-  display: inline;
-  height: 30px;
-  left: 0px;
-  margin-right: 5px;
-  margin-top: 5px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: 500;
-}
 
-.wrapCheckBox {
-  margin-top: 5px;
-  height: 40%;
-  overflow: hidden;
-}
-.checkBoxWrap {
-  margin-top: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 5px;
-  height: 60px;
-  padding: 5px;
-  border-radius: 10px;
-  cursor: pointer;
-  position: relative;
-}
-.checkBoxWrap:hover {
-  background-color: rgba(116, 116, 116, 0.461);
-}
-.checkboxUserAvatar {
-  width: 55px;
-  height: 55px;
-  border-left: 20px;
-  /* border:1px solid rgb(124, 0, 128); */
-  border-radius: 55px;
-}
-
-.checkbox {
-  position: absolute;
-  right: 10px;
-  cursor: pointer;
-  display: none;
-}
-
-.checkboxLabel {
-  font-size: 16px;
-  width: 100%;
-  height: 30px;
-  padding-left: 10px;
-  border-radius: 10px;
-}
-
-.checkbox:checked + .checkboxLabel {
-  background-color: #007bff;
-  color: white;
-}
 .menuGroup{
   width: 100%;
   /* border:1px solid red; */
@@ -255,8 +115,6 @@
   min-width: 120px;
   display: flex;
   justify-content: flex-start;
-  /* border:1px solid red; */
-  height: 100%;
 }
 
 @media (max-height: 720px) {

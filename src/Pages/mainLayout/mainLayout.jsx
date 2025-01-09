@@ -15,9 +15,6 @@ import {
   RoomListLoading,
   GroupRoomList,
 } from "../../Entities/Lists/roomList.jsx";
-import Icon from "../../Shared/icon/icon.jsx";
-import { MdAddAPhoto } from "react-icons/md";
-import { MdNoPhotography } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { addRoomList } from "../../store/actions/addRoomList.jsx";
 import { SearchPanel } from "../../Shared/searchPanel/searchPanel.jsx";
@@ -129,126 +126,23 @@ function MainLayout() {
   const handleAvatarGroup = (e) => {
     let files = e.target.files[0];
     setAvatarGroup(files);
-    console.log(files.name);
     const reader = new FileReader();
     reader.readAsDataURL(files);
     reader.onload = () => {
-      console.log(avatarGroup.name);
+      // console.log(avatarGroup.name);
       setAvatarPrew(reader.result);
     };
     reader.onerror = () => {
       console.log(reader.error);
     };
   };
-  const FormGroupChat = () => {
-    return (
-      <>
-        <div className={styles.headerModel}>
-          {!avatarGroup ? (
-            <div
-              className={styles.selectAvatarWrap}
-              onMouseLeave={() => setDeleteAvatar(false)}
-            >
-              <input
-                className={styles.inputAvatar}
-                type="file"
-                id="avatarGroup"
-                name="avatarGroup"
-                accept="image/*"
-                onChange={handleAvatarGroup}
-              />
-              <label htmlFor="avatarGroup">
-                <Icon onClick={() => setAvatarGroup("")}>
-                  <MdAddAPhoto color="black" size="40" />
-                </Icon>
-              </label>
-            </div>
-          ) : (
-            <>
-              <div
-                className={styles.selectAvatarWrap}
-                onMouseEnter={() => setDeleteAvatar(true)}
-                onMouseLeave={() => setDeleteAvatar(false)}
-              >
-                {!isDeleteAvatar ? (
-                  <img
-                    src={avatarPrew}
-                    alt="ava"
-                    className={styles.inputAvatarWrap}
-                  />
-                ) : (
-                  <Icon
-                    onClick={() => {
-                      setAvatarGroup("");
-                      console.log("delete");
-                    }}
-                  >
-                    <MdNoPhotography color="rgb(131, 130, 130)" size="30" />
-                  </Icon>
-                )}
-              </div>
-            </>
-          )}
+  // const FormGroupChat = () => {
+  //   return (
+  //     <>
 
-          <div className={styles.inputNameGroup}>
-            <span className={styles.modalTitle}>Название группы</span>
-            <input onChange={(e) => handleInputChangeName(e)} />
-            <ul className={styles.selectedUsers}>
-              {selectedUsers.map((user) => (
-                <div className={styles.userBadge}>
-                  <img
-                    className={styles.liAvatar}
-                    src={user.photo}
-                    alt={user.name}
-                  />
-                  <li className={styles.selectedUsersItems} key={user}>
-                    {user.username}
-                  </li>
-                </div>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <div className={styles.wrapCheckBox}>
-          {userlist
-            .filter((user) => user.username !== Parameters.authUser)
-            .map((user) => {
-              const upName =
-                user.username.charAt(0).toUpperCase() + user.username.slice(1);
-              return (
-                <>
-                  <label
-                    className={styles.checkBoxWrap}
-                    key={user.id}
-                    htmlFor={user.id}
-                  >
-                    <img
-                      className={styles.checkboxUserAvatar}
-                      src={user.photo}
-                      alt={user.username}
-                    />
-                    <input
-                      type="checkbox"
-                      className={styles.checkbox}
-                      id={user.id}
-                      checked={selectedUsers.some(
-                        (selectedUser) =>
-                          selectedUser.username === user.username
-                      )}
-                      onChange={() =>
-                        handleCheckboxChange(user.username, user.photo)
-                      }
-                    />
-                    <span className={styles.checkboxLabel}>{upName}</span>
-                  </label>
-                </>
-              );
-            })}
-        </div>
-      </>
-    );
-  };
+  //     </>
+  //   );
+  // };
 
   const RenderList = () => {
     const chatRender = chatList && !chatGroupList;
@@ -277,8 +171,11 @@ function MainLayout() {
                 text={
                   <>
                     Сообщений нет. <br />
-                    Перейдите во вкладку 'Контанты' для начала диалога с
-                    пользователями `
+                    Перейдите во вкладку '<span style={{color:"#105c9f" , cursor:"pointer"}}
+                    onClick={()=>{
+                      handlerMenuNav(setContactsList,setChatList,setChatGroupList)
+                    }}>Контанты</span>' для начала диалога с
+                    пользователями.
                   </>
                 }
                 icon
@@ -331,6 +228,11 @@ function MainLayout() {
       );
     }
   };
+ function handlerMenuNav(set1,set2,set3){
+  set1(true);
+  set2(false);
+  set3(false);
+ }
 
   return (
     <>
@@ -340,9 +242,20 @@ function MainLayout() {
           onCancel={handleCancel}
           onSubmit={() => {
             CreateGroupRoom(groupName, avatarGroup, selectedUsers);
+            addRoomList(dispatch)
             handleCancel();
           }}
-          children={<FormGroupChat />}
+          avatarGroup = {avatarGroup}
+          setDeleteAvatar = {setDeleteAvatar}
+          handleAvatarGroup = {handleAvatarGroup}
+          setAvatarGroup = {setAvatarGroup}
+          isDeleteAvatar = {isDeleteAvatar}
+          avatarPrew={avatarPrew}
+          handleInputChangeName = {handleInputChangeName}
+          selectedUsers={selectedUsers}
+          userlist={userlist}
+          handleCheckboxChange = { handleCheckboxChange}
+          Parameters={Parameters}
         />
 
         <div className={styles.contentWrap}>
@@ -354,26 +267,22 @@ function MainLayout() {
                     icon={chat}
                     title="Чаты"
                     handleClick={() => {
-                      setChatList(true);
-                      setChatGroupList(false);
+handlerMenuNav(setChatList,setChatGroupList,setContactsList)
                     }}
                   />
                   <MenuIcon
                     icon={groupIcon}
                     title={"Группа"}
                     handleClick={() => {
-                      setChatList(false);
-                      setChatGroupList(true);
+                      handlerMenuNav(setChatGroupList,setChatList,setContactsList)
+                      addRoomList(dispatch)
                     }}
                   />
                   <MenuIcon
                     icon={contacts}
                     title={"Контакты"}
                     handleClick={() => {
-                      // getData("users/", setUserList);
-                      setChatList(false);
-                      setChatGroupList(false);
-                      setContactsList(true);
+                      handlerMenuNav(setContactsList,setChatList,setChatGroupList)
                     }}
                   />
                 </>
