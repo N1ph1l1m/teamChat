@@ -17,6 +17,7 @@ export function RoomListItem({
   document,
   forwarded_messages,
   simple,
+  status,
 }) {
   const HeaderTime = () => {
     const isRead =
@@ -133,7 +134,8 @@ export function RoomListItem({
     <>
       <div onClick={click} className={styles.wrap}>
         <div className={styles.icon}>
-          <Icon> {icon}</Icon>
+            {status ? <div className={styles.status}></div> : null}
+          <Icon > {icon}</Icon>
         </div>
 
         {simpleItem && <p className={styles.simpleTittle}>{tittle}</p>}

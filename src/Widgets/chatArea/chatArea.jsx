@@ -7,6 +7,7 @@ import Picker from "@emoji-mart/react";
 import { IoIosClose } from "react-icons/io";
 import { FaFile, FaFileImage, FaPaperclip } from "react-icons/fa";
 
+
 function ChatArea({
   title,
   content,
@@ -24,6 +25,7 @@ function ChatArea({
   closeReplyMenu,
   setMessage,
 }) {
+
   const autUsr = localStorage.getItem("username");
   function renderSelectTypeFile() {
     if (selectTypeFile) {
@@ -65,7 +67,7 @@ function ChatArea({
     // return null;
   }
 
-  function mediaReplyMessage(reply, text, textS) {
+function mediaReplyMessage(reply, text, textS) {
     if (reply.length === 1) {
       return (
         <>
@@ -144,7 +146,6 @@ function ChatArea({
     const codeArray = [];
     sys.forEach((el) => codeArray.push("0x" + el));
     let emoji = String.fromCodePoint(...codeArray);
-
     setMessage((prevInput) => prevInput + emoji);
   }
 

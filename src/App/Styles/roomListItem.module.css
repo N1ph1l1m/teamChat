@@ -35,6 +35,17 @@
 
 .icon {
   width: 50px;
+  position: relative;
+}
+.status{
+  width: 10px;
+  height: 10px;
+  border-radius:50%;
+  background-color:rgb(11, 254, 11);
+  border:1px solid #FFFFFF;
+  position: absolute;
+  bottom: 5px;
+  right:1px;
 }
 .icon img {
   width: 100%;

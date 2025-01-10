@@ -6,7 +6,6 @@ import ChatArea from "../../Widgets/chatArea/chatArea";
 import Message from "../../Widgets/Message/message";
 import Icon from "../../Shared/icon/icon";
 import { BiMessageAltX } from "react-icons/bi";
-import { getData } from "../../Entities/api/getUserList";
 import { getRoomData } from "../../Entities/api/getRoomData";
 import { ReadMessageAll } from "../../Entities/api/ReadAllMessage";
 import { Parameters } from "../../App/Parameters/Parametrs";
@@ -30,6 +29,7 @@ import {
 } from "../../Features/inputHandlerEvents/handlersChat";
 import {
   fetchData,
+  getData,
   fetchDataRoomList,
   getMessageData,
   showMessageAvatar,

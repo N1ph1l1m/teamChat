@@ -7,7 +7,6 @@
     border-radius: 5px;
     overflow: auto;
     cursor: pointer;
-    border:1px solid green;
   }
   .wrap::-webkit-scrollbar {
     display: none;
@@ -23,10 +22,7 @@
     display: flex;
     align-items: center;
     height: 100%;
-    border:1px solid blue;
     width: 80%;
-    /* width: 200px; */
-    /* overflow: hidden; */
   }
   .iconText img {
     width: 55px;
@@ -40,19 +36,14 @@
     justify-content: space-between;
     align-items: center;
     padding: 5px;
-
   }
-
 
   .logOut{
     padding: 10px;
     width: 20%;
-    /* width: 50px; */
     display: flex;
     align-items: center;
     justify-content: center;
-
-    border:1px solid red;
   }
 
   .logOut:hover {
@@ -61,16 +52,9 @@
   }
 
   @media screen and (max-width:1250px) {
-    .wrap {
-      border:1px solid red;
-    }
     .menuWrap {
       justify-content: center;
     }
-
-    /* .iconText {
-      max-width: 75%;
-    } */
     .title {
       font-size: 14px;
     }
@@ -80,47 +64,43 @@
 }
 
 @media screen and (max-width:1185px) {
-  .wrap {
-    border:1px solid red;
-  }
+
   .menuWrap {
     justify-content: center;
   }
-  .iconText img {
-    width: 55px;
-    height: 55px;
-    border-radius: 50px;
-  }
   .iconText {
     max-width: 60%;
-
+    margin-right: 5px;
   }
-
   .title {
-    color: black;
     font-size: 12px;
   }
 }
 
 @media screen and (max-width:1115px) {
-  .wrap {
-    border:1px solid red;
-  }
-
   .menuWrap {
     justify-content: flex-start;
   }
-  .iconText img {
-    width: 55px;
-    height: 55px;
-    border-radius: 50px;
+  .iconText {
+    max-width: 65%;
+  }
+  .logOut{
+    margin-left: 5px;
+  }
+  .title {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width:1000px) {
+  .menuWrap {
+    justify-content: flex-start;
   }
   .iconText {
-   width: 30%;
-  }
-
+    width: auto;
+    margin-right: 5px;
+   }
   .title {
-    color: black;
     font-size: 12px;
   }
 }

@@ -2,8 +2,7 @@ import React from "react";
 import Nav from "../../Widgets/nav/nav";
 import NaviItem from "../../Shared/navItem/navItem.jsx";
 import { Outlet, useNavigate } from "react-router-dom";
-import "../../App/Styles/link.scss";
-import { getData } from "../../Entities/api/getUserList";
+import "../../App/Styles/link.scss"
 import { useState, useEffect } from "react";
 import CreateGroupRoom from "../../Entities/api/CreateGroupName.jsx";
 import { linkToMessage } from "../../Entities/api/createNavigateRoom.jsx";
@@ -16,20 +15,19 @@ import {
   GroupRoomList,
 } from "../../Entities/Lists/roomList.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { addRoomList } from "../../store/actions/addRoomList.jsx";
+import { addRoomList } from "../../store/actions/addRoomList.jsx"
 import { SearchPanel } from "../../Shared/searchPanel/searchPanel.jsx";
-import { getDataTest } from "../../Entities/api/getUserList";
-import { GoPlus } from "react-icons/go";
 import MenuIcon from "../../Shared/menuIcons/menuIcons.jsx";
 import chat from "../../App/Icons/chat.png";
 import groupIcon from "../../App/Icons/groupChat.png";
 import contacts from "../../App/Icons/contacts.png";
 import { NoMessages } from "../../Shared/NoMessages/NoMessages.jsx";
 import { Parameters } from "../../App/Parameters/Parametrs.js";
-import { GlobalWebSocket } from "../../Features/getServerData/getServerData.js";
+import { GlobalWebSocket ,  getData , userAuthId } from "../../Features/getServerData/getServerData.js";
 
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
+  const [autUserId, setAuthUserId] = useState("")
   const [isLoading, setIsLoading] = useState(true);
   const [isOpenModalCreateGroup, setModalCreateGroup] = useState(false);
   const [groupName, setGroupName] = useState();
@@ -38,16 +36,29 @@ function MainLayout() {
   const [avatarPrew, setAvatarPrew] = useState("");
   const [isDeleteAvatar, setDeleteAvatar] = useState(false);
   const roomList = useSelector((state) => state.roomList.roomList);
+  const isWebSocket = useSelector((state)=>state.isOpenSocket.isOpenSocket)
   const [chatList, setChatList] = useState(true);
   const [chatGroupList, setChatGroupList] = useState(false);
   const [contactsList, setContactsList] = useState(false);
   const dispatch = useDispatch();
 
+
+
+
+
   useEffect(() => {
-    console.log("dispatch - main layout");
-    addRoomList(dispatch);
-    getData("users/", setUserList);
+    async function render() {
+      console.log("dispatch - main layout");
+      addRoomList(dispatch);
+      await getData("users/", setUserList);
+    }
+    render()
+
   }, []);
+
+  useEffect(()=>{
+     userAuthId()
+  },[userlist]);
 
   useEffect(() => {
     if (!chatList) return;
@@ -59,9 +70,10 @@ function MainLayout() {
     GlobalWebSocket(Parameters.token, dispatch);
   }, [chatGroupList]);
 
+
+
   const UserList = () => {
     const navigate = useNavigate();
-
     return (
       <>
         {userlist
@@ -187,6 +199,7 @@ function MainLayout() {
               link
               authUser={Parameters.authUser}
               userLogo={userLogo}
+              // status = {roomList}
             />
           )}
         </>

@@ -1,6 +1,29 @@
-import { getData } from "../../Entities/api/getUserList";
+
+import axios from "axios";
 import { addRoomList } from "../../store/actions/addRoomList";
-import { useDispatch, useSelector } from "react-redux";
+import { Parameters } from "../../App/Parameters/Parametrs";
+
+
+export async function getData(url, setData) {
+  let urls = "http://127.0.0.1:8000/" + url;
+  const data = await axios.get(urls);
+  if (data) {
+    setData(data.data);
+  } else {
+    console.log("Error: " + data.detail);
+  }
+}
+
+export async function getDataRedux(url) {
+  let urls = "http://127.0.0.1:8000/" + url;
+try{
+  const response  = await axios.get(urls);
+  return response.data;
+}catch(error){
+  console.log(error)
+  return null
+}
+}
 
 export async function fetchData(setAuthUser) {
   try {
@@ -9,6 +32,22 @@ export async function fetchData(setAuthUser) {
     console.error(error);
   }
 }
+
+export  async function  userAuthId( userlist){
+  if(!userlist) return
+  try{
+    if(Parameters.authUserId) return
+    console.log("Получение id");
+    let user = Parameters.authUser;
+    let userId =  userlist.find((authUser)=> authUser.username === user)
+
+    if(userId){
+      localStorage.setItem("id",  userId.id);
+    }
+  }catch(error){
+    console.log(error);
+  }
+  }
 
 export async function fetchDataRoomList(setRoomListForwardModal) {
   try {
@@ -46,7 +85,7 @@ export function GlobalWebSocket(token, dispatch) {
   let socket = new WebSocket(socketUrl);
 
   socket.onopen = () => {
-    console.log("Global WebSocket открыт");
+    dispatch({type:"OPEN_WEBSOCKET"})
     socket.send(
       JSON.stringify({
         action: "subscribe_to_global_notifications",
@@ -56,9 +95,7 @@ export function GlobalWebSocket(token, dispatch) {
   };
 
   socket.onclose = function (event) {
-    console.log(
-      `Соединение global WebSocket  закрыто. Попытка переподключиться...`
-    );
+    dispatch({type:"CLOSE_WEBSOCKET"})
   };
 
   socket.onmessage = (event) => {

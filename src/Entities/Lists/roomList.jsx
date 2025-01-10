@@ -5,7 +5,6 @@ import {
   SimpleItem,
 } from "../../Shared/roomListItem/roomListItem";
 import styles from "../../App/Styles/roomList.module.css";
-import { MdOutlineTaskAlt } from "react-icons/md";
 import NaviItem from "../../Shared/navItem/navItem";
 
 export function RoomList({
@@ -15,6 +14,7 @@ export function RoomList({
   link,
   selectedRooms,
   setSelectRoomSendForwad,
+  status
 }) {
   const handlerRoomSelect = (roomPk, setSelectRoomSendForward) => {
     setSelectRoomSendForward((prevSelectedRooms) => {
@@ -71,6 +71,7 @@ export function RoomList({
                   photo={room.last_message.images}
                   document={room.last_message.documents}
                   forwarded_messages={room.last_message.forwarded_messages}
+                  status={status}
                 />
               </Link>
             </div>

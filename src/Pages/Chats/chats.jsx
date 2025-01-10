@@ -37,6 +37,7 @@ import {
 } from "../../Features/getServerData/getServerData";
 import ForwardMessageMenu from "../../Shared/ForwardMessageMenu/ForwardMessageMenu";
 import ModalMediaChat from "../../Widgets/modalMediaChat/modalMediaChat";
+import UpdateActivity from "../../Entities/api/UpdateActivity";
 function Chats() {
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -104,6 +105,7 @@ function Chats() {
         setChatSocket
       );
     }
+
     go();
   }, [id]);
 
@@ -260,8 +262,6 @@ function Chats() {
 
         checkAnonimusUser(messageData);
       }
-
-      // addRoomList(dispatch);
       setMessage("");
       setSendImage("");
       setInputPrew("");
@@ -282,6 +282,7 @@ function Chats() {
     } finally {
       setIsSending(false);
       await ReadMessageAll(otherUserId);
+      UpdateActivity(Parameters.authUserId);
     }
   }
 

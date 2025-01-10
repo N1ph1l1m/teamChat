@@ -53,13 +53,12 @@ function Login(props){
                   if (response.status === 200) {
                       var token = response.data.auth_token;
                       var id = response.data.id;
-                      console.log(response)
+                      console.log(response.data)
 
                       setMsg("Авторизация успешна!");
 
                       localStorage.setItem("login", true);
                       localStorage.setItem('username', username);
-                      localStorage.setItem('id', id);
                       localStorage.setItem('token', token);
 
                       setTimeout(() => {
