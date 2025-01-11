@@ -14,7 +14,6 @@ export function RoomList({
   link,
   selectedRooms,
   setSelectRoomSendForwad,
-  status
 }) {
   const handlerRoomSelect = (roomPk, setSelectRoomSendForward) => {
     setSelectRoomSendForward((prevSelectedRooms) => {
@@ -44,12 +43,14 @@ export function RoomList({
             .replace(authUser, "")
             .replace(/^_+|_+$/g, "")
             .trim();
+            {/* console.log(room) */}
           const capitalized =
             newName.charAt(0).toUpperCase() + newName.slice(1);
           const otherUser = room.current_users.find(
             (user) => user.username !== authUser
           );
           const avatar = otherUser ? otherUser.photo : userLogo;
+          const statusUser  = otherUser ? otherUser.last_active : null;
           const uniqueKey = `${room.pk}-${room.last_message?.created_at}`;
 
           return link ? (
@@ -71,7 +72,7 @@ export function RoomList({
                   photo={room.last_message.images}
                   document={room.last_message.documents}
                   forwarded_messages={room.last_message.forwarded_messages}
-                  status={status}
+                   status={statusUser}
                 />
               </Link>
             </div>

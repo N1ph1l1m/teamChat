@@ -2,6 +2,7 @@ import React from "react";
 import styles from "../../App/Styles/roomListItem.module.css";
 import Icon from "../icon/icon";
 import IsRead from "../isRead/isRead";
+import { StatusUser } from "../statusUser/statusUser";
 import { BiSolidMessageRounded } from "react-icons/bi";
 
 export function RoomListItem({
@@ -16,7 +17,6 @@ export function RoomListItem({
   photo,
   document,
   forwarded_messages,
-  simple,
   status,
 }) {
   const HeaderTime = () => {
@@ -134,7 +134,7 @@ export function RoomListItem({
     <>
       <div onClick={click} className={styles.wrap}>
         <div className={styles.icon}>
-            {status ? <div className={styles.status}></div> : null}
+            {<StatusUser status={status} online={  <div className={styles.status}></div>} />}
           <Icon > {icon}</Icon>
         </div>
 

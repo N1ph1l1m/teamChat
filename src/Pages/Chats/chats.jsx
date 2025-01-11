@@ -282,7 +282,7 @@ function Chats() {
     } finally {
       setIsSending(false);
       await ReadMessageAll(otherUserId);
-      UpdateActivity(Parameters.authUserId);
+      await UpdateActivity(Parameters.authUserId);
     }
   }
 

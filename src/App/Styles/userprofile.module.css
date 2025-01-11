@@ -41,7 +41,7 @@ width: 100%;
 .statusOnline{
     font-size: 12px;
     margin: 0;
-    color:blue;
+    color:rgb(16, 92, 159);
     font-weight: 500;
 }
 
@@ -53,7 +53,7 @@ width: 100%;
     top: 35px;
     padding: 0px;
     border-radius:10px;
-  
+
 }
 .menuItems{
     border-radius:10px;

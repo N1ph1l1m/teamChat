@@ -1,7 +1,6 @@
 import axios from "axios";
-import { Data } from "emoji-mart";
 
-export default function UpdateActivity(id){
+export default  async function UpdateActivity(id){
 
     const dataNow = new Date();
     const updateActivity = {
@@ -9,9 +8,14 @@ export default function UpdateActivity(id){
         last_active:  dataNow
     }
 try{
+  console.log("Update");
   const url = `http://127.0.0.1:8000/users/activity/${id}/`;
-  const response  =  axios.put(url,updateActivity)
-  if(response.status === 201 || response.status === 200){
+  const response  =   await axios.put(url,updateActivity)
+  if (response.status === 200 || response.status === 201) {
+    console.log("Response data:", response.data);
+    localStorage.setItem("last_active", dataNow); // Корректное использование localStorage
+  } else {
+    console.error("Unexpected response status:", response.status);
   }
 }catch(error){
     if (error.response) {

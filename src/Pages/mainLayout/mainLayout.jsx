@@ -51,14 +51,10 @@ function MainLayout() {
       console.log("dispatch - main layout");
       addRoomList(dispatch);
       await getData("users/", setUserList);
+     userAuthId(userlist)
     }
     render()
-
   }, []);
-
-  useEffect(()=>{
-     userAuthId()
-  },[userlist]);
 
   useEffect(() => {
     if (!chatList) return;
@@ -69,7 +65,6 @@ function MainLayout() {
     if (!chatGroupList) return;
     GlobalWebSocket(Parameters.token, dispatch);
   }, [chatGroupList]);
-
 
 
   const UserList = () => {
@@ -141,20 +136,13 @@ function MainLayout() {
     const reader = new FileReader();
     reader.readAsDataURL(files);
     reader.onload = () => {
-      // console.log(avatarGroup.name);
       setAvatarPrew(reader.result);
     };
     reader.onerror = () => {
       console.log(reader.error);
     };
   };
-  // const FormGroupChat = () => {
-  //   return (
-  //     <>
 
-  //     </>
-  //   );
-  // };
 
   const RenderList = () => {
     const chatRender = chatList && !chatGroupList;
@@ -199,7 +187,7 @@ function MainLayout() {
               link
               authUser={Parameters.authUser}
               userLogo={userLogo}
-              // status = {roomList}
+
             />
           )}
         </>

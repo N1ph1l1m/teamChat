@@ -2,6 +2,7 @@
 import axios from "axios";
 import { addRoomList } from "../../store/actions/addRoomList";
 import { Parameters } from "../../App/Parameters/Parametrs";
+import UpdateActivity from "../../Entities/api/UpdateActivity";
 
 
 export async function getData(url, setData) {
@@ -13,6 +14,25 @@ export async function getData(url, setData) {
     console.log("Error: " + data.detail);
   }
 }
+
+export async function loadUserData() {
+  let urls = "http://127.0.0.1:8000/users/"
+  const data = await axios.get(urls);
+  if (data) {
+    let user = localStorage.getItem('username');
+    let userData =   await data.data.find((authUser)=> authUser.username === user)
+    let userId = userData.id
+    localStorage.setItem("id",  userId);
+    let newActiveDate =  new Date();
+    localStorage.setItem('last_active', newActiveDate);
+      UpdateActivity(userData.id);
+
+
+  } else {
+    console.log("Error: " + data.detail);
+  }
+}
+
 
 export async function getDataRedux(url) {
   let urls = "http://127.0.0.1:8000/" + url;
@@ -33,18 +53,16 @@ export async function fetchData(setAuthUser) {
   }
 }
 
-export  async function  userAuthId( userlist){
+export  async function  userAuthId(userlist){
   if(!userlist) return
   try{
-    if(Parameters.authUserId) return
-    console.log("Получение id");
-    let user = Parameters.authUser;
-    let userId =  userlist.find((authUser)=> authUser.username === user)
-
-    if(userId){
-      localStorage.setItem("id",  userId.id);
-    }
-  }catch(error){
+      if(!localStorage.getItem("id")){
+        console.log("Get id");
+        let user = Parameters.authUser;
+        let userData =  userlist.find((authUser)=> authUser.username === user)
+        localStorage.setItem("id",  userData.id);
+      }
+    }catch(error){
     console.log(error);
   }
   }

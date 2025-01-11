@@ -4,6 +4,7 @@ import Button from '../../Shared/button/button'
 import Input from '../../Shared/input/input'
 import axios from 'axios';
 import styles  from "../../App/Styles/login.module.css"
+import { loadUserData } from "../../Features/getServerData/getServerData";
 function Login(props){
 
     const [username, setusername] = useState("");
@@ -17,6 +18,16 @@ function Login(props){
         setMsg("");
       }, 15000);
     }, [msg]);
+
+    async function NextPage(response){
+      var token = response.data.auth_token;
+      setMsg("Авторизация успешна!");
+      localStorage.setItem("login", true);
+      localStorage.setItem('username', username);
+      localStorage.setItem('token', token);
+      await loadUserData();
+      history("/");
+    }
 
     const handleInputChange = (e, type) => {
         switch (type) {
@@ -51,19 +62,16 @@ function Login(props){
           axios.post(url, data)
               .then((response) => {
                   if (response.status === 200) {
-                      var token = response.data.auth_token;
-                      var id = response.data.id;
-                      console.log(response.data)
+                      // var token = response.data.auth_token;
+                      // var id = response.data.id;
+                      // console.log(response.data)
 
-                      setMsg("Авторизация успешна!");
+                      // setMsg("Авторизация успешна!");
 
-                      localStorage.setItem("login", true);
-                      localStorage.setItem('username', username);
-                      localStorage.setItem('token', token);
-
-                      setTimeout(() => {
-                          history("/");
-                      }, 1000);
+                      // localStorage.setItem("login", true);
+                      // localStorage.setItem('username', username);
+                      // localStorage.setItem('token', token);
+                      NextPage(response);
                   } else {
                       setError("Login failed: " + response.data.detail);
                       console.log("Login failed: " + response.data.detail)
