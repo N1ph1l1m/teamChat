@@ -24,29 +24,7 @@ export function handlerInputImages(
     setSelectTypeFile(false);
     const files = Array.from(e.target.files);
     setSendImage(files);
-    console.log("Выбранный файл изображения:", files);
-
-    const prewImages = [];
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const previewData = {
-          content: reader.result,
-          type: file.type,
-        };
-        prewImages.push(previewData);
-        setInputPrew((prev) => ({
-          ...prev,
-          preview: [...(prev.preview || []), previewData],
-        }));
-      };
-
-      reader.readAsDataURL(file);
-    });
-
-    if (inputPrew && inputPrew.preview) {
-      console.log("Предпросмотр изображений:", inputPrew.previews);
-    }
+    // console.log("Выбранный файл изображения:", files);
   };
 }
 
@@ -68,28 +46,22 @@ export function handlerInputDocuments(
     setSelectTypeFile(false);
     const files = Array.from(e.target.files);
     setSendDocument(files);
-
-    const prewImages = [];
-    files.forEach((file) => {
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        const previewData = {
-          content: reader.result,
-          type: file.type,
-        };
-        prewImages.push(previewData);
-
-        setInputPrew((prev) => ({
-          ...prev,
-          preview: [...(prev.preview || []), previewData],
-        }));
-      };
-
-      reader.readAsDataURL(file);
-    });
-
-    if (prewImages.length > 0) {
-    }
   };
+}
+
+export function removeElementModal(
+  index,
+  sendDocument,
+  setSendDocument,
+  sendImage,
+  setSendImage
+) {
+  if (sendDocument && sendDocument.length !== 0) {
+    const newSendImage = sendDocument.filter((_, i) => i !== index);
+    setSendDocument(newSendImage);
+  }
+  if (sendImage && sendImage.length !== 0) {
+    const newSendImage = sendImage.filter((_, i) => i !== index);
+    setSendImage(newSendImage);
+  }
 }

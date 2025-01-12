@@ -1,6 +1,5 @@
 import React from "react";
 import styles from "../../App/Styles/message.module.css";
-// import Picker from "emoji-picker-react";
 import { IoIosMore } from "react-icons/io";
 import { IoArrowUndoSharp } from "react-icons/io5";
 import Icon from "../../Shared/icon/icon";

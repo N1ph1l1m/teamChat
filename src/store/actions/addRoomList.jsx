@@ -1,8 +1,7 @@
-import { getDataRedux } from "../../Features/getServerData/getServerData";
+import { getDataRedux } from "../../Entities/api/GetServerData";
 
 export const addRoomList = async (dispatch) => {
   try {
-    console.log("dispatch");
     const data = await getDataRedux("chat/rooms");
     dispatch({ type: "ADD_ROOMLIST", payload: data });
   } catch (error) {

@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "../../App/Styles/roomListItem.module.css";
 import Icon from "../icon/icon";
 import IsRead from "../isRead/isRead";
@@ -134,8 +133,13 @@ export function RoomListItem({
     <>
       <div onClick={click} className={styles.wrap}>
         <div className={styles.icon}>
-            {<StatusUser status={status} online={  <div className={styles.status}></div>} />}
-          <Icon > {icon}</Icon>
+          {
+            <StatusUser
+              status={status}
+              online={<div className={styles.status}></div>}
+            />
+          }
+          <Icon> {icon}</Icon>
         </div>
 
         {simpleItem && <p className={styles.simpleTittle}>{tittle}</p>}

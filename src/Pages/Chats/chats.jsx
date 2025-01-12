@@ -8,25 +8,25 @@ import userLogo from "../../App/images/userAvatar.png";
 import ChatArea from "../../Widgets/chatArea/chatArea";
 import Message from "../../Widgets/Message/message";
 import { NoMessages } from "../../Shared/NoMessages/NoMessages";
-import { getRoomData } from "../../Entities/api/getRoomData";
-import { ReadMessageAll } from "../../Entities/api/ReadAllMessage";
+import { getRoomData } from "../../Entities/api/GetRoomData";
+import { ReadMessageAll } from "../../Entities/api/ReadAllMessage.js";
 import {
   createNewMessageForward,
   sendForward,
-} from "../../Entities/api/forwardMessage";
+} from "../../Entities/api/ForwardMessage.js";
 import { sendReaction } from "../../Entities/api/ReactionSendDel";
-import { UserProfile } from "../../Shared/UserProfile/UserProfile";
+import { ChatHeader } from "../../Widgets/ChatsHeaders/ChatsHeaders";
 import { createReaction } from "../../Entities/api/ReactionToMessage";
 import ModalPhoto from "../../Widgets/modalPhoto/modalPhoto";
 import ModalForwardMessage from "../../Widgets/ModalForwardMessage/modalForwardMessage";
 import ModalSendMessage from "../../Widgets/modalSendMessage/modalSendMessage";
-import { RoomList } from "../../Entities/Lists/roomList";
-import { addRoomList } from "../../store/actions/addRoomList";
+import { RoomList } from "../../Widgets/Lists/roomList.jsx";
 import { Loader } from "../../Shared/loader/loader";
 import {
   handlerInputTextChange,
   handlerInputImages,
   handlerInputDocuments,
+  removeElementModal,
 } from "../../Features/inputHandlerEvents/handlersChat";
 import {
   fetchData,
@@ -34,10 +34,11 @@ import {
   getMessageData,
   showMessageAvatar,
   webSocket,
-} from "../../Features/getServerData/getServerData";
+} from "../../Entities/api/GetServerData.js";
 import ForwardMessageMenu from "../../Shared/ForwardMessageMenu/ForwardMessageMenu";
 import ModalMediaChat from "../../Widgets/modalMediaChat/modalMediaChat";
 import UpdateActivity from "../../Entities/api/UpdateActivity";
+import { SendFiles } from "../../Shared/SendFiles/sendFiles";
 function Chats() {
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -109,13 +110,20 @@ function Chats() {
     go();
   }, [id]);
 
+  useEffect(() => {
+    SendFiles(sendImage, setInputPrew);
+  }, [sendImage]);
+
+  useEffect(() => {
+    SendFiles(sendDocument, setInputPrew);
+  }, [sendDocument]);
+
   async function ReadMessage() {
     await ReadMessageAll(otherUserId);
   }
 
   useEffect(() => {
     if (messages.length === 0) {
-      console.log(isLoading);
       const timeout = setTimeout(() => setIsLoading(false), 10);
       ReadMessage();
       return () => clearTimeout(timeout);
@@ -146,7 +154,7 @@ function Chats() {
       }
       chatSocket.send(JSON.stringify(messageData));
     } catch (error) {
-      const urls = "http://127.0.0.1:8000/chat/tokens/";
+      const urls = `${Parameters.url}chat/tokens/`;
       axios
         .get(urls)
         .then((response) => {
@@ -183,7 +191,7 @@ function Chats() {
             const formData = new FormData();
             formData.append("image", img);
 
-            const url = "http://127.0.0.1:8000/chat/photo-upload/";
+            const url = `${Parameters.url}chat/photo-upload/`;
             const response = await axios.post(url, formData, {
               headers: {
                 "Content-Type": "multipart/form-data",
@@ -220,7 +228,7 @@ function Chats() {
               }
               const formData = new FormData();
               formData.append("document", documents);
-              const url = "http://127.0.0.1:8000/chat/documents-upload/";
+              const url = `${Parameters.url}chat/documents-upload/`;
               const response = await axios.post(url, formData, {
                 headers: {
                   "Content-Type": "multipart/form-data",
@@ -293,21 +301,15 @@ function Chats() {
   };
 
   const nextImg = () => {
-    console.log("next");
     if (currentPhotoId < modalPhoto.photoData.length - 1) {
       setCurrentPhotoId(currentPhotoId + 1);
     }
   };
 
   const prevImg = () => {
-    console.log("prev");
     if (!currentPhotoId > 0) return;
     setCurrentPhotoId(currentPhotoId - 1);
   };
-
-  function removeElementModal(inputPrew) {
-    console.log("remove " + inputPrew);
-  }
 
   const keyDownEvent = (e) => {
     if (e.code === "Enter" && !e.shiftKey) {
@@ -367,7 +369,7 @@ function Chats() {
           action: "delete_reaction",
         };
         checkAnonimusUser(messageData);
-        const url = `http://127.0.0.1:8000/chat/reaction/destroy/${reactionId}/`;
+        const url = `${Parameters.url}chat/reaction/destroy/${reactionId}/`;
         const response = await axios.delete(url);
         if (response.status === 204) {
         } else {
@@ -506,12 +508,13 @@ function Chats() {
     (msg) => msg.room && msg.room.id === parseInt(id)
   );
   const titleName = roomList ? (
-    <UserProfile
+    <ChatHeader
       room={roomList}
       authUserId={authUserId}
       setModal={() => {
         setMediaChatModal(true);
       }}
+      status
     />
   ) : (
     ""
@@ -542,7 +545,10 @@ function Chats() {
         }}
         isOpenEmoji={isOpenModelEmoji}
         progressBar={progressBar}
-        removeElement={removeElementModal}
+        sendDocument={sendDocument}
+        setSendDocument={setSendDocument}
+        sendImage={sendImage}
+        setSendImage={setSendImage}
       />
       <ModalForwardMessage
         isOpen={isOpenModalForward}

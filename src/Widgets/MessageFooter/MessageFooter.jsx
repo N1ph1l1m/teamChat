@@ -1,4 +1,3 @@
-import React from "react";
 import { MessageReaction } from "../../Shared/messageReaction/messageReaction";
 import styles from "../../App/Styles/messageFooter.module.css";
 import IsRead from "../../Shared/isRead/isRead";
@@ -16,13 +15,13 @@ export function MessageFooter({
 }) {
   return (
     <div className={styles.bubbleTimeWrap} style={style}>
-      <div style={reactionStyle} >
-      <MessageReaction
-        reactions={reactions}
-        avatar={avatar}
-        emoji={emoji}
-        onDestroyReaction={onDestroyReaction}
-      />
+      <div style={reactionStyle}>
+        <MessageReaction
+          reactions={reactions}
+          avatar={avatar}
+          emoji={emoji}
+          onDestroyReaction={onDestroyReaction}
+        />
       </div>
 
       <div className={styles.timeCheckWrap}>

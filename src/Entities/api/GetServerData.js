@@ -1,12 +1,10 @@
-
 import axios from "axios";
 import { addRoomList } from "../../store/actions/addRoomList";
 import { Parameters } from "../../App/Parameters/Parametrs";
-import UpdateActivity from "../../Entities/api/UpdateActivity";
-
+import UpdateActivity from "./UpdateActivity";
 
 export async function getData(url, setData) {
-  let urls = "http://127.0.0.1:8000/" + url;
+  let urls = Parameters.url + url;
   const data = await axios.get(urls);
   if (data) {
     setData(data.data);
@@ -16,33 +14,32 @@ export async function getData(url, setData) {
 }
 
 export async function loadUserData() {
-  let urls = "http://127.0.0.1:8000/users/"
+  let urls = `${Parameters.url}users/`;
   const data = await axios.get(urls);
   if (data) {
-    let user = localStorage.getItem('username');
-    let userData =   await data.data.find((authUser)=> authUser.username === user)
-    let userId = userData.id
-    localStorage.setItem("id",  userId);
-    let newActiveDate =  new Date();
-    localStorage.setItem('last_active', newActiveDate);
-      UpdateActivity(userData.id);
-
-
+    let user = localStorage.getItem("username");
+    let userData = await data.data.find(
+      (authUser) => authUser.username === user
+    );
+    let userId = userData.id;
+    localStorage.setItem("id", userId);
+    let newActiveDate = new Date();
+    localStorage.setItem("last_active", newActiveDate);
+    UpdateActivity(userData.id);
   } else {
     console.log("Error: " + data.detail);
   }
 }
 
-
 export async function getDataRedux(url) {
-  let urls = "http://127.0.0.1:8000/" + url;
-try{
-  const response  = await axios.get(urls);
-  return response.data;
-}catch(error){
-  console.log(error)
-  return null
-}
+  let urls = Parameters.url + url;
+  try {
+    const response = await axios.get(urls);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 }
 
 export async function fetchData(setAuthUser) {
@@ -53,19 +50,18 @@ export async function fetchData(setAuthUser) {
   }
 }
 
-export  async function  userAuthId(userlist){
-  if(!userlist) return
-  try{
-      if(!localStorage.getItem("id")){
-        console.log("Get id");
-        let user = Parameters.authUser;
-        let userData =  userlist.find((authUser)=> authUser.username === user)
-        localStorage.setItem("id",  userData.id);
-      }
-    }catch(error){
+export async function userAuthId(userlist) {
+  if (!userlist) return;
+  try {
+    if (!localStorage.getItem("id")) {
+      let user = Parameters.authUser;
+      let userData = userlist.find((authUser) => authUser.username === user);
+      localStorage.setItem("id", userData.id);
+    }
+  } catch (error) {
     console.log(error);
   }
-  }
+}
 
 export async function fetchDataRoomList(setRoomListForwardModal) {
   try {
@@ -82,7 +78,6 @@ export async function showMessageAvatar(
   setOtherUserId,
   setOtherUserAvatar
 ) {
-  // console.log("avatar");
   if (roomList.data) {
     const otherUser = roomList.data.current_users.find(
       (user) => user.username !== autUsr
@@ -99,11 +94,11 @@ export async function getMessageData(setMessages) {
 }
 
 export function GlobalWebSocket(token, dispatch) {
-  const socketUrl = `ws://localhost:8000/ws/chat/?token=${token}`;
+  const socketUrl = `${Parameters.urlWebSocket}/chat/?token=${token}`;
   let socket = new WebSocket(socketUrl);
 
   socket.onopen = () => {
-    dispatch({type:"OPEN_WEBSOCKET"})
+    dispatch({ type: "OPEN_WEBSOCKET" });
     socket.send(
       JSON.stringify({
         action: "subscribe_to_global_notifications",
@@ -113,11 +108,10 @@ export function GlobalWebSocket(token, dispatch) {
   };
 
   socket.onclose = function (event) {
-    dispatch({type:"CLOSE_WEBSOCKET"})
+    dispatch({ type: "CLOSE_WEBSOCKET" });
   };
 
   socket.onmessage = (event) => {
-    console.log("dispatch - global web");
     addRoomList(dispatch);
   };
   return socket;
@@ -133,7 +127,7 @@ export function webSocket(
   setChatSocket
 ) {
   // console.log("websocket");
-  const socketUrl = `ws://localhost:8000/ws/chat/${ROOM_PK}/?token=${TOKEN}`;
+  const socketUrl = `${Parameters.urlWebSocket}chat/${ROOM_PK}/?token=${TOKEN}`;
   let socket = new WebSocket(socketUrl);
   socket.onopen = function () {
     console.log("WebSocket открыт");
@@ -200,7 +194,7 @@ export function webSocket(
                       reaction.id_user.photo &&
                       !reaction.id_user.photo.startsWith("http")
                     ) {
-                      reaction.id_user.photo = `http://127.0.0.1:8000${reaction.id_user.photo}`;
+                      reaction.id_user.photo = `${Parameters.url2}${reaction.id_user.photo}`;
                     }
                     return reaction;
                   }
@@ -209,7 +203,7 @@ export function webSocket(
               if (updatedMessage.images) {
                 updatedMessage.images = updatedMessage.images.map((image) => {
                   if (image.image && !image.image.startsWith("http")) {
-                    image.image = `http://127.0.0.1:8000${image.image}`;
+                    image.image = `${Parameters.url2}{image.image}`;
                   }
                   return image;
                 });
@@ -219,7 +213,7 @@ export function webSocket(
                   updatedMessage.reply_to.images =
                     updatedMessage.reply_to.images.map((image) => {
                       if (image.image && !image.image.startsWith("http")) {
-                        image.image = `http://127.0.0.1:8000${image.image}`;
+                        image.image = `${Parameters.url2}${image.image}`;
                       }
                       return image;
                     });
@@ -232,13 +226,13 @@ export function webSocket(
                       image.original_message.user.photo &&
                       !image.original_message.user.photo.startsWith("http")
                     ) {
-                      image.original_message.user.photo = `http://127.0.0.1:8000${image.original_message.user.photo}`;
+                      image.original_message.user.photo = `${Parameters.url2}${image.original_message.user.photo}`;
                     }
 
                     image.original_message.images.map((img) => {
                       console.log(img);
                       if (img.image && !img.image.startsWith("http")) {
-                        img.image = `http://127.0.0.1:8000${img.image}`;
+                        img.image = `${Parameters.url2}${img.image}`;
                       }
                     });
 

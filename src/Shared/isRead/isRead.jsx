@@ -1,4 +1,3 @@
-import React from "react";
 import Icon from "../../Shared/icon/icon";
 import { IoCheckmarkDoneSharp } from "react-icons/io5";
 

@@ -1,10 +1,8 @@
-import React from "react";
 import styles from "../../App/Styles/replyMessage.module.css";
 import { DownloadFileTypeIcons } from "../../Shared/FileTypeIcons/downloadFileTypeIcons"
 import { HeaderName } from "../../Shared/HeaderNameMessage/HeaderNameMessage";
 
 export default function ReplyMessage({ reply }) {
-  const autUsr = localStorage.getItem("username");
 
   const hasReply = reply && reply.reply_to;
   const hasText = hasReply && reply.reply_to.text;

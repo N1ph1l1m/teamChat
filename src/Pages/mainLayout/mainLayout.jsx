@@ -2,10 +2,10 @@ import React from "react";
 import Nav from "../../Widgets/nav/nav";
 import NaviItem from "../../Shared/navItem/navItem.jsx";
 import { Outlet, useNavigate } from "react-router-dom";
-import "../../App/Styles/link.scss"
+import "../../App/Styles/link.scss";
 import { useState, useEffect } from "react";
-import CreateGroupRoom from "../../Entities/api/CreateGroupName.jsx";
-import { linkToMessage } from "../../Entities/api/createNavigateRoom.jsx";
+import CreateGroupRoom from "../../Entities/api/CreateGroupRoom.js";
+import { linkToMessage } from "../../Entities/api/CreateNavigateRoom.js";
 import ModalCreateGroup from "../../Widgets/modalCreateGroup/modalCreateGroup.jsx";
 import styles from "../../App/Styles/mainLayout.module.css";
 import userLogo from "../../App/images/userAvatar.png";
@@ -13,9 +13,9 @@ import {
   RoomList,
   RoomListLoading,
   GroupRoomList,
-} from "../../Entities/Lists/roomList.jsx";
+} from "../../Widgets/Lists/roomList.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { addRoomList } from "../../store/actions/addRoomList.jsx"
+import { addRoomList } from "../../store/actions/addRoomList.jsx";
 import { SearchPanel } from "../../Shared/searchPanel/searchPanel.jsx";
 import MenuIcon from "../../Shared/menuIcons/menuIcons.jsx";
 import chat from "../../App/Icons/chat.png";
@@ -23,11 +23,15 @@ import groupIcon from "../../App/Icons/groupChat.png";
 import contacts from "../../App/Icons/contacts.png";
 import { NoMessages } from "../../Shared/NoMessages/NoMessages.jsx";
 import { Parameters } from "../../App/Parameters/Parametrs.js";
-import { GlobalWebSocket ,  getData , userAuthId } from "../../Features/getServerData/getServerData.js";
+import {
+  GlobalWebSocket,
+  getData,
+  userAuthId,
+} from "../../Entities/api/GetServerData.js";
 
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
-  const [autUserId, setAuthUserId] = useState("")
+  const [autUserId, setAuthUserId] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isOpenModalCreateGroup, setModalCreateGroup] = useState(false);
   const [groupName, setGroupName] = useState();
@@ -36,25 +40,25 @@ function MainLayout() {
   const [avatarPrew, setAvatarPrew] = useState("");
   const [isDeleteAvatar, setDeleteAvatar] = useState(false);
   const roomList = useSelector((state) => state.roomList.roomList);
-  const isWebSocket = useSelector((state)=>state.isOpenSocket.isOpenSocket)
+  const isWebSocket = useSelector((state) => state.isOpenSocket.isOpenSocket);
   const [chatList, setChatList] = useState(true);
   const [chatGroupList, setChatGroupList] = useState(false);
   const [contactsList, setContactsList] = useState(false);
   const dispatch = useDispatch();
-
-
-
-
 
   useEffect(() => {
     async function render() {
       console.log("dispatch - main layout");
       addRoomList(dispatch);
       await getData("users/", setUserList);
-     userAuthId(userlist)
+      userAuthId(userlist);
     }
-    render()
+    render();
   }, []);
+
+  useEffect(() => {
+    addRoomList(dispatch);
+  }, [!roomList]);
 
   useEffect(() => {
     if (!chatList) return;
@@ -65,7 +69,6 @@ function MainLayout() {
     if (!chatGroupList) return;
     GlobalWebSocket(Parameters.token, dispatch);
   }, [chatGroupList]);
-
 
   const UserList = () => {
     const navigate = useNavigate();
@@ -143,7 +146,6 @@ function MainLayout() {
     };
   };
 
-
   const RenderList = () => {
     const chatRender = chatList && !chatGroupList;
     const groupRender = !chatList && chatGroupList;
@@ -171,11 +173,20 @@ function MainLayout() {
                 text={
                   <>
                     Сообщений нет. <br />
-                    Перейдите во вкладку '<span style={{color:"#105c9f" , cursor:"pointer"}}
-                    onClick={()=>{
-                      handlerMenuNav(setContactsList,setChatList,setChatGroupList)
-                    }}>Контанты</span>' для начала диалога с
-                    пользователями.
+                    Перейдите во вкладку '
+                    <span
+                      style={{ color: "#105c9f", cursor: "pointer" }}
+                      onClick={() => {
+                        handlerMenuNav(
+                          setContactsList,
+                          setChatList,
+                          setChatGroupList
+                        );
+                      }}
+                    >
+                      Контанты
+                    </span>
+                    ' для начала диалога с пользователями.
                   </>
                 }
                 icon
@@ -187,7 +198,6 @@ function MainLayout() {
               link
               authUser={Parameters.authUser}
               userLogo={userLogo}
-
             />
           )}
         </>
@@ -229,11 +239,11 @@ function MainLayout() {
       );
     }
   };
- function handlerMenuNav(set1,set2,set3){
-  set1(true);
-  set2(false);
-  set3(false);
- }
+  function handlerMenuNav(set1, set2, set3) {
+    set1(true);
+    set2(false);
+    set3(false);
+  }
 
   return (
     <>
@@ -243,19 +253,19 @@ function MainLayout() {
           onCancel={handleCancel}
           onSubmit={() => {
             CreateGroupRoom(groupName, avatarGroup, selectedUsers);
-            addRoomList(dispatch)
+            addRoomList(dispatch);
             handleCancel();
           }}
-          avatarGroup = {avatarGroup}
-          setDeleteAvatar = {setDeleteAvatar}
-          handleAvatarGroup = {handleAvatarGroup}
-          setAvatarGroup = {setAvatarGroup}
-          isDeleteAvatar = {isDeleteAvatar}
+          avatarGroup={avatarGroup}
+          setDeleteAvatar={setDeleteAvatar}
+          handleAvatarGroup={handleAvatarGroup}
+          setAvatarGroup={setAvatarGroup}
+          isDeleteAvatar={isDeleteAvatar}
           avatarPrew={avatarPrew}
-          handleInputChangeName = {handleInputChangeName}
+          handleInputChangeName={handleInputChangeName}
           selectedUsers={selectedUsers}
           userlist={userlist}
-          handleCheckboxChange = { handleCheckboxChange}
+          handleCheckboxChange={handleCheckboxChange}
           Parameters={Parameters}
         />
 
@@ -268,22 +278,34 @@ function MainLayout() {
                     icon={chat}
                     title="Чаты"
                     handleClick={() => {
-handlerMenuNav(setChatList,setChatGroupList,setContactsList)
+                      handlerMenuNav(
+                        setChatList,
+                        setChatGroupList,
+                        setContactsList
+                      );
                     }}
                   />
                   <MenuIcon
                     icon={groupIcon}
                     title={"Группа"}
                     handleClick={() => {
-                      handlerMenuNav(setChatGroupList,setChatList,setContactsList)
-                      addRoomList(dispatch)
+                      handlerMenuNav(
+                        setChatGroupList,
+                        setChatList,
+                        setContactsList
+                      );
+                      addRoomList(dispatch);
                     }}
                   />
                   <MenuIcon
                     icon={contacts}
                     title={"Контакты"}
                     handleClick={() => {
-                      handlerMenuNav(setContactsList,setChatList,setChatGroupList)
+                      handlerMenuNav(
+                        setContactsList,
+                        setChatList,
+                        setChatGroupList
+                      );
                     }}
                   />
                 </>

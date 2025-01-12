@@ -13,8 +13,8 @@ export const SearchPanel = ({
         <input
           placeholder="Поиск"
           className={styles.searchGroup}
-          onChange={inputSearch} // Передаем обработчик изменений
-          value={inputValue} // Значение поля ввода
+          onChange={inputSearch}
+          value={inputValue}
           onKeyDownCapture={keyDownSearch}
         />
         <button className={styles.createGroup} onClick={createGroup}>

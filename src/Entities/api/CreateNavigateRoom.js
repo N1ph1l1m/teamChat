@@ -1,9 +1,8 @@
 import axios from "axios";
-
+import { Parameters } from "../../App/Parameters/Parametrs";
 async function CreateRoom(username) {
   let token = localStorage.getItem("token");
-  localStorage.setItem("roomName", username);
-  let urls = `http://127.0.0.1:8000/chat/room/`;
+  let urls = `${Parameters.url}/chat/room/`;
   return axios
     .post(
       urls,

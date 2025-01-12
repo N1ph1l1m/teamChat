@@ -1,10 +1,8 @@
-import React from "react";
 import styles from "../../App/Styles/menuMessage.module.css";
 import { IoArrowRedoSharp, IoCheckmarkCircleOutline } from "react-icons/io5";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-
 
 export function MessageMenu({
   menu,
@@ -32,7 +30,7 @@ export function MessageMenu({
           />
           <span>Переслать</span>
         </li>
-        <li   onClick={onSelectMessage}>
+        <li onClick={onSelectMessage}>
           <IoCheckmarkCircleOutline
             color="rgb(117, 117, 117)"
             size="20"

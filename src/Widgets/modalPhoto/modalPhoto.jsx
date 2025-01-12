@@ -1,4 +1,3 @@
-import React from "react";
 import Portal from "../modalCreateGroup/portal";
 import PropTypes from "prop-types";
 import styles from "../../App/Styles/modalPhoto.module.css";

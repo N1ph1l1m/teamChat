@@ -1,4 +1,4 @@
-import { getData } from "../../Features/getServerData/getServerData";
+import { getData } from "../../Entities/api/GetServerData";
 import { useEffect, useState } from "react";
 import UserItem from "../../Shared/userItem/userItem";
 import styles from "../../App/Styles/nav.module.css";

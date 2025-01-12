@@ -1,16 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import React from "react";
+import PropTypes from "prop-types";
+import classNames from "classnames";
 
-import './badge.scss';
+import styles from "../../App/Styles/badge.module.css";
 
-const Badge = ({
-value,circle,className,inline,outer, ...attrs
-}) =>{
-  const text = typeof value === 'string' || value instanceof String;
+const Badge = ({ value, circle, className, inline, outer, ...attrs }) => {
+  const text = typeof value === "string" || value instanceof String;
 
   const classes = classNames(
-    'badge',
+    styles.badge,
     { circle },
     className,
     { inline },
@@ -19,32 +17,25 @@ value,circle,className,inline,outer, ...attrs
     { warning: attrs.warning },
     { alert: attrs.alert },
     { success: attrs.success },
-    { info: attrs.info },
+    { info: attrs.info }
   );
 
-    return(
-    <span className={classes}>
-        {value}
-    </span>
-    )
+  return <span className={classes}>{value}</span>;
 };
 
 Badge.propTypes = {
-    value: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.string,
-    ]).isRequired,
-    circle: PropTypes.bool,
-    className: PropTypes.string,
-    inline: PropTypes.bool,
-    outer: PropTypes.bool,
-  };
+  value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  circle: PropTypes.bool,
+  className: PropTypes.string,
+  inline: PropTypes.bool,
+  outer: PropTypes.bool,
+};
 
-  Badge.defaultProps = {
-    circle: false,
-    className: '',
-    inline: false,
-    outer: false,
-  };
+Badge.defaultProps = {
+  circle: false,
+  className: "",
+  inline: false,
+  outer: false,
+};
 
-  export default Badge;
+export default Badge;

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Parameters } from "../../App/Parameters/Parametrs";
 export async function ReadMessage(id) {
   const reactionData = {
     id: id,
@@ -6,7 +7,7 @@ export async function ReadMessage(id) {
   };
 
   try {
-    const url = `http://127.0.0.1:8000/chat/message-read/${id}/`;
+    const url = `${Parameters.url}chat/message-read/${id}/`;
     const response = await axios.put(url, reactionData);
     if (response.status === 201 || response.status === 200) {
       // console.log(`Cообщение ${id} прочитано `);

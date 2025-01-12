@@ -6,22 +6,22 @@ import ChatArea from "../../Widgets/chatArea/chatArea";
 import Message from "../../Widgets/Message/message";
 import Icon from "../../Shared/icon/icon";
 import { BiMessageAltX } from "react-icons/bi";
-import { getRoomData } from "../../Entities/api/getRoomData";
+import { getRoomData } from "../../Entities/api/GetRoomData";
 import { ReadMessageAll } from "../../Entities/api/ReadAllMessage";
 import { Parameters } from "../../App/Parameters/Parametrs";
 import {
   createNewMessageForward,
   sendForward,
-} from "../../Entities/api/forwardMessage";
-import { GroupProfile } from "../../Shared/UserProfile/UserProfile";
+} from "../../Entities/api/ForwardMessage";
+import { GroupChatHeader } from "../../Widgets/ChatsHeaders/ChatsHeaders";
 import { createReaction } from "../../Entities/api/ReactionToMessage";
 import styles from "../../App/Styles/chats.module.css";
 import ModalPhoto from "../../Widgets/modalPhoto/modalPhoto";
 import ModalSendMessage from "../../Widgets/modalSendMessage/modalSendMessage";
 import ModalForwardMessage from "../../Widgets/ModalForwardMessage/modalForwardMessage";
-import { RoomList } from "../../Entities/Lists/roomList";
+import { RoomList } from "../../Widgets/Lists/roomList";
 import { Loader } from "../../Shared/loader/loader";
-import { GroupRoomList } from "../../Entities/Lists/roomList";
+import { GroupRoomList } from "../../Widgets/Lists/roomList";
 import {
   handlerInputTextChange,
   handlerInputImages,
@@ -31,10 +31,9 @@ import {
   fetchData,
   getData,
   fetchDataRoomList,
-  getMessageData,
   showMessageAvatar,
   webSocket,
-} from "../../Features/getServerData/getServerData";
+} from "../../Entities/api/GetServerData";
 import { addRoomList } from "../../store/actions/addRoomList";
 import userLogo from "../../App/images/userAvatar.png";
 
@@ -697,7 +696,7 @@ function GroupChats() {
   const filteredMessages = messages.filter(
     (msg) => msg.room && msg.room.id === parseInt(id)
   );
-  const titleName = roomList ? <GroupProfile room={roomList} /> : "";
+  const titleName = roomList ? <GroupChatHeader room={roomList} /> : "";
   const forwardTitle = isSelectedMessage ? <ForwardMessageMenu /> : "";
   return (
     <>

@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Icon from "../icon/icon";
 import { GoPlus } from "react-icons/go";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import styles from "../../App/Styles/dropDown.module.css";
 
-function DropDown({
+export function DropDown({
   isContent,
   plusClick,
   onClick,
@@ -46,7 +46,6 @@ function DropDown({
     return text;
   };
 
-  // const contentShow = showDrop();
   const hoverIcon = showRightIcon();
   return (
     <div
@@ -73,5 +72,3 @@ function DropDown({
     </div>
   );
 }
-
-export default DropDown;

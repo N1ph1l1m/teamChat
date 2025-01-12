@@ -3,7 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import "./icon.scss";
+import styles from "../../App/Styles/icon.module.css";
 
 const Icon = ({
   name,
@@ -16,8 +16,8 @@ const Icon = ({
 }) => {
   const elemSize = size ? { fontSize: `${size}px` } : null;
   const classes = classNames(
-    "fa",
-    `fa-${name}`,
+    styles.fa,
+    `${styles.fa}-${name}`,
     className,
     { func: onClick },
     { disabled }

@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import styles from "../../App/Styles/messageReaction.module.css";
 
 export function MessageReaction({ reactions, onDestroyReaction }) {
@@ -10,11 +9,7 @@ export function MessageReaction({ reactions, onDestroyReaction }) {
         reactions.reactions.map((reaction, index) => (
           <div
             onClick={() =>
-              onDestroyReaction(
-                reaction.id,
-                reactions.id,
-                reaction
-              )
+              onDestroyReaction(reaction.id, reactions.id, reaction)
             }
             key={index}
             className={styles.wrapReactionMessage}
