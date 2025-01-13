@@ -5,7 +5,6 @@ import axios from "axios";
 import ChatArea from "../../Widgets/chatArea/chatArea";
 import Message from "../../Widgets/Message/message";
 import Icon from "../../Shared/icon/icon";
-import { BiMessageAltX } from "react-icons/bi";
 import { getRoomData } from "../../Entities/api/GetRoomData";
 import { ReadMessageAll } from "../../Entities/api/ReadAllMessage";
 import { Parameters } from "../../App/Parameters/Parametrs";
@@ -30,193 +29,61 @@ import {
 import {
   fetchData,
   getData,
+  getMessageData,
   fetchDataRoomList,
   showMessageAvatar,
   webSocket,
 } from "../../Entities/api/GetServerData";
 import { addRoomList } from "../../store/actions/addRoomList";
 import userLogo from "../../App/images/userAvatar.png";
+import UpdateActivity from "../../Entities/api/UpdateActivity";
+import { SendFiles } from "../../Shared/SendFiles/sendFiles";
+import ForwardMessageMenu from "../../Shared/ForwardMessageMenu/ForwardMessageMenu";
+import ModalMediaChat from "../../Widgets/modalMediaChat/modalMediaChat";
+import { NoMessages } from "../../Shared/NoMessages/NoMessages";
+import { sendReaction } from "../../Entities/api/ReactionSendDel";
 
 function GroupChats() {
   const dispatch = useDispatch();
-  const autUsr = localStorage.getItem("username");
-  const TOKEN = localStorage.getItem("token").trim();
   const { id } = useParams();
-  const REQUEST_ID = 1;
   const ROOM_PK = id;
   const [authUserId, setAuthUserId] = useState("");
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [sendImage, setSendImage] = useState("");
-  const [sendingPhoto, setSendingPhoto] = useState([]);
   const [sendDocument, setSendDocument] = useState("");
   const [isWebSocketOpen, setIsWebSocketOpen] = useState(false);
   const [chatSocket, setChatSocket] = useState(null);
   const [roomList, setRoomList] = useState(null);
   const [roomListForwardModal, setRoomListForwardModal] = useState(null);
   const [inputPrew, setInputPrew] = useState({});
+  const [otherUserId, setOtherUserId] = useState(null);
   const [otherUserAvatar, setOtherUserAvatar] = useState(null);
   const [authUser, setAuthUser] = useState([]);
-  const [otherUserId, setOtherUserId] = useState(null);
   const [modal, setModel] = useState(false);
   const [photoModal, setPhotoModal] = useState(false);
+  const [mediaChatModal, setMediaChatModal] = useState(false);
   const [modalPhoto, setModalPhoto] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [currentPhotoId, setCurrentPhotoId] = useState(0);
   const [isOpenEmoji, setEmoji] = useState(false);
   const [isOpenModelEmoji, setModelEmoji] = useState(false);
   const [progressBar, setProgressBar] = useState(0);
-  // const [isOpenReactions, setReactions] = useState(false);
   const [selectTypeFile, setSelectTypeFile] = useState(false);
   const [messageMenu, setMessageMenu] = useState(true);
   const [replyMessage, setReplyMessage] = useState([]);
   const [replyMessagePrew, setReplyMessagePrew] = useState([]);
   const [emojiWindow, setEmojiWindow] = useState(false);
-  const [selectReactionEmoji, setReactionEmoji] = useState([]);
   const [focusMessage, setFocusMessage] = useState();
   const [isSelectedMessage, setIsSelectedMessage] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState([]);
   const [isOpenModalForward, setOpenModalForward] = useState(false);
   const [isSelectRoomSendForward, setSelectRoomSendForward] = useState([]);
+  const [filteredMessages, setFilteredMessage] = useState("");
 
   useEffect(() => {
-    async function getMessageData() {
-      // console.log("Message");
-      const data = await getData(`chat/room/message/`, setMessages);
-      return data;
-    }
     let reconnectInterval = 1000;
-
-    // function webSocket() {
-
-    //   const socketUrl = `ws://localhost:8000/ws/chat/${ROOM_PK}/?token=${TOKEN}`;
-    //   let socket = new WebSocket(socketUrl);
-    //   socket.onopen = function () {
-    //     console.log("WebSocket открыт");
-    //     setIsWebSocketOpen(true);
-
-    //     socket.send(
-    //       JSON.stringify({
-    //         pk: ROOM_PK,
-    //         action: "join_room",
-    //         request_id: REQUEST_ID,
-    //       })
-    //     );
-    //     socket.send(
-    //       JSON.stringify({
-    //         pk: ROOM_PK,
-    //         action: "retrieve",
-    //         request_id: REQUEST_ID,
-    //       })
-    //     );
-    //     socket.send(
-    //       JSON.stringify({
-    //         pk: ROOM_PK,
-    //         action: "subscribe_to_messages_in_room",
-    //         request_id: REQUEST_ID,
-    //       })
-    //     );
-    //   };
-    //   function reconnectWebSocket() {
-    //     socket = new WebSocket(socketUrl);
-    //   }
-    //   socket.onclose = function (event) {
-    //     console.log("Соединение закрыто. Попытка переподключиться...");
-    //     setTimeout(reconnectWebSocket(), reconnectInterval);
-
-    //     reconnectInterval = Math.min(reconnectInterval * 2, 5000);
-    //   };
-
-    //   socket.onmessage = function async(e) {
-    //     const data = JSON.parse(e.data);
-    //     switch (data.action) {
-    //       case "create":
-    //         setMessages((prevMessages) => {
-    //           const messageExists = prevMessages.some(
-    //             (msg) => msg.id === data.data.id
-    //           );
-    //           getMessageData();
-    //           if (!messageExists) {
-    //             return [...prevMessages, data.data];
-    //           }
-    //           return prevMessages;
-    //         });
-
-    //         break;
-    //       case "update":
-    //         setMessages((prevMessages) => {
-    //           const updatedMessages = prevMessages.map((msg) => {
-    //             if (msg.id === data.data.id) {
-    //               const updatedMessage = { ...msg, ...data.data };
-    //               if (updatedMessage.reactions) {
-    //                 updatedMessage.reactions = updatedMessage.reactions.map(
-    //                   (reaction) => {
-    //                     if (
-    //                       reaction.id_user.photo &&
-    //                       !reaction.id_user.photo.startsWith("http")
-    //                     ) {
-    //                       reaction.id_user.photo = `http://127.0.0.1:8000${reaction.id_user.photo}`;
-    //                     }
-    //                     return reaction;
-    //                   }
-    //                 );
-    //               }
-    //               if (updatedMessage.images) {
-    //                 updatedMessage.images = updatedMessage.images.map(
-    //                   (image) => {
-    //                     if (image.image && !image.image.startsWith("http")) {
-    //                       image.image = `http://127.0.0.1:8000${image.image}`;
-    //                     }
-    //                     return image;
-    //                   }
-    //                 );
-    //               }
-
-    //               if (updatedMessage.reply_to) {
-    //                 if (updatedMessage.reply_to.images) {
-    //                   updatedMessage.reply_to.images =
-    //                     updatedMessage.reply_to.images.map((image) => {
-    //                       if (image.image && !image.image.startsWith("http")) {
-    //                         image.image = `http://127.0.0.1:8000${image.image}`;
-    //                       }
-    //                       return image;
-    //                     });
-    //                 }
-    //               }
-    //               if (updatedMessage.forwarded_messages) {
-    //                 updatedMessage.forwarded_messages =
-    //                   updatedMessage.forwarded_messages.map((image) => {
-    //                     if (
-    //                       image.original_message.user.photo &&
-    //                       !image.original_message.user.photo.startsWith("http")
-    //                     ) {
-    //                       image.original_message.user.photo = `http://127.0.0.1:8000${image.original_message.user.photo}`;
-    //                     }
-
-    //                     image.original_message.images.map((img) => {
-    //                       console.log(img);
-    //                       if (img.image && !img.image.startsWith("http")) {
-    //                         img.image = `http://127.0.0.1:8000${img.image}`;
-    //                       }
-    //                     });
-
-    //                     return image;
-    //                   });
-    //               }
-    //               return updatedMessage;
-    //             }
-    //             return msg;
-    //           });
-    //           return updatedMessages;
-    //         });
-    //         break;
-    //       default:
-    //         break;
-    //     }
-    //   };
-    //   setChatSocket(socket);
-    // }
 
     async function go() {
       fetchData(setAuthUser);
@@ -241,30 +108,41 @@ function GroupChats() {
         setIsWebSocketOpen,
         Parameters.request_id,
         setMessages,
-        setChatSocket,
-        dispatch
+        setChatSocket
       );
     }
-
     go();
   }, [id]);
+
+  useEffect(() => {
+    SendFiles(sendImage, setInputPrew);
+  }, [sendImage]);
+
+  useEffect(() => {
+    setFilteredMessage(
+      messages.filter((msg) => msg.room && msg.room.id === parseInt(id))
+    );
+  }, [messages]);
+  useEffect(() => {
+    SendFiles(sendDocument, setInputPrew);
+  }, [sendDocument]);
 
   async function ReadMessage() {
     await ReadMessageAll(otherUserId);
   }
 
   useEffect(() => {
-    if (messages.length === 0) {
+    if (filteredMessages.length === 0) {
       const timeout = setTimeout(() => setIsLoading(false), 10);
       ReadMessage();
       return () => clearTimeout(timeout);
     }
-    if (messages.length > 0) {
+    if (filteredMessages.length > 0) {
       const timeout = setTimeout(() => setIsLoading(true), 100);
       ReadMessage();
       return () => clearTimeout(timeout);
     }
-  }, [messages]);
+  }, [filteredMessages]);
 
   function handleCancelModal() {
     setModel(false);
@@ -275,6 +153,7 @@ function GroupChats() {
     setPhotoModal(false);
     setIsSelectedMessage(false);
     setSelectRoomSendForward("");
+    setMediaChatModal(false);
   }
 
   function checkAnonimusUser(messageData) {
@@ -284,7 +163,7 @@ function GroupChats() {
       }
       chatSocket.send(JSON.stringify(messageData));
     } catch (error) {
-      const urls = "http://127.0.0.1:8000/chat/tokens/";
+      const urls = `${Parameters.url}chat/tokens/`;
       axios
         .get(urls)
         .then((response) => {
@@ -321,7 +200,7 @@ function GroupChats() {
             const formData = new FormData();
             formData.append("image", img);
 
-            const url = "http://127.0.0.1:8000/chat/photo-upload/";
+            const url = `${Parameters.url}chat/photo-upload/`;
             const response = await axios.post(url, formData, {
               headers: {
                 "Content-Type": "multipart/form-data",
@@ -358,7 +237,7 @@ function GroupChats() {
               }
               const formData = new FormData();
               formData.append("document", documents);
-              const url = "http://127.0.0.1:8000/chat/documents-upload/";
+              const url = `${Parameters.url}chat/documents-upload/`;
               const response = await axios.post(url, formData, {
                 headers: {
                   "Content-Type": "multipart/form-data",
@@ -400,7 +279,6 @@ function GroupChats() {
 
         checkAnonimusUser(messageData);
       }
-      addRoomList(dispatch);
       setMessage("");
       setSendImage("");
       setInputPrew("");
@@ -421,32 +299,26 @@ function GroupChats() {
     } finally {
       setIsSending(false);
       await ReadMessageAll(otherUserId);
+      await UpdateActivity(Parameters.authUserId);
     }
   }
 
   const modalPh = (photoData) => {
     setCurrentPhotoId(photoData.id);
-    // console.log(photoData);
     setModalPhoto(photoData);
     setPhotoModal(true);
   };
 
   const nextImg = () => {
-    console.log("next");
     if (currentPhotoId < modalPhoto.photoData.length - 1) {
       setCurrentPhotoId(currentPhotoId + 1);
     }
   };
 
   const prevImg = () => {
-    console.log("prev");
     if (!currentPhotoId > 0) return;
     setCurrentPhotoId(currentPhotoId - 1);
   };
-
-  function removeElementModal(inputPrew) {
-    console.log("remove " + inputPrew);
-  }
 
   const keyDownEvent = (e) => {
     if (e.code === "Enter" && !e.shiftKey) {
@@ -490,40 +362,22 @@ function GroupChats() {
   function showEmojiWindows() {
     setEmojiWindow(!emojiWindow);
   }
-  const userAuth = autUsr;
+  const userAuth = Parameters.authUser;
   const authenticatedUser = authUser.find((user) => user.username === userAuth);
-
-  async function sendReaction(messageId, reactionId) {
-    try {
-      const messageData = {
-        message_id: messageId,
-        reaction_id: reactionId,
-        request_id: REQUEST_ID,
-        action: "update_message_reactions",
-      };
-
-      chatSocket.send(JSON.stringify(messageData));
-    } catch (error) {
-      console.error(
-        "Ошибка при отправке реакции:",
-        error.response?.data || error.message
-      );
-    }
-  }
 
   async function deleteReaction(reactionId, messageId, requestion) {
     try {
       if (!reactionId) return null;
 
-      if (requestion.id_user.username === autUsr) {
+      if (requestion.id_user.username === Parameters.authUser) {
         const messageData = {
           message_id: messageId,
           reaction_id: reactionId,
-          request_id: REQUEST_ID,
+          request_id: Parameters.request_id,
           action: "delete_reaction",
         };
-        chatSocket.send(JSON.stringify(messageData));
-        const url = `http://127.0.0.1:8000/chat/reaction/destroy/${reactionId}/`;
+        checkAnonimusUser(messageData);
+        const url = `${Parameters.url}chat/reaction/destroy/${reactionId}/`;
         const response = await axios.delete(url);
         if (response.status === 204) {
         } else {
@@ -539,14 +393,14 @@ function GroupChats() {
   }
 
   async function handleEmojiSelect(selectReactionEmoji) {
+    console.log("handleEmojiSelect");
     try {
       const newReaction = await createReaction(
         authenticatedUser,
         selectReactionEmoji
       );
       if (newReaction) {
-        setReactionEmoji(newReaction);
-        await sendReaction(focusMessage, newReaction.id);
+        await sendReaction(focusMessage, newReaction.id, chatSocket);
         showEmojiWindows();
       }
     } catch (error) {
@@ -563,7 +417,6 @@ function GroupChats() {
   async function sendForwardMessage() {
     try {
       if (!isSelectRoomSendForward) return null;
-      // console.log(isSelectRoomSendForward)
       for (const selectRoom of isSelectRoomSendForward) {
         const forwardedIds = await sendForward(
           selectedMessage,
@@ -593,20 +446,9 @@ function GroupChats() {
       }
     }
   }
-
-  const NoMessages = () => (
-    <div className={styles.nullMessageWrap}>
-      <Icon>
-        <BiMessageAltX color="gray" size="25" />
-      </Icon>
-      <p className={styles.nullMessageText}>Сообщений пока нет</p>
-    </div>
-  );
-
   const handleCheckboxChangeMessage = (id) => {
     setSelectedMessage((prevSelectedUsers) => {
       if (!Array.isArray(prevSelectedUsers)) {
-        // console.error("prevSelectedUsers is not an array:", prevSelectedUsers);
         return [{ id }];
       }
 
@@ -616,31 +458,6 @@ function GroupChats() {
         return [...prevSelectedUsers, { id }];
       }
     });
-  };
-  const ForwardMessageMenu = () => {
-    return (
-      <div className={styles.forwardMenuWrap}>
-        <button
-          className={styles.forwardButton}
-          onClick={() => {
-            // console.log(authUserId)
-            if (selectedMessage.length === 0) return null;
-            setOpenModalForward(true);
-          }}
-        >
-          Переслать
-        </button>
-        <button
-          className={styles.forwardButton}
-          onClick={() => {
-            setIsSelectedMessage(false);
-            setSelectedMessage("");
-          }}
-        >
-          Отмена
-        </button>
-      </div>
-    );
   };
 
   const MessageGroup = ({
@@ -693,11 +510,27 @@ function GroupChats() {
     );
   };
 
-  const filteredMessages = messages.filter(
-    (msg) => msg.room && msg.room.id === parseInt(id)
+  const titleName = roomList ? (
+    <GroupChatHeader
+      room={roomList}
+      authUserId={authUserId}
+      setModal={() => {
+        setMediaChatModal(true);
+      }}
+    />
+  ) : (
+    ""
   );
-  const titleName = roomList ? <GroupChatHeader room={roomList} /> : "";
-  const forwardTitle = isSelectedMessage ? <ForwardMessageMenu /> : "";
+  const forwardTitle = isSelectedMessage ? (
+    <ForwardMessageMenu
+      selectedMessage={selectedMessage}
+      setOpenModalForward={setOpenModalForward}
+      setIsSelectedMessage={setIsSelectedMessage}
+      setSelectedMessage={setSelectedMessage}
+    />
+  ) : (
+    ""
+  );
   return (
     <>
       <ModalSendMessage
@@ -714,7 +547,10 @@ function GroupChats() {
         }}
         isOpenEmoji={isOpenModelEmoji}
         progressBar={progressBar}
-        removeElement={removeElementModal}
+        sendDocument={sendDocument}
+        setSendDocument={setSendDocument}
+        sendImage={sendImage}
+        setSendImage={setSendImage}
       />
       <ModalForwardMessage
         isOpen={isOpenModalForward}
@@ -751,6 +587,11 @@ function GroupChats() {
         nextPhoto={nextImg}
         prevPhoto={prevImg}
       />
+      <ModalMediaChat
+        isOpen={mediaChatModal}
+        onCancel={handleCancelModal}
+        media={filteredMessages}
+      />
 
       <ChatArea
         title={forwardTitle ? forwardTitle : titleName}
@@ -783,8 +624,6 @@ function GroupChats() {
         content={
           <>
             {isLoading && filteredMessages.length === 0 ? (
-              <NoMessages text={"Сообщений пока нет"} />
-            ) : filteredMessages.length === 0 && isLoading ? (
               <Loader
                 custom
                 widthLoader={"70px"}
@@ -792,6 +631,8 @@ function GroupChats() {
                 borderLoader={"10px solid #f3f3f3"}
                 borderTopLoader={"10px solid  #3498db"}
               />
+            ) : filteredMessages.length === 0 && !isLoading ? (
+              <NoMessages text={"Сообщений пока нет"} />
             ) : (
               filteredMessages.map((msg, index, arr) => {
                 const previousMessage = arr[index - 1];

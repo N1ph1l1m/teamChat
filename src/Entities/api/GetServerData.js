@@ -126,7 +126,6 @@ export function webSocket(
   setMessages,
   setChatSocket
 ) {
-  // console.log("websocket");
   const socketUrl = `${Parameters.urlWebSocket}chat/${ROOM_PK}/?token=${TOKEN}`;
   let socket = new WebSocket(socketUrl);
   socket.onopen = function () {
@@ -231,7 +230,7 @@ export function webSocket(
 
                     image.original_message.images.map((img) => {
                       if (img.image && !img.image.startsWith("http")) {
-                      img.image = `${Parameters.url2}${img.image}`;
+                        img.image = `${Parameters.url2}${img.image}`;
                       }
                     });
 

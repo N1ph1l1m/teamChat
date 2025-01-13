@@ -76,7 +76,7 @@ function Chats() {
   const [selectedMessage, setSelectedMessage] = useState([]);
   const [isOpenModalForward, setOpenModalForward] = useState(false);
   const [isSelectRoomSendForward, setSelectRoomSendForward] = useState([]);
-  const [filteredMessages, setFilteredMessage] = useState("")
+  const [filteredMessages, setFilteredMessage] = useState("");
 
   useEffect(() => {
     let reconnectInterval = 1000;
@@ -106,21 +106,19 @@ function Chats() {
         setMessages,
         setChatSocket
       );
-      setFilteredMessage(messages.filter(
-        (msg) => msg.room && msg.room.id === parseInt(id)))
-      // if (messages.length === 0) {
-      //   const timeout = setTimeout(() => setIsLoading(false), 10);
-      //   ReadMessage();
-      //   return () => clearTimeout(timeout);
-      // }
     }
-
     go();
   }, [id]);
 
   useEffect(() => {
     SendFiles(sendImage, setInputPrew);
   }, [sendImage]);
+
+  useEffect(() => {
+    setFilteredMessage(
+      messages.filter((msg) => msg.room && msg.room.id === parseInt(id))
+    );
+  }, [messages]);
 
   useEffect(() => {
     SendFiles(sendDocument, setInputPrew);
@@ -512,8 +510,6 @@ function Chats() {
     );
   };
 
-
-
   const titleName = roomList ? (
     <ChatHeader
       room={roomList}
@@ -637,7 +633,6 @@ function Chats() {
                 borderLoader={"10px solid #f3f3f3"}
                 borderTopLoader={"10px solid  #3498db"}
               />
-
             ) : filteredMessages.length === 0 && !isLoading ? (
               <NoMessages text={"Сообщений пока нет"} />
             ) : (

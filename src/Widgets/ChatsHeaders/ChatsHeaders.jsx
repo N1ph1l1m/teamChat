@@ -27,12 +27,18 @@ export const ChatHeader = ({ room, authUserId, setModal, status }) => {
   }
 };
 
-export const GroupChatHeader = ({ room }) => {
+export const GroupChatHeader = ({ room, setModal }) => {
   try {
     let nameRoom = room.name;
     let userAvatar = room.photo_room;
 
-    return <UserProfile userAvatar={userAvatar} nameRoom={nameRoom} />;
+    return (
+      <UserProfile
+        userAvatar={userAvatar}
+        nameRoom={nameRoom}
+        setModal={setModal}
+      />
+    );
   } catch (error) {
     console.log(error);
   }
