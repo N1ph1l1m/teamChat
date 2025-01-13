@@ -94,7 +94,7 @@ export async function getMessageData(setMessages) {
 }
 
 export function GlobalWebSocket(token, dispatch) {
-  const socketUrl = `${Parameters.urlWebSocket}/chat/?token=${token}`;
+  const socketUrl = `${Parameters.urlWebSocket}chat/?token=${token}`;
   let socket = new WebSocket(socketUrl);
 
   socket.onopen = () => {
@@ -230,9 +230,8 @@ export function webSocket(
                     }
 
                     image.original_message.images.map((img) => {
-                      console.log(img);
                       if (img.image && !img.image.startsWith("http")) {
-                        img.image = `${Parameters.url2}${img.image}`;
+                      img.image = `${Parameters.url2}${img.image}`;
                       }
                     });
 

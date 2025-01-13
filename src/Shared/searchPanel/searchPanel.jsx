@@ -1,25 +1,18 @@
 import { GoPlus } from "react-icons/go";
 import styles from "../../App/Styles/mainLayout.module.css";
 
-export const SearchPanel = ({
+export const HeaderPanel = ({
   createGroup,
-  inputValue,
-  inputSearch,
-  keyDownSearch,
+  title,
+
 }) => {
   return (
     <>
       <div className={styles.menuGroup}>
-        <input
-          placeholder="Поиск"
-          className={styles.searchGroup}
-          onChange={inputSearch}
-          value={inputValue}
-          onKeyDownCapture={keyDownSearch}
-        />
+        <h1 className={styles.header}>{title}</h1>
         <button className={styles.createGroup} onClick={createGroup}>
           <GoPlus
-            color={createGroup ? "rgba(0, 0, 0, 0.283)" : "transparent"}
+            color={createGroup ? "black" : "transparent"}
             size="25"
           />
         </button>

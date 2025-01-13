@@ -197,7 +197,19 @@
 .modalFooter button:last-child {
   margin-left: 10px;
 }
-.modalButton{
-  background-color: #390cce;
+
+
+
+.modalBtn{
   padding: 10px;
+
 }
+.close{
+padding: 10px;
+background-color:rgb(204, 10, 10);
+}
+
+.create{
+  padding: 10px;
+  background-color:rgba(7, 92, 7, 0.869)
+  }

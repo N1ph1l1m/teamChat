@@ -5,6 +5,7 @@ import classNames from "classnames";
 import styles from "../../App/Styles/button.module.css";
 
 const Button = ({
+  style,
   children,
   onClick,
   className,

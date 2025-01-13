@@ -183,3 +183,22 @@ export const SimpleItem = () => {
     </>
   );
 };
+export const UserListItem = ({icon,status,tittle})=>{
+  return(<>
+       <div  className={styles.wrap}>
+        <div className={styles.icon}>
+          {
+            <StatusUser
+              status={status}
+              online={<div className={styles.status}></div>}
+            />
+          }
+          <Icon> {icon}</Icon>
+        </div>
+        <div className={styles.titleText}>
+        {<p className={styles.simpleTittle}>{tittle}</p>}
+        </div>
+
+      </div>
+  </>)
+}

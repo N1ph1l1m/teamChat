@@ -1,4 +1,4 @@
-import React from "react";
+import {React , useCallback} from "react";
 import Nav from "../../Widgets/nav/nav";
 import NaviItem from "../../Shared/navItem/navItem.jsx";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -13,10 +13,11 @@ import {
   RoomList,
   RoomListLoading,
   GroupRoomList,
+  UserList,
 } from "../../Widgets/Lists/roomList.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { addRoomList } from "../../store/actions/addRoomList.jsx";
-import { SearchPanel } from "../../Shared/searchPanel/searchPanel.jsx";
+import { HeaderPanel } from "../../Shared/searchPanel/searchPanel.jsx";
 import MenuIcon from "../../Shared/menuIcons/menuIcons.jsx";
 import chat from "../../App/Icons/chat.png";
 import groupIcon from "../../App/Icons/groupChat.png";
@@ -31,7 +32,6 @@ import {
 
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
-  const [autUserId, setAuthUserId] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isOpenModalCreateGroup, setModalCreateGroup] = useState(false);
   const [groupName, setGroupName] = useState();
@@ -44,7 +44,11 @@ function MainLayout() {
   const [chatList, setChatList] = useState(true);
   const [chatGroupList, setChatGroupList] = useState(false);
   const [contactsList, setContactsList] = useState(false);
+  const [isSearch, setIsSearch] = useState()
+  const [searchValue, setSearchValue] = useState("");
   const dispatch = useDispatch();
+
+
 
   useEffect(() => {
     async function render() {
@@ -55,6 +59,7 @@ function MainLayout() {
     }
     render();
   }, []);
+
 
   useEffect(() => {
     addRoomList(dispatch);
@@ -70,41 +75,41 @@ function MainLayout() {
     GlobalWebSocket(Parameters.token, dispatch);
   }, [chatGroupList]);
 
-  const UserList = () => {
-    const navigate = useNavigate();
-    return (
-      <>
-        {userlist
-          .filter((user) => user.username !== Parameters.authUser)
-          .map((user, index) => {
-            const upName =
-              user.username.charAt(0).toUpperCase() + user.username.slice(1);
-            return (
-              <div
-                className={styles.userListWrap}
-                key={index}
-                onClick={() => {
-                  linkToMessage(
-                    userlist,
-                    user.id,
-                    Parameters,
-                    roomList,
-                    navigate
-                  );
-                }}
-              >
-                <NaviItem
-                  icon={
-                    <img src={user.photo} alt={`${user.username}'s avatar`} />
-                  }
-                  tittle={upName}
-                />
-              </div>
-            );
-          })}
-      </>
-    );
-  };
+  // const UserList = () => {
+  //   const navigate = useNavigate();
+  //   return (
+  //     <>
+  //       {userlist
+  //         .filter((user) => user.username !== Parameters.authUser)
+  //         .map((user, index) => {
+  //           const upName =
+  //             user.username.charAt(0).toUpperCase() + user.username.slice(1);
+  //           return (
+  //             <div
+  //               className={styles.userListWrap}
+  //               key={index}
+  //               onClick={() => {
+  //                 linkToMessage(
+  //                   userlist,
+  //                   user.id,
+  //                   Parameters,
+  //                   roomList,
+  //                   navigate
+  //                 );
+  //               }}
+  //             >
+  //               <NaviItem
+  //                 icon={
+  //                   <img src={user.photo} alt={`${user.username}'s avatar`} />
+  //                 }
+  //                 tittle={upName}
+  //               />
+  //             </div>
+  //           );
+  //         })}
+  //     </>
+  //   );
+  // };
 
   function handleCancel() {
     setModalCreateGroup(false);
@@ -146,6 +151,13 @@ function MainLayout() {
     };
   };
 
+
+
+  const handleInputChange = (e) => {
+    console.log(e.target.value)
+    setSearchValue(e.target.value)
+  };
+
   const RenderList = () => {
     const chatRender = chatList && !chatGroupList;
     const groupRender = !chatList && chatGroupList;
@@ -164,7 +176,8 @@ function MainLayout() {
     if (chatRender) {
       return (
         <>
-          <SearchPanel />
+          <HeaderPanel
+               title={"Чаты"} />
           {isLoading && roomList.length === 0 ? (
             <RoomListLoading />
           ) : isLoading && filterRoomList.length === 0 ? (
@@ -207,12 +220,15 @@ function MainLayout() {
       return (
         <>
           <>
-            <SearchPanel
+            <HeaderPanel
               createGroup={() => {
                 getData("users/", setUserList);
                 showModalGroupChat();
               }}
+              title={"Группы"}
             />
+
+
             {roomList && roomList.length === 0 ? (
               <RoomListLoading />
             ) : (
@@ -220,6 +236,7 @@ function MainLayout() {
                 roomList={roomList}
                 authUser={Parameters.authUser}
                 link
+                isSearch={isSearch}
               />
             )}
           </>
@@ -229,11 +246,13 @@ function MainLayout() {
     if (contactRender) {
       return (
         <>
-          <SearchPanel />
+          <HeaderPanel
+                 title={"Контакты"}
+          />
           {userlist && userlist.length === 0 ? (
             <RoomListLoading />
           ) : (
-            <UserList />
+            <UserList userlist={userlist} roomList={roomList}/>
           )}{" "}
         </>
       );
@@ -252,9 +271,8 @@ function MainLayout() {
           isOpen={isOpenModalCreateGroup}
           onCancel={handleCancel}
           onSubmit={() => {
-            CreateGroupRoom(groupName, avatarGroup, selectedUsers);
+            CreateGroupRoom(groupName, avatarGroup, selectedUsers , handleCancel);
             addRoomList(dispatch);
-            handleCancel();
           }}
           avatarGroup={avatarGroup}
           setDeleteAvatar={setDeleteAvatar}
@@ -287,7 +305,7 @@ function MainLayout() {
                   />
                   <MenuIcon
                     icon={groupIcon}
-                    title={"Группа"}
+                    title={"Группы"}
                     handleClick={() => {
                       handlerMenuNav(
                         setChatGroupList,

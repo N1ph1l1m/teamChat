@@ -29,7 +29,6 @@ const ModalCreateGroup = ({
           <div className={styles.modalOverlay}>
             <div className={styles.modalWrap}>
               <div className={styles.modalBody}>
-                {/* {children} */}
                 <div className={styles.headerModel}>
                   {!avatarGroup ? (
                     <div
@@ -145,13 +144,15 @@ const ModalCreateGroup = ({
               </div>
               <div className={styles.modalFooter}>
                 <Button
-                  className={styles.modalButton}
+                  className={styles.close}
                   onClick={onCancel}
                   invert
                 >
                   Закрыть
                 </Button>
-                <Button className={styles.modalButton} onClick={onSubmit}>
+                <Button
+                 className={styles.create}
+                 onClick={onSubmit}>
                   Создать
                 </Button>
               </div>

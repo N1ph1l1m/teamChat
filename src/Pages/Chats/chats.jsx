@@ -76,6 +76,7 @@ function Chats() {
   const [selectedMessage, setSelectedMessage] = useState([]);
   const [isOpenModalForward, setOpenModalForward] = useState(false);
   const [isSelectRoomSendForward, setSelectRoomSendForward] = useState([]);
+  const [filteredMessages, setFilteredMessage] = useState("")
 
   useEffect(() => {
     let reconnectInterval = 1000;
@@ -105,6 +106,13 @@ function Chats() {
         setMessages,
         setChatSocket
       );
+      setFilteredMessage(messages.filter(
+        (msg) => msg.room && msg.room.id === parseInt(id)))
+      // if (messages.length === 0) {
+      //   const timeout = setTimeout(() => setIsLoading(false), 10);
+      //   ReadMessage();
+      //   return () => clearTimeout(timeout);
+      // }
     }
 
     go();
@@ -123,17 +131,17 @@ function Chats() {
   }
 
   useEffect(() => {
-    if (messages.length === 0) {
+    if (filteredMessages.length === 0) {
       const timeout = setTimeout(() => setIsLoading(false), 10);
       ReadMessage();
       return () => clearTimeout(timeout);
     }
-    if (messages.length > 0) {
+    if (filteredMessages.length > 0) {
       const timeout = setTimeout(() => setIsLoading(true), 100);
       ReadMessage();
       return () => clearTimeout(timeout);
     }
-  }, [messages]);
+  }, [filteredMessages]);
 
   function handleCancelModal() {
     setModel(false);
@@ -504,9 +512,8 @@ function Chats() {
     );
   };
 
-  const filteredMessages = messages.filter(
-    (msg) => msg.room && msg.room.id === parseInt(id)
-  );
+
+
   const titleName = roomList ? (
     <ChatHeader
       room={roomList}
@@ -623,8 +630,6 @@ function Chats() {
         content={
           <>
             {isLoading && filteredMessages.length === 0 ? (
-              <NoMessages text={"Сообщений пока нет"} />
-            ) : filteredMessages.length === 0 && !isLoading ? (
               <Loader
                 custom
                 widthLoader={"70px"}
@@ -632,6 +637,9 @@ function Chats() {
                 borderLoader={"10px solid #f3f3f3"}
                 borderTopLoader={"10px solid  #3498db"}
               />
+
+            ) : filteredMessages.length === 0 && !isLoading ? (
+              <NoMessages text={"Сообщений пока нет"} />
             ) : (
               filteredMessages.map((msg, index, arr) => {
                 const previousMessage = arr[index - 1];

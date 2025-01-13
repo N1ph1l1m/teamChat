@@ -30,22 +30,21 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-
 }
 
 .icon {
   width: 50px;
   position: relative;
 }
-.status{
+.status {
   width: 10px;
   height: 10px;
-  border-radius:50%;
-  background-color:rgb(11, 254, 11);
-  border:1px solid #FFFFFF;
+  border-radius: 50%;
+  background-color: rgb(11, 254, 11);
+  border: 1px solid #ffffff;
   position: absolute;
   bottom: 5px;
-  right:1px;
+  right: 1px;
 }
 .icon img {
   width: 100%;
@@ -56,26 +55,24 @@
   border: 1px solid black;
 }
 
-.simpleIcon{
+.simpleIcon {
   width: 55px;
   height: 55px;
   border-radius: 50%;
 
-  background-color:rgba(128, 128, 128, 0.402);
+  background-color: rgba(128, 128, 128, 0.402);
 }
-.simpleWrapText{
+.simpleWrapText {
   width: 100%;
   height: 50px;
   margin-top: 15px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+}
 
-  }
-
-
-
-.simpleTittleItem , .simpleTextItem{
+.simpleTittleItem,
+.simpleTextItem {
   width: 50px;
   height: 10px;
   margin-left: 9px;
@@ -85,11 +82,11 @@
   display: inline;
   font-weight: 600;
   /* border:1px solid black; */
-  border-radius:10px;
-  background-color:rgba(128, 128, 128, 0.402);
+  border-radius: 10px;
+  background-color: rgba(128, 128, 128, 0.402);
 }
-.simpleTextItem{
-width: 80px;
+.simpleTextItem {
+  width: 80px;
 }
 
 .headerTitle {
@@ -108,7 +105,6 @@ width: 80px;
   margin-top: 10px;
   margin-right: 3px;
   align-items: center;
-  /* border:1px solid red; */
 }
 
 .timeMessage {
@@ -154,7 +150,6 @@ width: 80px;
 .textWrap {
   display: flex;
   padding: 4px;
-  /* border:1px solid red; */
   align-items: center;
   height: 36px;
 
@@ -166,7 +161,6 @@ width: 80px;
     min-width: 70%;
     padding: 8px;
   }
-
   .titleText {
     font-size: 14px;
     width: 90%;
@@ -174,7 +168,7 @@ width: 80px;
   }
 }
 
-@media screen and (max-width: 1153px){
+@media screen and (max-width: 1153px) {
   .wrap {
     width: 87%;
   }
@@ -186,30 +180,32 @@ width: 80px;
   }
 }
 
-@media screen and (max-width: 1120px){
+@media screen and (max-width: 1120px) {
+
   .wrap {
     width: 80%;
-    /* height: 145px; */
-    /* flex-wrap: wrap;
-    justify-content: flex-start; */
   }
+
   .icon img {
-    /* display: none; */
     width: 35px;
     height: 35px;
-
   }
+  .status {
+    top: 25px;
+    right: 2px;
+  }
+
 }
 
-@media screen and (max-width: 915px){
+@media screen and (max-width: 915px) {
   .wrap {
     width: 40%;
-    /* height: 145px; */
-    /* flex-wrap: wrap;
-    justify-content: flex-start; */
+  }
+  .status {
+    top: 17px;
+    right: 5px;
   }
   .icon img {
-    /* display: none; */
     width: 100%;
     height: auto;
     width: 25px;

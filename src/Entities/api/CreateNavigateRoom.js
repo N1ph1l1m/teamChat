@@ -27,7 +27,6 @@ async function CreateRoom(username) {
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
-      console.log("username " + username);
     });
 }
 
@@ -66,7 +65,6 @@ export function linkToMessage(userlist, id, Parameters, roomList, navigate) {
   }
 
   if (filteredRooms.length === 1) {
-    console.log("Navigating to room:", filteredRooms[0].pk);
     navigate(`/chats/${filteredRooms[0].pk}`);
   }
 }

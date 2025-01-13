@@ -1,11 +1,16 @@
 import React from "react";
+import {useNavigate } from "react-router-dom";
+import { Parameters } from "../../App/Parameters/Parametrs";
 import { Link } from "react-router-dom";
+import {linkToMessage} from "../../Entities/api/CreateNavigateRoom"
 import {
   RoomListItem,
   SimpleItem,
+  UserListItem,
 } from "../../Shared/roomListItem/roomListItem";
 import styles from "../../App/Styles/roomList.module.css";
 import NaviItem from "../../Shared/navItem/navItem";
+
 
 export function RoomList({
   roomList,
@@ -119,6 +124,7 @@ export function GroupRoomList({
   link,
   selectedRooms,
   setSelectRoomSendForwad,
+  isSearch,
 }) {
   const handlerRoomSelect = (roomPk, setSelectRoomSendForward) => {
     setSelectRoomSendForward((prevSelectedRooms) => {
@@ -132,7 +138,8 @@ export function GroupRoomList({
 
   return (
     <div className={styles.groupListWrap}>
-      {roomList
+      {roomList && !isSearch  ? (
+        roomList
         .filter(
           (room) =>
             room.current_users.some((user) => user.username === authUser) &&
@@ -188,7 +195,48 @@ export function GroupRoomList({
               />
             </label>
           );
-        })}
+        })
+      ) :(<p>Search</p>)
+
+      }
     </div>
   );
 }
+
+ export  const UserList = ({userlist , roomList}) => {
+    const navigate = useNavigate();
+    return (
+      <>
+        {userlist
+          .filter((user) => user.username !== Parameters.authUser)
+          .map((user, index) => {
+            const userStatus = user.last_active;
+            const upName =
+              user.username.charAt(0).toUpperCase() + user.username.slice(1);
+            return (
+              <div
+                className={styles.roomListChats}
+                key={index}
+                onClick={() => {
+                  linkToMessage(
+                    userlist,
+                    user.id,
+                    Parameters,
+                    roomList,
+                    navigate
+                  );
+                }}
+              >
+                <UserListItem
+                  icon={
+                    <img src={user.photo} alt={`${user.username}'s avatar`} />
+                  }
+                  status= {userStatus}
+                  tittle={upName}
+                />
+              </div>
+            );
+          })}
+      </>
+    );
+  };
