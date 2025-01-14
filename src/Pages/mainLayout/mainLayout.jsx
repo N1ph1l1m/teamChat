@@ -75,42 +75,6 @@ function MainLayout() {
     GlobalWebSocket(Parameters.token, dispatch);
   }, [chatGroupList]);
 
-  // const UserList = () => {
-  //   const navigate = useNavigate();
-  //   return (
-  //     <>
-  //       {userlist
-  //         .filter((user) => user.username !== Parameters.authUser)
-  //         .map((user, index) => {
-  //           const upName =
-  //             user.username.charAt(0).toUpperCase() + user.username.slice(1);
-  //           return (
-  //             <div
-  //               className={styles.userListWrap}
-  //               key={index}
-  //               onClick={() => {
-  //                 linkToMessage(
-  //                   userlist,
-  //                   user.id,
-  //                   Parameters,
-  //                   roomList,
-  //                   navigate
-  //                 );
-  //               }}
-  //             >
-  //               <NaviItem
-  //                 icon={
-  //                   <img src={user.photo} alt={`${user.username}'s avatar`} />
-  //                 }
-  //                 tittle={upName}
-  //               />
-  //             </div>
-  //           );
-  //         })}
-  //     </>
-  //   );
-  // };
-
   function handleCancel() {
     setModalCreateGroup(false);
     setSelectedUsers([]);
@@ -149,13 +113,6 @@ function MainLayout() {
     reader.onerror = () => {
       console.log(reader.error);
     };
-  };
-
-
-
-  const handleInputChange = (e) => {
-    console.log(e.target.value)
-    setSearchValue(e.target.value)
   };
 
   const RenderList = () => {

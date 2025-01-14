@@ -42,8 +42,8 @@ export const UserProfile = ({
       >
         {showMenu ? (
           <div className={styles.menuChat}>
-            <ul className={styles.menuItems}>
-              <li
+            <ul className={styles.menuItemWrap}>
+              <li className={styles.menuItem}
                 onClick={() => {
                   navigate("/");
                 }}
@@ -52,14 +52,16 @@ export const UserProfile = ({
                   size="20"
                   style={{ marginRight: "5px" }}
                   color="rgb(131, 130, 130)"
-                />{" "}
-                Закрыть
+                />
+                 Закрыть
               </li>
-              <li onClick={setModal}>
+              <li className={styles.menuItem}
+                onClick={setModal}
+                >
                 <FaPaperclip
                   size="20"
-                  color="rgb(131, 130, 130)"
                   style={{ marginRight: "5px" }}
+                  color="rgb(131, 130, 130)"
                 />
                 Показать вложения
               </li>

@@ -32,6 +32,7 @@
   overflow: scroll;
   border-right:1px solid rgba(0, 0, 0, 0.283);
   border-radius:10px 0px 0px 10px;
+  /* border:10px solid green; */
 }
 .navWrap::-webkit-scrollbar{
   display: none;
@@ -60,31 +61,31 @@
 
 
 
-.menuGroup{
-  max-width: 100%;
-  min-width: 20%s;
-  /* border:1px solid red; */
+.headerWrap{
+  /* max-width: 100%; */
+  /* border:1px solid green; */
   display: flex;
   justify-content: space-between;
   padding: 5px;
   align-items:center;
-  /* flex-direction: column; */
-
 }
 .header{
   font-size: 16px;
+  min-width: 50px;
+
   font-weight: 600;
 }
 .createGroup{
   padding: 0px;
   margin: 0px;
-  /* margin-top: 10px; */
   background-color:transparent;
   border:0px solid transparent;
   display: flex;
   align-items:center;
   font-size: 14px;
   cursor: pointer;
+  width: 25px;
+  height: 25px;
 }
 
 .searchGroup{
@@ -121,4 +122,39 @@
   .wrapCheckBox {
     height: 30%;
   }
+}
+
+@media screen and (max-width:1150px) {
+
+  .headerWrap{
+    width: 90%;
+  }
+
+}
+@media screen and (max-width:1040px) {
+   .headerWrap{
+    width: 70%;
+  }
+
+}
+
+@media screen and (max-width:880px) {
+  .headerWrap{
+   width: 57%;
+ }
+
+}
+@media screen and (max-width:800px) {
+  .headerWrap{
+   width: 57%;
+    flex-direction: column;
+    align-items: flex-start;
+ }
+
+}
+@media screen and (max-width:666px) {
+  .header{
+    font-size: 10px;
+ }
+
 }

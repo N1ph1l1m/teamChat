@@ -8,7 +8,7 @@ export const HeaderPanel = ({
 }) => {
   return (
     <>
-      <div className={styles.menuGroup}>
+      <div className={styles.headerWrap}>
         <h1 className={styles.header}>{title}</h1>
         <button className={styles.createGroup} onClick={createGroup}>
           <GoPlus

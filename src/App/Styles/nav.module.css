@@ -10,7 +10,8 @@
 display: flex;
 flex-direction: row;
 height: 100%;
-
+/* border:3px solid blue; */
+width: 100%;
 }
 
 .menuNav{
@@ -20,6 +21,7 @@ height: 100%;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     padding: 10px;
+
 }
 .menuItems{
     display: flex;
@@ -30,11 +32,12 @@ height: 100%;
 }
 
 .navItem{
+    /* width: 100%; */
     position: relative;
     height: 90%;
     overflow: scroll;
-    width: 100%;
-    justify-self: start;
+
+    justify-self: start
 }
 .navItem::-webkit-scrollbar{
     display: none;

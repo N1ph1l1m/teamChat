@@ -130,12 +130,12 @@ function Chats() {
 
   useEffect(() => {
     if (filteredMessages.length === 0) {
-      const timeout = setTimeout(() => setIsLoading(false), 10);
+      const timeout = setTimeout(() => setIsLoading(false), 1000);
       ReadMessage();
       return () => clearTimeout(timeout);
     }
     if (filteredMessages.length > 0) {
-      const timeout = setTimeout(() => setIsLoading(true), 100);
+      const timeout = setTimeout(() => setIsLoading(true), 500);
       ReadMessage();
       return () => clearTimeout(timeout);
     }

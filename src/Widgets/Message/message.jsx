@@ -54,6 +54,8 @@ export default function Message({
     Array.isArray(forwardMessage.forwarded_messages) &&
     forwardMessage.forwarded_messages.length > 0;
 
+    const nullMessage = isForwardMessageNull && isPhotoNull && isDocumentNull && !text
+
   const onlyForward =
     isForwardMessage &&
     isForwardMessageArray &&
@@ -77,7 +79,7 @@ export default function Message({
 
   return (
     <>
-      <div
+     {!nullMessage ?  <div
         className={`${styles.message} ${sent ? styles.sent : styles.received}`}
         onMouseLeave={hiddenMenu}
         onMouseEnter={() => {
@@ -89,7 +91,6 @@ export default function Message({
           src={avatar}
           alt={"avatar user"}
         />
-
         {onlyForward && (
           <div className={styles.messageBubbleText}>
             <ForwardMessage
@@ -313,7 +314,7 @@ export default function Message({
             onSelectMessage={onSelectMessage}
           />
         </div>
-      </div>
+      </div> : null }
     </>
   );
 }
