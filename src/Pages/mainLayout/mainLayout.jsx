@@ -1,11 +1,9 @@
-import {React , useCallback} from "react";
+import { React } from "react";
 import Nav from "../../Widgets/nav/nav";
-import NaviItem from "../../Shared/navItem/navItem.jsx";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import "../../App/Styles/link.scss";
 import { useState, useEffect } from "react";
 import CreateGroupRoom from "../../Entities/api/CreateGroupRoom.js";
-import { linkToMessage } from "../../Entities/api/CreateNavigateRoom.js";
 import ModalCreateGroup from "../../Widgets/modalCreateGroup/modalCreateGroup.jsx";
 import styles from "../../App/Styles/mainLayout.module.css";
 import userLogo from "../../App/images/userAvatar.png";
@@ -44,11 +42,8 @@ function MainLayout() {
   const [chatList, setChatList] = useState(true);
   const [chatGroupList, setChatGroupList] = useState(false);
   const [contactsList, setContactsList] = useState(false);
-  const [isSearch, setIsSearch] = useState()
-  const [searchValue, setSearchValue] = useState("");
+  const [isSearch, setIsSearch] = useState();
   const dispatch = useDispatch();
-
-
 
   useEffect(() => {
     async function render() {
@@ -59,7 +54,6 @@ function MainLayout() {
     }
     render();
   }, []);
-
 
   useEffect(() => {
     addRoomList(dispatch);
@@ -133,8 +127,7 @@ function MainLayout() {
     if (chatRender) {
       return (
         <>
-          <HeaderPanel
-               title={"Чаты"} />
+          <HeaderPanel title={"Чаты"} />
           {isLoading && roomList.length === 0 ? (
             <RoomListLoading />
           ) : isLoading && filterRoomList.length === 0 ? (
@@ -185,7 +178,6 @@ function MainLayout() {
               title={"Группы"}
             />
 
-
             {roomList && roomList.length === 0 ? (
               <RoomListLoading />
             ) : (
@@ -203,13 +195,11 @@ function MainLayout() {
     if (contactRender) {
       return (
         <>
-          <HeaderPanel
-                 title={"Контакты"}
-          />
+          <HeaderPanel title={"Контакты"} />
           {userlist && userlist.length === 0 ? (
             <RoomListLoading />
           ) : (
-            <UserList userlist={userlist} roomList={roomList}/>
+            <UserList userlist={userlist} roomList={roomList} />
           )}{" "}
         </>
       );
@@ -228,7 +218,12 @@ function MainLayout() {
           isOpen={isOpenModalCreateGroup}
           onCancel={handleCancel}
           onSubmit={() => {
-            CreateGroupRoom(groupName, avatarGroup, selectedUsers , handleCancel);
+            CreateGroupRoom(
+              groupName,
+              avatarGroup,
+              selectedUsers,
+              handleCancel
+            );
             addRoomList(dispatch);
           }}
           avatarGroup={avatarGroup}

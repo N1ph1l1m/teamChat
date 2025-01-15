@@ -1,8 +1,8 @@
-FROM node:v20.12.2
+FROM node:22.13
 
 WORKDIR /app
 
-COPY package.json .
+COPY package*.json .
 
 RUN npm install
 
