@@ -3,7 +3,7 @@ export const Parameters = {
   authUserId: localStorage.getItem("id"),
   token: localStorage.getItem("token"),
   request_id: 1,
-  url: "http://127.0.0.1:8000/",
-  url2: "http://127.0.0.1:8000",
-  urlWebSocket: "ws://localhost:8000/ws/",
+  url: "http://192.168.77.16:8000/",
+  url2: "http://192.168.77.16:8000",
+  urlWebSocket: "ws://192.168.77.16:8000/ws/",
 };
