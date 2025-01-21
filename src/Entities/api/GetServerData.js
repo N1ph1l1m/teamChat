@@ -173,7 +173,7 @@ export function webSocket(
           const messageExists = prevMessages.some(
             (msg) => msg.id === data.data.id
           );
-          getMessageData(setMessages);
+
           if (!messageExists) {
             return [...prevMessages, data.data];
           }
@@ -183,6 +183,7 @@ export function webSocket(
         break;
       case "update":
         setMessages((prevMessages) => {
+          console.log("onMessage update");
           const updatedMessages = prevMessages.map((msg) => {
             if (msg.id === data.data.id) {
               const updatedMessage = { ...msg, ...data.data };

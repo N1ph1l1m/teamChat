@@ -34,6 +34,7 @@ import {
   getMessageData,
   showMessageAvatar,
   webSocket,
+  OnMessageSocket
 } from "../../Entities/api/GetServerData.js";
 import ForwardMessageMenu from "../../Shared/ForwardMessageMenu/ForwardMessageMenu";
 import ModalMediaChat from "../../Widgets/modalMediaChat/modalMediaChat";
@@ -106,9 +107,12 @@ function Chats() {
         setMessages,
         setChatSocket
       );
+      await ReadMessageAll(otherUserId);
     }
     go();
   }, [id]);
+
+
 
   useEffect(() => {
     SendFiles(sendImage, setInputPrew);
@@ -128,18 +132,7 @@ function Chats() {
     await ReadMessageAll(otherUserId);
   }
 
-  useEffect(() => {
-    if (filteredMessages.length === 0) {
-      const timeout = setTimeout(() => setIsLoading(false), 1000);
-      ReadMessage();
-      return () => clearTimeout(timeout);
-    }
-    if (filteredMessages.length > 0) {
-      const timeout = setTimeout(() => setIsLoading(true), 500);
-      ReadMessage();
-      return () => clearTimeout(timeout);
-    }
-  }, [filteredMessages]);
+
 
   function handleCancelModal() {
     setModel(false);
@@ -153,12 +146,13 @@ function Chats() {
     setMediaChatModal(false);
   }
 
-  function checkAnonimusUser(messageData) {
+  async function checkAnonimusUser(messageData) {
     try {
       if (!chatSocket || chatSocket.readyState !== WebSocket.OPEN) {
         throw new Error("WebSocket is not open.");
       }
       chatSocket.send(JSON.stringify(messageData));
+      await ReadMessageAll(otherUserId);
     } catch (error) {
       const urls = `${Parameters.url}chat/tokens/`;
       axios
@@ -219,7 +213,7 @@ function Chats() {
           action: "create_message",
           request_id: Parameters.request_id,
         };
-        checkAnonimusUser(messageData);
+        await checkAnonimusUser(messageData);
       } else if (sendDocument) {
         if (Array.isArray(sendDocument) && sendDocument.length > 0) {
           const uploadPromises = Array.from(sendDocument).map(
@@ -295,7 +289,7 @@ function Chats() {
       }
     } finally {
       setIsSending(false);
-      await ReadMessageAll(otherUserId);
+
       await UpdateActivity(Parameters.authUserId);
     }
   }

@@ -8,6 +8,7 @@ export async function ReadMessageAll(id) {
   };
 
   try {
+    console.log("read message All");
     const url = `${Parameters.url}chat/message-read-status/${id}/`;
     const response = await axios.get(url);
     if (response.data.has_unread) {

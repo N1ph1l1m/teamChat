@@ -111,6 +111,7 @@ function GroupChats() {
         setChatSocket
       );
     }
+
     go();
   }, [id]);
 

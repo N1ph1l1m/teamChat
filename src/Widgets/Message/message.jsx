@@ -11,6 +11,7 @@ import { MessagePhoto } from "../../Shared/messagePhoto/messagePhoto";
 import { MessageDocuments } from "../../Shared/messageDocuments/messageDocuments";
 import { ReadMessage } from "../../Entities/api/ReadMessage";
 import ForwardMessage from "../../Shared/ForwardMessage/ForwardMessage";
+import { Parameters } from "../../App/Parameters/Parametrs";
 
 export default function Message({
   messageId,
@@ -76,7 +77,11 @@ export default function Message({
       ReadMessage(forwardMessage.id);
     }
   }
-
+  function avatarLoad(){
+    if(!avatar.startsWith("http")){
+      return Parameters.url2 + avatar
+    }else return avatar
+  }
   return (
     <>
      {!nullMessage ?  <div
@@ -88,7 +93,7 @@ export default function Message({
       >
         <img
           className={styles.messageAvatar}
-          src={avatar}
+          src={avatarLoad()}
           alt={"avatar user"}
         />
         {onlyForward && (

@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD [ "set", "HOST=192.168.77.11","npm" , "start"]
+CMD ["npm" , "start"]

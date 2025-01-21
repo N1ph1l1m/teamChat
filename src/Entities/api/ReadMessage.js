@@ -7,6 +7,7 @@ export async function ReadMessage(id) {
   };
 
   try {
+    console.log("read message");
     const url = `${Parameters.url}chat/message-read/${id}/`;
     const response = await axios.put(url, reactionData);
     if (response.status === 201 || response.status === 200) {
