@@ -2,6 +2,7 @@ import axios from "axios";
 import { addRoomList } from "../../store/actions/addRoomList";
 import { Parameters } from "../../App/Parameters/Parametrs";
 import UpdateActivity from "./UpdateActivity";
+import { CheckAuthUser } from "./CheckAuthUser";
 
 export async function getData(url, setData) {
   let urls = Parameters.url + url;
@@ -160,9 +161,10 @@ export function webSocket(
   }
   socket.onclose = function (event) {
     console.log("Соединение закрыто. Попытка переподключиться...");
-    setTimeout(reconnectWebSocket(), reconnectInterval);
+    CheckAuthUser(Parameters.authUserId)
+    // setTimeout(reconnectWebSocket(), reconnectInterval);
 
-    reconnectInterval = Math.min(reconnectInterval * 2, 5000);
+    // reconnectInterval = Math.min(reconnectInterval * 2, 5000);
   };
 
   socket.onmessage = function async(e) {
