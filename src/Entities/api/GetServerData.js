@@ -99,6 +99,7 @@ export function GlobalWebSocket(token, dispatch) {
   let socket = new WebSocket(socketUrl);
 
   socket.onopen = () => {
+    console.log("open global webSocket");
     dispatch({ type: "OPEN_WEBSOCKET" });
     socket.send(
       JSON.stringify({
@@ -109,6 +110,7 @@ export function GlobalWebSocket(token, dispatch) {
   };
 
   socket.onclose = function (event) {
+    console.error("close global webSocket");
     dispatch({ type: "CLOSE_WEBSOCKET" });
   };
 

@@ -3,12 +3,9 @@ import { Parameters } from "../../App/Parameters/Parametrs";
 
 async function newToken(username){
     const user = {username};
-    console.log(user);
-
   const url = `${Parameters.url}chat/create-token/`;
     const response =  await axios.post(url,user);
     if(response.status === 201 || response.status === 200){
-        console.log(response.data);
         localStorage.setItem("token", response.data.key);
         Parameters.token = response.data.key;
         window.location.reload();
@@ -19,39 +16,21 @@ async function newToken(username){
 }
 export async function CheckAuthUser(id){
 try{
-    const urls = `${Parameters.url}chat/tokens/`;
-      await axios
-        .get(urls)
-        .then((response) => {
-          let data = response.data;
-          if(data.length === 0 ){
-            newToken(Parameters.authUser)
-          }else if(data.length >0){
-            data
-            .filter((user) => user.user === id)
-            .map((user) => {
+    const getTokens = `${Parameters.url}chat/tokens/`;
+    const response  = await axios.get(getTokens);
+    let  dataTokens = response.data
+    let filterToken =  dataTokens.filter((user) => user.user == id)
 
-                // if(user.key.length === 0){
-                //     console.log("New token 2 ");
-                //     newToken(Parameters.authUser)
-                // }
+    if(dataTokens.length === 0 ){
+      newToken(Parameters.authUser)
+    }else if(filterToken.length === 0){
+      newToken(Parameters.authUser)
+    }else if(filterToken.length  !== 0 && filterToken.key  !== Parameters.token){
+        newToken(Parameters.authUser)
+    }else{
+          console.error('Error')
+    }
 
-              if (user.key !== Parameters.token) console.log("Смена токена");
-              localStorage.setItem("token", user.key);
-              Parameters.token = user.key;
-              window.location.reload();
-            });
-          }else{
-            console.error('error');
-          }
-
-        })
-        .catch((err) => {
-          console.error(
-            "Error fetching token:",
-            err.response?.data || err.message
-          );
-        });
 }catch(error){
     console.error(error)
 }

@@ -115,15 +115,20 @@ function GroupChats() {
     go();
   }, [id]);
 
+ useEffect(() => {
+    setFilteredMessage(
+      messages.filter((msg) => msg.room && msg.room.id === parseInt(id))
+    );
+    if (filteredMessages.length === 0) {
+      const timeout = setTimeout(() => setIsLoading(false), 500);
+      return () => clearTimeout(timeout);
+    }
+  }, [messages]);
+
   useEffect(() => {
     SendFiles(sendImage, setInputPrew);
   }, [sendImage]);
 
-  useEffect(() => {
-    setFilteredMessage(
-      messages.filter((msg) => msg.room && msg.room.id === parseInt(id))
-    );
-  }, [messages]);
   useEffect(() => {
     SendFiles(sendDocument, setInputPrew);
   }, [sendDocument]);
@@ -138,11 +143,7 @@ function GroupChats() {
       ReadMessage();
       return () => clearTimeout(timeout);
     }
-    if (filteredMessages.length > 0) {
-      const timeout = setTimeout(() => setIsLoading(true), 500);
-      ReadMessage();
-      return () => clearTimeout(timeout);
-    }
+
   }, [filteredMessages]);
 
   function handleCancelModal() {

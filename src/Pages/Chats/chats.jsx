@@ -114,24 +114,34 @@ function Chats() {
 
 
 
-  useEffect(() => {
-    SendFiles(sendImage, setInputPrew);
-  }, [sendImage]);
+  async function ReadMessage() {
+    await ReadMessageAll(otherUserId);
+  }
 
   useEffect(() => {
     setFilteredMessage(
       messages.filter((msg) => msg.room && msg.room.id === parseInt(id))
     );
+
+    if (filteredMessages.length === 0) {
+      const timeout = setTimeout(() => setIsLoading(false), 500);
+      return () => clearTimeout(timeout);
+    }else{
+      ReadMessage();
+    }
+
+
   }, [messages]);
+
+
+  useEffect(() => {
+    SendFiles(sendImage, setInputPrew);
+  }, [sendImage]);
+
 
   useEffect(() => {
     SendFiles(sendDocument, setInputPrew);
   }, [sendDocument]);
-
-  async function ReadMessage() {
-    await ReadMessageAll(otherUserId);
-  }
-
 
 
   function handleCancelModal() {
