@@ -522,6 +522,7 @@ function Chats() {
         setMediaChatModal(true);
       }}
       status
+      menu
     />
   ) : (
     ""

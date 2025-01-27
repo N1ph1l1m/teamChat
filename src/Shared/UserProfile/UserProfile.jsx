@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import styles from "../../App/Styles/userprofile.module.css";
 import { StatusUser } from "../statusUser/statusUser";
-import { useNavigate } from "react-router";
+
 import Icon from "../icon/icon";
 import { IoIosMore } from "react-icons/io";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { FaPaperclip } from "react-icons/fa";
+
 export const UserProfile = ({
   userAvatar,
   nameRoom,
   setModal,
   userActive,
   status,
+  menu,
 }) => {
   const [showMenu, setMenu] = useState(false);
-  let navigate = useNavigate();
-
   return (
     <div className={styles.userProfileWrap}>
       <div className={styles.userProfileItems}>
@@ -45,7 +45,7 @@ export const UserProfile = ({
             <ul className={styles.menuItemWrap}>
               <li className={styles.menuItem}
                 onClick={() => {
-                  navigate("/");
+                  // navigate("/");
                 }}
               >
                 <IoMdCloseCircleOutline
@@ -70,11 +70,12 @@ export const UserProfile = ({
         ) : (
           false
         )}
-        <IoIosMore
+        {menu ?   <IoIosMore
           style={{ marginRight: "10px", cursor: "pointer" }}
           size="25"
           color="gray"
-        />
+        /> : null }
+
       </Icon>
     </div>
   );

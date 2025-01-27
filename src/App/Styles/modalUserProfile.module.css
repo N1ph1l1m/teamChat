@@ -1,0 +1,83 @@
+.modalOverlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+  }
+
+  .modalWrap {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    max-height: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: content-box;
+    overflow: hidden;
+    border:1px solid white;
+    border-radius:5px;
+
+  }
+  .headerWrap{
+    background-color:#ffffff;
+    margin-bottom: 8px;
+    border-bottom: 3px solid #cccbcb ;
+  }
+  .header{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items:center;
+    height: 50px;
+    padding: 5px;
+    margin-bottom: 5px;
+
+  }
+  .header h1{
+    font-size: 18px;
+    color:rgb(53, 53, 53);
+  }
+  .header i {
+    cursor:pointer;
+    margin-top: 7px;
+  }
+  .userProfile{
+    margin-bottom: 10px;
+
+  }
+
+  .modalBody {
+    flex-grow: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background-color:#ffffff;
+  }
+  .modalBody ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .listProfile{
+    margin: 0 0 10px 10px;
+    padding: 5px;
+    font-size: 16px;
+    width: 250px;
+    height: 30px;
+    cursor:pointer;
+    display: flex;
+    align-items:center;
+    margin-bottom: 10px;
+  }
+
+  .listProfile span{
+    margin-left: 10px;
+    color:rgb(53, 53, 53);
+  }

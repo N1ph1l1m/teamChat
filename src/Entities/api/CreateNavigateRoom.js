@@ -36,6 +36,7 @@ async function createNavigate(contact, navigate) {
 }
 
 export function linkToMessage(userlist, id, Parameters, roomList, navigate) {
+  // console.log(id)
   const contact = userlist.find((user) => user.id === id);
 
   const authUsr = userlist.find(

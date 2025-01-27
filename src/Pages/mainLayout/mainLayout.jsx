@@ -27,11 +27,15 @@ import {
   getData,
   userAuthId,
 } from "../../Entities/api/GetServerData.js";
-
+import { ModalUserProfile } from "../../Widgets/ModalUserProfile/ModalUserProfile.jsx";
+import ModalMediaChat from "../../Widgets/modalMediaChat/modalMediaChat.jsx";
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [userProfile,setUserProfile] = useState("")
   const [isOpenModalCreateGroup, setModalCreateGroup] = useState(false);
+  const [isOpenModalUserProfile,setOpenModalUserProfile] = useState(false);
+    const [mediaChatModal, setMediaChatModal] = useState(false);
   const [groupName, setGroupName] = useState();
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [avatarGroup, setAvatarGroup] = useState("");
@@ -43,6 +47,7 @@ function MainLayout() {
   const [chatGroupList, setChatGroupList] = useState(false);
   const [contactsList, setContactsList] = useState(false);
   const [isSearch, setIsSearch] = useState();
+    const [filteredMessages, setFilteredMessage] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -71,12 +76,30 @@ function MainLayout() {
 
   function handleCancel() {
     setModalCreateGroup(false);
+    setOpenModalUserProfile(false)
+    setMediaChatModal(false)
     setSelectedUsers([]);
     setAvatarGroup("");
     setGroupName("");
+
+
   }
   function showModalGroupChat() {
     setModalCreateGroup(true);
+  }
+  function showModalUserProfile(id){
+    setUserProfile(id)
+    setFilteredMessage(() =>
+      roomList.filter((room) => {
+        return (
+          room.current_users.length === 2 &&
+          room.current_users.some((user) => user.id === userProfile) &&
+          room.current_users.some((user) => user.id === Parameters.authUserId)
+        );
+      })
+    );
+    setOpenModalUserProfile(true);
+
   }
 
   const handleInputChangeName = (e) => {
@@ -199,7 +222,11 @@ function MainLayout() {
           {userlist && userlist.length === 0 ? (
             <RoomListLoading />
           ) : (
-            <UserList userlist={userlist} roomList={roomList} />
+            <UserList
+              userlist={userlist}
+              roomList={roomList}
+              setUserProfile={showModalUserProfile}
+              />
           )}{" "}
         </>
       );
@@ -238,6 +265,20 @@ function MainLayout() {
           handleCheckboxChange={handleCheckboxChange}
           Parameters={Parameters}
         />
+        <ModalUserProfile
+          isOpen={isOpenModalUserProfile}
+          onCancel={()=>{console.log(filteredMessages)}}
+          userData = {userlist}
+          userId  = {userProfile}
+          userlist={userlist}
+          roomList={roomList}
+        />
+
+         <ModalMediaChat
+                isOpen={mediaChatModal}
+                onCancel={handleCancel}
+                media={filteredMessages}
+              />
 
         <div className={styles.contentWrap}>
           <div className={styles.navWrap}>

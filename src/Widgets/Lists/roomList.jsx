@@ -203,7 +203,7 @@ export function GroupRoomList({
   );
 }
 
- export  const UserList = ({userlist , roomList}) => {
+ export  const UserList = ({userlist , roomList, setUserProfile}) => {
     const navigate = useNavigate();
     return (
       <>
@@ -217,15 +217,20 @@ export function GroupRoomList({
               <div
                 className={styles.roomListChats}
                 key={index}
-                onClick={() => {
-                  linkToMessage(
-                    userlist,
-                    user.id,
-                    Parameters,
-                    roomList,
-                    navigate
-                  );
-                }}
+                onClick={()=>setUserProfile(user.id)
+
+                //   () =>
+                // {
+
+                //   // linkToMessage(
+                //   //   userlist,
+                //   //   user.id,
+                //   //   Parameters,
+                //   //   roomList,
+                //   //   navigate
+                //   // );
+                // }
+                }
               >
                 <UserListItem
                   icon={

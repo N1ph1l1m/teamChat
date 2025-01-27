@@ -1,6 +1,6 @@
 import { UserProfile } from "../../Shared/UserProfile/UserProfile";
 
-export const ChatHeader = ({ room, authUserId, setModal, status }) => {
+export const ChatHeader = ({ room, authUserId, setModal, status, menu}) => {
   try {
     let nameRoom = "";
     let userAvatar = "";
@@ -20,6 +20,7 @@ export const ChatHeader = ({ room, authUserId, setModal, status }) => {
         setModal={setModal}
         userActive={userActive}
         status={status}
+        menu = {menu}
       />
     );
   } catch (error) {
