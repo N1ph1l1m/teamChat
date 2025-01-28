@@ -22,6 +22,7 @@ import ModalForwardMessage from "../../Widgets/ModalForwardMessage/modalForwardM
 import ModalSendMessage from "../../Widgets/modalSendMessage/modalSendMessage";
 import { RoomList } from "../../Widgets/Lists/roomList.jsx";
 import { Loader } from "../../Shared/loader/loader";
+
 import {
   handlerInputTextChange,
   handlerInputImages,
@@ -46,6 +47,8 @@ function Chats() {
   const ROOM_PK = id;
   const [authUserId, setAuthUserId] = useState("");
   const [messages, setMessages] = useState([]);
+  const [isMedia, setMedia] = useState(true);
+  const [isDocuments, setDocuments] = useState(false);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [sendImage, setSendImage] = useState("");
@@ -598,6 +601,10 @@ function Chats() {
         isOpen={mediaChatModal}
         onCancel={handleCancelModal}
         media={filteredMessages}
+        isMedia={isMedia}
+        setMedia={setMedia}
+        isDocuments={isDocuments}
+        setDocuments={setDocuments}
       />
 
       <ChatArea

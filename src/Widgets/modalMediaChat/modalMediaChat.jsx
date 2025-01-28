@@ -27,9 +27,8 @@ const MediaRender = ({ media, modalPhoto }) => {
   const allPhotos = Array.isArray(media)
     ? media
         .filter((item) => item && item.images.length !== 0)
-        .flatMap((item) => item.images)
+        .flatMap((item,index) => item.images)
     : [];
-  console.log(allPhotos.length);
   return (
     <>
       {allPhotos && allPhotos.length === 0 ? (
@@ -38,8 +37,8 @@ const MediaRender = ({ media, modalPhoto }) => {
           icon={<MdImageNotSupported color="gray" size="30" />}
         />
       ) : (
-        Object.entries(sortMedia(allPhotos)).map(([monthYear, photos]) => (
-          <div className={styles.groupPhoto}>
+        Object.entries(sortMedia(allPhotos)).map(([monthYear, photos],index) => (
+          <div className={styles.groupPhoto} key={index}>
             <h3>{monthYear}</h3>
             <div className={styles.mediaImgWrap}>
               {photos.map((img, index) => (
@@ -75,8 +74,8 @@ const DocumentsRender = ({ media }) => {
           icon={<TbNoteOff color="gray" size="30" />}
         />
       ) : (
-        Object.entries(sortMedia(allDocuments)).map(([monthYear]) => (
-          <div>
+        Object.entries(sortMedia(allDocuments)).map(([monthYear],index) => (
+          <div key={index}>
             <h3>{monthYear}</h3>
             <MessageDocuments documents={allDocuments} />
           </div>
@@ -86,14 +85,12 @@ const DocumentsRender = ({ media }) => {
   );
 };
 
-const ModalMediaChat = ({ isOpen, onCancel, media, photoData }) => {
-  const [isMedia, setMedia] = useState(true);
-  const [isDocuments, setDocuments] = useState(false);
-  const mediaShow = isMedia && !isDocuments;
-  const documentsShow = !isMedia && isDocuments;
+const ModalMediaChat = ({ isOpen, onCancel, media, photoData , isMedia , setMedia, isDocuments,setDocuments }) => {
   const [modalPhoto, setModalPhoto] = useState("");
   const [photoModal, setPhotoModal] = useState(false);
   const [currentPhotoId, setCurrentPhotoId] = useState(0);
+  const mediaShow = isMedia && !isDocuments;
+  const documentsShow = !isMedia && isDocuments;
 
   const modalPh = (photoData) => {
     setCurrentPhotoId(photoData.id);

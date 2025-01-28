@@ -13,7 +13,7 @@
     top: 50%;
     left: 50%;
     width: 300px;
-    height: 300px;
+    overflow: auto;
     transform: translate(-50%, -50%);
     background-color: #fff;
     max-height: 90%;
@@ -23,7 +23,7 @@
     box-sizing: content-box;
     overflow: hidden;
     border:1px solid white;
-    border-radius:5px;
+    border-radius:10px;
 
   }
   .headerWrap{
@@ -41,7 +41,7 @@
     margin-bottom: 5px;
 
   }
-  .header h1{
+  .title{
     font-size: 18px;
     color:rgb(53, 53, 53);
   }
@@ -57,8 +57,9 @@
   .modalBody {
     flex-grow: 1;
     padding: 10px;
-    overflow-y: auto;
+    overflow-y: auto hidden;
     background-color:#ffffff;
+
   }
   .modalBody ul {
     list-style: none;
@@ -81,3 +82,18 @@
     margin-left: 10px;
     color:rgb(53, 53, 53);
   }
+  .mediaMargin{
+    margin-bottom: 8px;
+    border-bottom: 3px solid #cccbcb ;
+  }
+.usersWrap{
+  border:1px solid blue;
+display: flex;
+flex-direction: column;
+justify-content: flex-start;
+}
+.usersAvatar{
+  width: 30px;
+  height: 30px;
+  border-radius:50px;
+}

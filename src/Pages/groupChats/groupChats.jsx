@@ -21,6 +21,7 @@ import ModalForwardMessage from "../../Widgets/ModalForwardMessage/modalForwardM
 import { RoomList } from "../../Widgets/Lists/roomList";
 import { Loader } from "../../Shared/loader/loader";
 import { GroupRoomList } from "../../Widgets/Lists/roomList";
+import { getPluralForm } from "../../Entities/PluralForm/getPluralForm";
 import {
   handlerInputTextChange,
   handlerInputImages,
@@ -42,6 +43,7 @@ import ForwardMessageMenu from "../../Shared/ForwardMessageMenu/ForwardMessageMe
 import ModalMediaChat from "../../Widgets/modalMediaChat/modalMediaChat";
 import { NoMessages } from "../../Shared/NoMessages/NoMessages";
 import { sendReaction } from "../../Entities/api/ReactionSendDel";
+import { ModalGroupChatInfo } from "../../Widgets/ModalUserProfile/ModalUserProfile";
 
 function GroupChats() {
   const dispatch = useDispatch();
@@ -50,6 +52,8 @@ function GroupChats() {
   const [authUserId, setAuthUserId] = useState("");
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
+  const [isMedia, setMedia] = useState(true);
+  const [isDocuments, setDocuments] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [sendImage, setSendImage] = useState("");
   const [sendDocument, setSendDocument] = useState("");
@@ -62,6 +66,7 @@ function GroupChats() {
   const [otherUserAvatar, setOtherUserAvatar] = useState(null);
   const [authUser, setAuthUser] = useState([]);
   const [modal, setModel] = useState(false);
+  const [isOpenModalGroupInfo,setOpenGroupInfo] = useState(false);
   const [photoModal, setPhotoModal] = useState(false);
   const [mediaChatModal, setMediaChatModal] = useState(false);
   const [modalPhoto, setModalPhoto] = useState("");
@@ -156,6 +161,7 @@ function GroupChats() {
     setIsSelectedMessage(false);
     setSelectRoomSendForward("");
     setMediaChatModal(false);
+    setOpenGroupInfo(false);
   }
 
   function checkAnonimusUser(messageData) {
@@ -462,6 +468,17 @@ function GroupChats() {
     });
   };
 
+  function handleOpenImagesMedia(){
+    setMediaChatModal(true);
+    setMedia(true)
+    setDocuments(false)
+  }
+
+  function handleOpenDocumentsMedia(){
+    setMediaChatModal(true);
+    setDocuments(true)
+    setMedia(false)
+  }
   const MessageGroup = ({
     msg,
     photoData,
@@ -511,7 +528,7 @@ function GroupChats() {
       </div>
     );
   };
-
+  let num  = 3
   const titleName = roomList ? (
     <GroupChatHeader
       room={roomList}
@@ -519,6 +536,9 @@ function GroupChats() {
       setModal={() => {
         setMediaChatModal(true);
       }}
+      menu
+      users={`${num} ${getPluralForm(num,'участник' , 'участника' , 'участников')}`}
+      showModalInfo = {()=>{setOpenGroupInfo(true)}}
     />
   ) : (
     ""
@@ -593,6 +613,17 @@ function GroupChats() {
         isOpen={mediaChatModal}
         onCancel={handleCancelModal}
         media={filteredMessages}
+        isMedia={isMedia}
+        setMedia={setMedia}
+        isDocuments={isDocuments}
+        setDocuments={setDocuments}
+      />
+      <ModalGroupChatInfo
+        isOpen={isOpenModalGroupInfo}
+        onCancel={handleCancelModal}
+        roomList={roomList}
+        documents={handleOpenDocumentsMedia}
+        images={handleOpenImagesMedia}
       />
 
       <ChatArea

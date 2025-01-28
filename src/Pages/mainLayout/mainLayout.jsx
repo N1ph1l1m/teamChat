@@ -29,13 +29,16 @@ import {
 } from "../../Entities/api/GetServerData.js";
 import { ModalUserProfile } from "../../Widgets/ModalUserProfile/ModalUserProfile.jsx";
 import ModalMediaChat from "../../Widgets/modalMediaChat/modalMediaChat.jsx";
+import { TbCircleLetterG } from "react-icons/tb";
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [userProfile,setUserProfile] = useState("")
   const [isOpenModalCreateGroup, setModalCreateGroup] = useState(false);
   const [isOpenModalUserProfile,setOpenModalUserProfile] = useState(false);
-    const [mediaChatModal, setMediaChatModal] = useState(false);
+  const [mediaChatModal, setMediaChatModal] = useState(false);
+  const [isMedia, setMedia] = useState(false);
+  const [isDocuments, setDocuments] = useState(true);
   const [groupName, setGroupName] = useState();
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [avatarGroup, setAvatarGroup] = useState("");
@@ -74,6 +77,22 @@ function MainLayout() {
     GlobalWebSocket(Parameters.token, dispatch);
   }, [chatGroupList]);
 
+  useEffect(()=>{
+    if(userProfile){
+      setFilteredMessage(() =>
+        roomList.filter((room) => {
+          return (
+            room.current_users.length === 2
+            &&
+            room.current_users.some((user) => user.id === userProfile)
+            &&
+            room.current_users.some((user) => user.id === Parameters.authUserId   )
+          )
+        }).map((room)=>room.message)
+      );
+    }
+  },[userProfile,Parameters.authUserId,roomList]);
+
   function handleCancel() {
     setModalCreateGroup(false);
     setOpenModalUserProfile(false)
@@ -81,24 +100,13 @@ function MainLayout() {
     setSelectedUsers([]);
     setAvatarGroup("");
     setGroupName("");
-
-
   }
   function showModalGroupChat() {
     setModalCreateGroup(true);
   }
   function showModalUserProfile(id){
-    setUserProfile(id)
-    setFilteredMessage(() =>
-      roomList.filter((room) => {
-        return (
-          room.current_users.length === 2 &&
-          room.current_users.some((user) => user.id === userProfile) &&
-          room.current_users.some((user) => user.id === Parameters.authUserId)
-        );
-      })
-    );
-    setOpenModalUserProfile(true);
+   setUserProfile(id)
+  setOpenModalUserProfile(true);
 
   }
 
@@ -237,6 +245,31 @@ function MainLayout() {
     set2(false);
     set3(false);
   }
+  function showMediaImages(){
+    setUserProfile(false)
+    setMediaChatModal(true)
+    setMedia(true)
+    setDocuments(false)
+  }
+  function showMediaDocuments(){
+    setUserProfile(false)
+    setMediaChatModal(true)
+    setMedia(false)
+    setDocuments(true)
+  }
+  function countFiles(param){
+    if (!filteredMessages || !Array.isArray(filteredMessages[0])) {
+      return 0;
+    }
+
+    return filteredMessages[0].reduce((total, element) => {
+      if (element.images && Array.isArray(element[param])) {
+        return total + element[param].length;
+      }
+      return total;
+    }, 0);
+
+  }
 
   return (
     <>
@@ -267,17 +300,26 @@ function MainLayout() {
         />
         <ModalUserProfile
           isOpen={isOpenModalUserProfile}
-          onCancel={()=>{console.log(filteredMessages)}}
+          onCancel={handleCancel}
           userData = {userlist}
           userId  = {userProfile}
           userlist={userlist}
           roomList={roomList}
+          images={showMediaImages}
+          documents={showMediaDocuments}
+          countImages={countFiles('images')}
+          countDocuments={countFiles('documents')}
         />
 
          <ModalMediaChat
                 isOpen={mediaChatModal}
                 onCancel={handleCancel}
-                media={filteredMessages}
+                media={filteredMessages[0]}
+                isMedia={isMedia}
+                setMedia={setMedia}
+                isDocuments={isDocuments}
+                setDocuments={setDocuments}
+
               />
 
         <div className={styles.contentWrap}>

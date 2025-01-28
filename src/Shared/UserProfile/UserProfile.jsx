@@ -7,18 +7,22 @@ import { IoIosMore } from "react-icons/io";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { FaPaperclip } from "react-icons/fa";
 
+
+
 export const UserProfile = ({
   userAvatar,
   nameRoom,
   setModal,
   userActive,
   status,
+  users,
   menu,
+  showModalInfo,
 }) => {
   const [showMenu, setMenu] = useState(false);
   return (
-    <div className={styles.userProfileWrap}>
-      <div className={styles.userProfileItems}>
+    <div  className={styles.userProfileWrap}>
+      <div onClick = {showModalInfo} className={styles.userProfileItems}>
         <img className={styles.userAvatar} src={userAvatar} alt="User Avatar" />
         <div className={styles.userTitle}>
           <p className={styles.titleUserName}>{nameRoom}</p>
@@ -29,6 +33,16 @@ export const UserProfile = ({
               offline={
                 <p className={styles.statusOnline} style={{ color: "gray" }}>
                   Offline
+                </p>
+              }
+            />
+          ) : null}
+          {users ? (
+            <StatusUser
+              status={userActive}
+              offline={
+                <p className={styles.statusOnline} style={{ color: "gray" }}>
+                  {users}
                 </p>
               }
             />
