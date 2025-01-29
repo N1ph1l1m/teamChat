@@ -164,8 +164,8 @@ function Chats() {
       if (!chatSocket || chatSocket.readyState !== WebSocket.OPEN) {
         throw new Error("WebSocket is not open.");
       }
-      chatSocket.send(JSON.stringify(messageData));
-      await ReadMessageAll(otherUserId);
+       await chatSocket.send(JSON.stringify(messageData));
+      // await ReadMessageAll(otherUserId);
     } catch (error) {
       const urls = `${Parameters.url}chat/tokens/`;
       axios
@@ -226,7 +226,9 @@ function Chats() {
           action: "create_message",
           request_id: Parameters.request_id,
         };
+        console.log(messageData);
         await checkAnonimusUser(messageData);
+
       } else if (sendDocument) {
         if (Array.isArray(sendDocument) && sendDocument.length > 0) {
           const uploadPromises = Array.from(sendDocument).map(
@@ -280,7 +282,7 @@ function Chats() {
           request_id: Parameters.request_id,
           reply_to: replyMessage ? replyMessage : null,
         };
-
+        console.log(messageData);
         checkAnonimusUser(messageData);
       }
       setMessage("");

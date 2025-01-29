@@ -157,7 +157,6 @@ function MainLayout() {
     );
 
     if (chatRender) {
-      console.log(filterRoomList)
       return (
         <>
           <HeaderPanel title={"Чаты"} />

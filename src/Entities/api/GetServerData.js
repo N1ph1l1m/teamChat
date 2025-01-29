@@ -2,7 +2,6 @@ import axios from "axios";
 import { addRoomList } from "../../store/actions/addRoomList";
 import { Parameters } from "../../App/Parameters/Parametrs";
 import UpdateActivity from "./UpdateActivity";
-import { CheckAuthUser } from "./CheckAuthUser";
 
 export async function getData(url, setData) {
   let urls = Parameters.url + url;
@@ -99,7 +98,6 @@ export function GlobalWebSocket(token, dispatch) {
   let socket = new WebSocket(socketUrl);
 
   socket.onopen = () => {
-    console.log("open global webSocket");
     dispatch({ type: "OPEN_WEBSOCKET" });
     socket.send(
       JSON.stringify({
@@ -110,7 +108,6 @@ export function GlobalWebSocket(token, dispatch) {
   };
 
   socket.onclose = function (event) {
-    console.error("close global webSocket");
     dispatch({ type: "CLOSE_WEBSOCKET" });
   };
 
@@ -163,31 +160,32 @@ export function webSocket(
   }
   socket.onclose = function (event) {
     console.log("Соединение закрыто. Попытка переподключиться...");
-    CheckAuthUser(Parameters.authUserId)
-    // setTimeout(reconnectWebSocket(), reconnectInterval);
+    setTimeout(reconnectWebSocket(), reconnectInterval);
 
-    // reconnectInterval = Math.min(reconnectInterval * 2, 5000);
+    reconnectInterval = Math.min(reconnectInterval * 2, 5000);
   };
 
   socket.onmessage = function async(e) {
     const data = JSON.parse(e.data);
+    // console.log("Полученные данные WebSocket:", data);
     switch (data.action) {
       case "create":
+        console.log("create")
         setMessages((prevMessages) => {
-          const messageExists = prevMessages.some(
-            (msg) => msg.id === data.data.id
-          );
-
+          const messageExists = prevMessages.some((msg) => msg.id === data.data.id);
           if (!messageExists) {
             return [...prevMessages, data.data];
           }
           return prevMessages;
         });
 
+
+        // getMessageData(setMessages);
+
         break;
       case "update":
+        console.log("update")
         setMessages((prevMessages) => {
-          console.log("onMessage update");
           const updatedMessages = prevMessages.map((msg) => {
             if (msg.id === data.data.id) {
               const updatedMessage = { ...msg, ...data.data };
