@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styles from "../../App/Styles/userprofile.module.css";
 import { StatusUser } from "../statusUser/statusUser";
-
 import Icon from "../icon/icon";
 import { IoIosMore } from "react-icons/io";
 import { IoMdCloseCircleOutline } from "react-icons/io";
@@ -29,11 +28,12 @@ export const UserProfile = ({
           {status ? (
             <StatusUser
               status={userActive}
-              online={<p className={styles.statusOnline}>Online</p>}
+              online={<p className={styles.statusOnline}> Online</p>}
               offline={
                 <p className={styles.statusOnline} style={{ color: "gray" }}>
-                  Offline
+                  был(а) недавно
                 </p>
+
               }
             />
           ) : null}

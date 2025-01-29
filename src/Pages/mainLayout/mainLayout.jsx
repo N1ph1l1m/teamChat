@@ -60,6 +60,7 @@ function MainLayout() {
       await getData("users/", setUserList);
       userAuthId(userlist);
     }
+
     render();
   }, []);
 
@@ -156,6 +157,7 @@ function MainLayout() {
     );
 
     if (chatRender) {
+      console.log(filterRoomList)
       return (
         <>
           <HeaderPanel title={"Чаты"} />
@@ -188,7 +190,7 @@ function MainLayout() {
             </div>
           ) : (
             <RoomList
-              roomList={roomList}
+              roomList={filterRoomList}
               link
               authUser={Parameters.authUser}
               userLogo={userLogo}

@@ -2,7 +2,7 @@ import axios from "axios";
 import { Parameters } from "../../App/Parameters/Parametrs";
 async function CreateRoom(username) {
   let token = localStorage.getItem("token");
-  let urls = `${Parameters.url}/chat/room/`;
+  let urls = `${Parameters.url}chat/room/`;
   return axios
     .post(
       urls,
@@ -36,7 +36,6 @@ async function createNavigate(contact, navigate) {
 }
 
 export function linkToMessage(userlist, id, Parameters, roomList, navigate) {
-  // console.log(id)
   const contact = userlist.find((user) => user.id === id);
 
   const authUsr = userlist.find(

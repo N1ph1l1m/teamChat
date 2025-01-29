@@ -13,7 +13,8 @@
     top: 50%;
     left: 50%;
     width: 300px;
-    overflow: auto;
+    overflow: auto hidden;
+    overflow-x: hidden;
     transform: translate(-50%, -50%);
     background-color: #fff;
     max-height: 90%;
@@ -21,7 +22,6 @@
     flex-direction: column;
     justify-content: space-between;
     box-sizing: content-box;
-    overflow: hidden;
     border:1px solid white;
     border-radius:10px;
 
@@ -54,10 +54,10 @@
 
   }
 
-  .modalBody {
+  .modalBody, .usersWrap > ul {
     flex-grow: 1;
     padding: 10px;
-    overflow-y: auto hidden;
+    /* overflow-y: auto hidden; */
     background-color:#ffffff;
 
   }
@@ -76,6 +76,7 @@
     display: flex;
     align-items:center;
     margin-bottom: 10px;
+
   }
 
   .listProfile span{
@@ -87,10 +88,17 @@
     border-bottom: 3px solid #cccbcb ;
   }
 .usersWrap{
-  border:1px solid blue;
-display: flex;
-flex-direction: column;
-justify-content: flex-start;
+  display: flex;
+  flex-direction: column;
+
+}
+.usersWrap ul{
+  margin-top: -10px;
+  overflow-y: scroll;
+  max-height: 200px;
+}
+.usersWrap ul::-webkit-scrollbar {
+  display: none;
 }
 .usersAvatar{
   width: 30px;

@@ -32,7 +32,7 @@ export const ModalUserProfile = ({
             <div className={styles.modalWrap}>
               <div className={styles.headerWrap}>
                 <div className={styles.header}>
-                  <h1>Информация</h1>
+                  <h1 className={styles.title}>Информация</h1>
                   <Icon>
                     <IoIosClose
                       className={styles.closeModel}
@@ -216,20 +216,21 @@ function countFiles(param){
                   </li>
                 </ul>
               </div>
+
                 <div className={styles.usersWrap}>
                 <h1 className={styles.title} >Участники</h1>
                 <ul>
-                    {roomList.current_users.map((user)=>{
+                    {roomList.current_users.map((user,index)=>{
                       return(
                         <>
                         <li
                     className={styles.listProfile}
+                    key={index}
                     onClick={() => {
                       navigate(`/grchats/${roomList.pk}`);
-                      onCancel();
                     }}
                   >
-                    <img className={styles.usersAvatar} src ={user.photo}/>
+                    <img className={styles.usersAvatar} src ={user.photo} alt={`userGroup${index}`}/>
 
                     <span>{user.username}</span>
                   </li>
