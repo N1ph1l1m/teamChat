@@ -1,13 +1,19 @@
 import axios from "axios";
 import { Parameters } from "../../App/Parameters/Parametrs";
+import { addRoomList } from "../../store/actions/addRoomList";
 
-export default function CreateGroupRoom(groupName, avatar, currentUsers , handleCancel) {
-   if(!groupName){
-     alert("Название группы не должно быть пустым")
-     return false
-   }else if(currentUsers.length === 0 ){
-    alert("Список пользователей не должно быть пустым")
-  }else{
+export default function CreateGroupRoom(
+  groupName,
+  avatar,
+  currentUsers,
+  handleCancel,
+) {
+  if (!groupName) {
+    alert("Название группы не должно быть пустым");
+    return false;
+  } else if (currentUsers.length === 0) {
+    alert("Список пользователей не должно быть пустым");
+  } else {
     const token = Parameters.token;
     const url = `${Parameters.url}chat/create-groupchat/`;
 
@@ -27,7 +33,7 @@ export default function CreateGroupRoom(groupName, avatar, currentUsers , handle
       })
       .then((response) => {
         if (response.status === 200 || response.status === 201) {
-        handleCancel()
+          handleCancel();
         } else {
           console.error("Error:", response.status, response.statusText);
         }
@@ -43,9 +49,5 @@ export default function CreateGroupRoom(groupName, avatar, currentUsers , handle
           console.error("Ошибка при настройке запроса:", error.message);
         }
       });
-
-
   }
-
-
 }

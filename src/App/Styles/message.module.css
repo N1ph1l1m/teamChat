@@ -21,7 +21,7 @@
   position: relative;
   display: inline-block;
   max-width: 350px;
-  min-width: 60px;
+  min-width: 160px;
   min-height: 30px;
   padding: 10px;
   border-radius: 20px;
@@ -41,9 +41,9 @@
   border-bottom-left-radius: 0px;
 }
 
-.received .messageBubbleText {
+.received .messageBubbleText{
   background-color: #d3cdcd;
-  border-bottom-left-radius: 0;
+  border-bottom-left-radius: 0px;
   color: black;
 }
 .messageBubbleDocuments {
@@ -70,7 +70,6 @@
 }
 
 .messageBublePhoto {
-
   display: flex;
   justify-content: flex-end;
   flex-direction: row;

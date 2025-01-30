@@ -1,12 +1,25 @@
 .bubbleTimeWrap {
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-    position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items:flex-end;
+  position: relative;
 
 }
+.reactionWrap{
 
-  .bubbleTimeText {
+display: flex;
+flex-direction: row;
+
+}
+.reaction{
+  position: absolute;
+  right: 70px;
+  width: 100px;
+  display: flex;
+  justify-content: flex-end;
+  top: -11px;
+}
+.bubbleTimeText {
     font-size: 12px;
   }
 .isRead{
@@ -16,10 +29,12 @@
 
 
 .timeCheckWrap{
+  /* border:2px solid green; */
   display: flex;
   flex-direction: row;
   align-items:center;
   width: 60px;
   justify-content: space-around;
- height: 20px;
+  height: 20px;
+  position: relative;
 }

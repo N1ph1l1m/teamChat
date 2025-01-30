@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import styles from "../../App/Styles/userprofile.module.css";
 import { StatusUser } from "../statusUser/statusUser";
 import Icon from "../icon/icon";
+import { useNavigate } from "react-router";
 import { IoIosMore } from "react-icons/io";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { FaPaperclip } from "react-icons/fa";
-
-
-
 export const UserProfile = ({
   userAvatar,
   nameRoom,
@@ -19,9 +17,10 @@ export const UserProfile = ({
   showModalInfo,
 }) => {
   const [showMenu, setMenu] = useState(false);
+  let navigate = useNavigate();
   return (
-    <div  className={styles.userProfileWrap}>
-      <div onClick = {showModalInfo} className={styles.userProfileItems}>
+    <div className={styles.userProfileWrap}>
+      <div onClick={showModalInfo} className={styles.userProfileItems}>
         <img className={styles.userAvatar} src={userAvatar} alt="User Avatar" />
         <div className={styles.userTitle}>
           <p className={styles.titleUserName}>{nameRoom}</p>
@@ -33,7 +32,6 @@ export const UserProfile = ({
                 <p className={styles.statusOnline} style={{ color: "gray" }}>
                   был(а) недавно
                 </p>
-
               }
             />
           ) : null}
@@ -57,9 +55,10 @@ export const UserProfile = ({
         {showMenu ? (
           <div className={styles.menuChat}>
             <ul className={styles.menuItemWrap}>
-              <li className={styles.menuItem}
+              <li
+                className={styles.menuItem}
                 onClick={() => {
-                  // navigate("/");
+                  navigate("/");
                 }}
               >
                 <IoMdCloseCircleOutline
@@ -67,11 +66,9 @@ export const UserProfile = ({
                   style={{ marginRight: "5px" }}
                   color="rgb(131, 130, 130)"
                 />
-                 Закрыть
+                Закрыть
               </li>
-              <li className={styles.menuItem}
-                onClick={setModal}
-                >
+              <li className={styles.menuItem} onClick={setModal}>
                 <FaPaperclip
                   size="20"
                   style={{ marginRight: "5px" }}
@@ -84,12 +81,13 @@ export const UserProfile = ({
         ) : (
           false
         )}
-        {menu ?   <IoIosMore
-          style={{ marginRight: "10px", cursor: "pointer" }}
-          size="25"
-          color="gray"
-        /> : null }
-
+        {menu ? (
+          <IoIosMore
+            style={{ marginRight: "10px", cursor: "pointer" }}
+            size="25"
+            color="gray"
+          />
+        ) : null}
       </Icon>
     </div>
   );

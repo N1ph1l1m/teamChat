@@ -1,7 +1,6 @@
 import Portal from "../modalCreateGroup/portal";
 import styles from "../../App/Styles/modalUserProfile.module.css";
 import { IoIosClose } from "react-icons/io";
-import { UserListItem } from "../../Shared/roomListItem/roomListItem";
 import { UserProfile } from "../../Shared/UserProfile/UserProfile";
 import { Parameters } from "../../App/Parameters/Parametrs";
 import { useNavigate } from "react-router";
@@ -95,7 +94,15 @@ export const ModalUserProfile = ({
                     <Icon>
                       <FaFileImage color="#6f6f6f" size="20" />
                     </Icon>
-                    <span>{countImages} {getPluralForm(countImages,'фотография' , 'фотографии','фотографий')}</span>
+                    <span>
+                      {countImages}{" "}
+                      {getPluralForm(
+                        countImages,
+                        "фотография",
+                        "фотографии",
+                        "фотографий"
+                      )}
+                    </span>
                   </li>
                   <li
                     className={styles.listProfile}
@@ -107,7 +114,10 @@ export const ModalUserProfile = ({
                     <Icon>
                       <FaFile color="#6f6f6f" size="20" />
                     </Icon>
-                    <span>{countDocuments} {getPluralForm(countDocuments,'файл' , 'файла','файлов')} </span>
+                    <span>
+                      {countDocuments}{" "}
+                      {getPluralForm(countDocuments, "файл", "файла", "файлов")}{" "}
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -118,7 +128,6 @@ export const ModalUserProfile = ({
     </>
   );
 };
-
 
 export const ModalGroupChatInfo = ({
   isOpen,
@@ -133,18 +142,15 @@ export const ModalGroupChatInfo = ({
   countDocuments,
 }) => {
   let navigate = useNavigate();
-function countFiles(param){
-
-
-  return roomList.message.reduce((total, element) => {
-    if (element.images && Array.isArray(element[param])) {
-      return total + element[param].length;
-    }
-    console.log(total);
-    return total;
-  }, 0);
-
-}
+  function countFiles(param) {
+    return roomList.message.reduce((total, element) => {
+      if (element.images && Array.isArray(element[param])) {
+        return total + element[param].length;
+      }
+      console.log(total);
+      return total;
+    }, 0);
+  }
   return (
     <>
       {isOpen && (
@@ -164,16 +170,20 @@ function countFiles(param){
                   </Icon>
                 </div>
                 <div className={styles.userProfile}>
-                    <UserProfile
-                      userAvatar={roomList.photo_room}
-                      nameRoom={roomList.name}
-                      users = {`${roomList.current_users.length} ${getPluralForm(roomList.current_users.length,'участник' , 'участника' , 'участников')}` }
-                        />
+                  <UserProfile
+                    userAvatar={roomList.photo_room}
+                    nameRoom={roomList.name}
+                    users={`${roomList.current_users.length} ${getPluralForm(
+                      roomList.current_users.length,
+                      "участник",
+                      "участника",
+                      "участников"
+                    )}`}
+                  />
                 </div>
               </div>
 
-              <div className={`${styles.modalBody} ${styles.mediaMargin}` }
-              >
+              <div className={`${styles.modalBody} ${styles.mediaMargin}`}>
                 <ul>
                   <li
                     className={styles.listProfile}
@@ -200,7 +210,16 @@ function countFiles(param){
                     <Icon>
                       <FaFileImage color="#6f6f6f" size="20" />
                     </Icon>
-                    <span> {countFiles('images')} {getPluralForm(countFiles('images'),'фотография' , 'фотографии','фотографий')}</span>
+                    <span>
+                      {" "}
+                      {countFiles("images")}{" "}
+                      {getPluralForm(
+                        countFiles("images"),
+                        "фотография",
+                        "фотографии",
+                        "фотографий"
+                      )}
+                    </span>
                   </li>
                   <li
                     className={styles.listProfile}
@@ -212,37 +231,45 @@ function countFiles(param){
                     <Icon>
                       <FaFile color="#6f6f6f" size="20" />
                     </Icon>
-                    <span>{countFiles('documents')} {getPluralForm(countFiles('documents') ,'файл' , 'файла','файлов')} </span>
+                    <span>
+                      {countFiles("documents")}{" "}
+                      {getPluralForm(
+                        countFiles("documents"),
+                        "файл",
+                        "файла",
+                        "файлов"
+                      )}{" "}
+                    </span>
                   </li>
                 </ul>
               </div>
 
-                <div className={styles.usersWrap}>
-                <h1 className={styles.title} >Участники</h1>
+              <div className={styles.usersWrap}>
+                <h1 className={styles.title}>Участники</h1>
                 <ul>
-                    {roomList.current_users.map((user,index)=>{
-                      return(
-                        <>
+                  {roomList.current_users.map((user, index) => {
+                    return (
+                      <>
                         <li
-                    className={styles.listProfile}
-                    key={index}
-                    onClick={() => {
-                      navigate(`/grchats/${roomList.pk}`);
-                    }}
-                  >
-                    <img className={styles.usersAvatar} src ={user.photo} alt={`userGroup${index}`}/>
+                          className={styles.listProfile}
+                          key={index}
+                          onClick={() => {
+                            navigate(`/grchats/${roomList.pk}`);
+                          }}
+                        >
+                          <img
+                            className={styles.usersAvatar}
+                            src={user.photo}
+                            alt={`userGroup${index}`}
+                          />
 
-                    <span>{user.username}</span>
-                  </li>
-                        </>
-                      )
-
-
-                    })}
-
-
+                          <span>{user.username}</span>
+                        </li>
+                      </>
+                    );
+                  })}
                 </ul>
-                </div>
+              </div>
             </div>
           </div>
         </Portal>

@@ -33,9 +33,9 @@ import { TbCircleLetterG } from "react-icons/tb";
 function MainLayout() {
   const [userlist, setUserList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [userProfile,setUserProfile] = useState("")
+  const [userProfile, setUserProfile] = useState("");
   const [isOpenModalCreateGroup, setModalCreateGroup] = useState(false);
-  const [isOpenModalUserProfile,setOpenModalUserProfile] = useState(false);
+  const [isOpenModalUserProfile, setOpenModalUserProfile] = useState(false);
   const [mediaChatModal, setMediaChatModal] = useState(false);
   const [isMedia, setMedia] = useState(false);
   const [isDocuments, setDocuments] = useState(true);
@@ -50,7 +50,7 @@ function MainLayout() {
   const [chatGroupList, setChatGroupList] = useState(false);
   const [contactsList, setContactsList] = useState(false);
   const [isSearch, setIsSearch] = useState();
-    const [filteredMessages, setFilteredMessage] = useState("");
+  const [filteredMessages, setFilteredMessage] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -78,26 +78,32 @@ function MainLayout() {
     GlobalWebSocket(Parameters.token, dispatch);
   }, [chatGroupList]);
 
-  useEffect(()=>{
-    if(userProfile){
+  useEffect(() => {
+    if (userProfile) {
       setFilteredMessage(() =>
-        roomList.filter((room) => {
-          return (
-            room.current_users.length === 2
-            &&
-            room.current_users.some((user) => user.id === userProfile)
-            &&
-            room.current_users.some((user) => user.id === Parameters.authUserId   )
-          )
-        }).map((room)=>room.message)
+        roomList
+          .filter((room) => {
+            return (
+              room.current_users.length === 2 &&
+              room.current_users.some((user) => user.id === userProfile) &&
+              room.current_users.some(
+                (user) => user.id === Parameters.authUserId
+              )
+            );
+          })
+          .map((room) => room.message)
       );
     }
-  },[userProfile,Parameters.authUserId,roomList]);
+  }, [userProfile, Parameters.authUserId, roomList]);
+
+  useEffect(() => {
+    addRoomList(dispatch);
+  }, [isOpenModalCreateGroup]);
 
   function handleCancel() {
     setModalCreateGroup(false);
-    setOpenModalUserProfile(false)
-    setMediaChatModal(false)
+    setOpenModalUserProfile(false);
+    setMediaChatModal(false);
     setSelectedUsers([]);
     setAvatarGroup("");
     setGroupName("");
@@ -105,10 +111,9 @@ function MainLayout() {
   function showModalGroupChat() {
     setModalCreateGroup(true);
   }
-  function showModalUserProfile(id){
-   setUserProfile(id)
-  setOpenModalUserProfile(true);
-
+  function showModalUserProfile(id) {
+    setUserProfile(id);
+    setOpenModalUserProfile(true);
   }
 
   const handleInputChangeName = (e) => {
@@ -235,7 +240,7 @@ function MainLayout() {
               userlist={userlist}
               roomList={roomList}
               setUserProfile={showModalUserProfile}
-              />
+            />
           )}{" "}
         </>
       );
@@ -246,19 +251,19 @@ function MainLayout() {
     set2(false);
     set3(false);
   }
-  function showMediaImages(){
-    setUserProfile(false)
-    setMediaChatModal(true)
-    setMedia(true)
-    setDocuments(false)
+  function showMediaImages() {
+    setUserProfile(false);
+    setMediaChatModal(true);
+    setMedia(true);
+    setDocuments(false);
   }
-  function showMediaDocuments(){
-    setUserProfile(false)
-    setMediaChatModal(true)
-    setMedia(false)
-    setDocuments(true)
+  function showMediaDocuments() {
+    setUserProfile(false);
+    setMediaChatModal(true);
+    setMedia(false);
+    setDocuments(true);
   }
-  function countFiles(param){
+  function countFiles(param) {
     if (!filteredMessages || !Array.isArray(filteredMessages[0])) {
       return 0;
     }
@@ -269,7 +274,6 @@ function MainLayout() {
       }
       return total;
     }, 0);
-
   }
 
   return (
@@ -283,7 +287,8 @@ function MainLayout() {
               groupName,
               avatarGroup,
               selectedUsers,
-              handleCancel
+              handleCancel,
+              dispatch
             );
             addRoomList(dispatch);
           }}
@@ -302,26 +307,25 @@ function MainLayout() {
         <ModalUserProfile
           isOpen={isOpenModalUserProfile}
           onCancel={handleCancel}
-          userData = {userlist}
-          userId  = {userProfile}
+          userData={userlist}
+          userId={userProfile}
           userlist={userlist}
           roomList={roomList}
           images={showMediaImages}
           documents={showMediaDocuments}
-          countImages={countFiles('images')}
-          countDocuments={countFiles('documents')}
+          countImages={countFiles("images")}
+          countDocuments={countFiles("documents")}
         />
 
-         <ModalMediaChat
-                isOpen={mediaChatModal}
-                onCancel={handleCancel}
-                media={filteredMessages[0]}
-                isMedia={isMedia}
-                setMedia={setMedia}
-                isDocuments={isDocuments}
-                setDocuments={setDocuments}
-
-              />
+        <ModalMediaChat
+          isOpen={mediaChatModal}
+          onCancel={handleCancel}
+          media={filteredMessages[0]}
+          isMedia={isMedia}
+          setMedia={setMedia}
+          isDocuments={isDocuments}
+          setDocuments={setDocuments}
+        />
 
         <div className={styles.contentWrap}>
           <div className={styles.navWrap}>

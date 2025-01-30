@@ -127,7 +127,7 @@ export function webSocket(
   setChatSocket,
   messages,
   setFilteredMessage,
-  id,
+  id
 ) {
   const socketUrl = `${Parameters.urlWebSocket}chat/${ROOM_PK}/?token=${TOKEN}`;
   let socket = new WebSocket(socketUrl);
@@ -174,24 +174,22 @@ export function webSocket(
     // console.log("Полученные данные WebSocket:", data);
     switch (data.action) {
       case "create":
-        console.log("create")
+        console.log("create");
         setMessages((prevMessages) => {
-          const messageExists = prevMessages.some((msg) => msg.id === data.data.id);
+          const messageExists = prevMessages.some(
+            (msg) => msg.id === data.data.id
+          );
           if (!messageExists) {
-            getMessageData(setMessages)
+            getMessageData(setMessages);
             return [...prevMessages, data.data];
           }
           return prevMessages;
         });
-      break;
-      // case "create_message":
-      //   console.log("create_message");
-      //   getMessageData(setMessages)
-      // break;
+        break;
 
       case "update":
-        console.log("update")
-        console.log(data.data)
+        console.log("update");
+        console.log(data.data);
         setMessages((prevMessages) => {
           const updatedMessages = prevMessages.map((msg) => {
             if (msg.id === data.data.id) {

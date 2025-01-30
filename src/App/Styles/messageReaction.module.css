@@ -11,6 +11,8 @@
     flex-flow: nowrap row;
     margin-right: 10px;
     cursor: pointer;
+    margin-right: 5px;
+    margin-bottom: 5px ;
     }
   .reactionEmoji{
     font-size:20px;

@@ -15,7 +15,7 @@ export function MessageFooter({
 }) {
   return (
     <div className={styles.bubbleTimeWrap} style={style}>
-      <div style={reactionStyle}>
+      <div style={reactionStyle} className={styles.reactionWrap}>
         <MessageReaction
           reactions={reactions}
           avatar={avatar}
@@ -30,8 +30,9 @@ export function MessageFooter({
         {!time && sent ? (
           <IsRead
             style={{
+              position: "absolute",
               backgroundColor: "black",
-              marginRight: "10px",
+              right: "3px",
               height: "20px",
               width: "30px",
               padingLeft: "15px",
