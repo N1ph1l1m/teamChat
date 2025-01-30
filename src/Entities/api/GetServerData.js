@@ -124,7 +124,10 @@ export function webSocket(
   setIsWebSocketOpen,
   REQUEST_ID,
   setMessages,
-  setChatSocket
+  setChatSocket,
+  messages,
+  setFilteredMessage,
+  id,
 ) {
   const socketUrl = `${Parameters.urlWebSocket}chat/${ROOM_PK}/?token=${TOKEN}`;
   let socket = new WebSocket(socketUrl);
@@ -147,6 +150,7 @@ export function webSocket(
         request_id: REQUEST_ID,
       })
     );
+
     socket.send(
       JSON.stringify({
         pk: ROOM_PK,
@@ -174,17 +178,20 @@ export function webSocket(
         setMessages((prevMessages) => {
           const messageExists = prevMessages.some((msg) => msg.id === data.data.id);
           if (!messageExists) {
+            getMessageData(setMessages)
             return [...prevMessages, data.data];
           }
           return prevMessages;
         });
+      break;
+      // case "create_message":
+      //   console.log("create_message");
+      //   getMessageData(setMessages)
+      // break;
 
-
-        // getMessageData(setMessages);
-
-        break;
       case "update":
         console.log("update")
+        console.log(data.data)
         setMessages((prevMessages) => {
           const updatedMessages = prevMessages.map((msg) => {
             if (msg.id === data.data.id) {
@@ -205,7 +212,7 @@ export function webSocket(
               if (updatedMessage.images) {
                 updatedMessage.images = updatedMessage.images.map((image) => {
                   if (image.image && !image.image.startsWith("http")) {
-                    image.image = `${Parameters.url2}{image.image}`;
+                    image.image = `${Parameters.url2}${image.image}`;
                   }
                   return image;
                 });

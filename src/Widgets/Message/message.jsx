@@ -14,7 +14,6 @@ import ForwardMessage from "../../Shared/ForwardMessage/ForwardMessage";
 import { Parameters } from "../../App/Parameters/Parametrs";
 
 export default function Message({
-  messageId,
   text,
   avatar,
   sent,
@@ -55,7 +54,7 @@ export default function Message({
     Array.isArray(forwardMessage.forwarded_messages) &&
     forwardMessage.forwarded_messages.length > 0;
 
-    const nullMessage = isForwardMessageNull && isPhotoNull && isDocumentNull && !text
+  const nullMessage = isForwardMessageNull && isPhotoNull && isDocumentNull && !text
 
   const onlyForward =
     isForwardMessage &&
@@ -280,13 +279,14 @@ export default function Message({
 
         {text && Array.isArray(photos) && photos.length > 1 && (
           <div className={styles.messageBubbleAll}>
-            <HeaderName username={username} />
+
             <MessagePhoto
               photos={photos}
               modalPhoto={modalPhoto}
               photoData={photoData}
             />
             <div className={styles.bubbleText}>
+            <HeaderName username={username} />
               <ReplyMessage reply={reply} />
               <p>{text}</p>
               <MessageFooter

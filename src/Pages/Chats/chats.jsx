@@ -108,18 +108,14 @@ function Chats() {
         setIsWebSocketOpen,
         Parameters.request_id,
         setMessages,
-        setChatSocket
+        setChatSocket,
       );
       await ReadMessageAll(otherUserId);
+
     }
     go();
   }, [id]);
 
-
-
-  async function ReadMessage() {
-    await ReadMessageAll(otherUserId);
-  }
 
   useEffect(() => {
     setFilteredMessage(
@@ -129,10 +125,8 @@ function Chats() {
     if (filteredMessages.length === 0) {
       const timeout = setTimeout(() => setIsLoading(false), 500);
       return () => clearTimeout(timeout);
-    }else{
-      ReadMessage();
     }
-
+    console.log(filteredMessages);
 
   }, [messages]);
 
@@ -164,8 +158,8 @@ function Chats() {
       if (!chatSocket || chatSocket.readyState !== WebSocket.OPEN) {
         throw new Error("WebSocket is not open.");
       }
-       await chatSocket.send(JSON.stringify(messageData));
-      // await ReadMessageAll(otherUserId);
+       chatSocket.send(JSON.stringify(messageData));
+        ReadMessageAll(otherUserId);
     } catch (error) {
       const urls = `${Parameters.url}chat/tokens/`;
       axios
@@ -199,6 +193,7 @@ function Chats() {
       let imageData = [];
       let documentsData = [];
       if (sendImage) {
+        console.log("send image ");
         if (Array.isArray(sendImage) && sendImage.length > 0) {
           const uploadPromises = Array.from(sendImage).map(async (img) => {
             const formData = new FormData();
@@ -222,7 +217,7 @@ function Chats() {
 
         const messageData = {
           message: message || "",
-          images: imageData || [],
+          images: imageData ,
           action: "create_message",
           request_id: Parameters.request_id,
         };
@@ -276,13 +271,13 @@ function Chats() {
         if (!message && replyMessage) return null;
         const messageData = {
           message: message || "",
-          images: imageData || [],
+          images: imageData,
           documents: documentsData || [],
           action: "create_message",
           request_id: Parameters.request_id,
           reply_to: replyMessage ? replyMessage : null,
         };
-        console.log(messageData);
+        // console.log(messageData);
         checkAnonimusUser(messageData);
       }
       setMessage("");
@@ -304,6 +299,7 @@ function Chats() {
       }
     } finally {
       setIsSending(false);
+
 
       await UpdateActivity(Parameters.authUserId);
     }

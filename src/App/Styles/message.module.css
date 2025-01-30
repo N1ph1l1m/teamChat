@@ -150,6 +150,7 @@
   min-width: 60px;
   text-align: justify;
   overflow: hidden;
+
 }
 
 .sent .messageBubbleAll.one {
@@ -167,6 +168,7 @@
 
 .messageBubbleAll > .wrapPhoto > img {
   border-radius: 10px 10px 0px 0px;
+
 }
 
 .sent > .messageBubbleAll > .bubbleText {
@@ -177,6 +179,7 @@
   border-bottom-right-radius: 10px;
   padding: 5px;
   margin-top: -2px;
+
 }
 .received > .messageBubbleAll > .bubbleText {
   width: 403px;
@@ -186,10 +189,13 @@
   border-bottom-right-radius: 10px;
   padding: 5px;
   margin-top: -2px;
+
+
 }
 
 .messageBubbleAll > .wrapPhotoTwo > img:first-child {
   border-radius: 10px 0px 0px 0px;
+
 }
 .messageBubbleAll > .wrapPhotoTwo > img:nth-child(2) {
   border-radius: 0px 10px 0px 0px;

@@ -12,6 +12,7 @@ export async function ReadMessage(id) {
     const response = await axios.put(url, reactionData);
     if (response.status === 201 || response.status === 200) {
       // console.log(`Cообщение ${id} прочитано `);
+      console.log(response)
     } else {
       console.error("Ошибка: Непредвиденный ответ от сервера", response.status);
     }
