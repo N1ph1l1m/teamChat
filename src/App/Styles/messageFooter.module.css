@@ -6,10 +6,8 @@
 
 }
 .reactionWrap{
-
 display: flex;
 flex-direction: row;
-
 }
 .reaction{
   position: absolute;
@@ -26,10 +24,7 @@ flex-direction: row;
   font-size: 14px;
   color:black;
 }
-
-
 .timeCheckWrap{
-  /* border:2px solid green; */
   display: flex;
   flex-direction: row;
   align-items:center;
