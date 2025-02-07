@@ -186,7 +186,7 @@ export function InputFileTypeIcons(img, index) {
     default:
       return (
         <Icon>
-          <img className="fileType" src={img.content} alt="default" />
+          <img className="fileType" src={img ? img.content : defaultIcon} />
         </Icon>
       );
   }

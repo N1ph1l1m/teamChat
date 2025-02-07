@@ -52,6 +52,7 @@ width: 100%;
     top: 35px;
     padding: 0px;
     border-radius:10px;
+    /* border:1px solid red; */
 
 }
 .menuItemWrap{
@@ -67,8 +68,6 @@ width: 100%;
     width: 100%;
     z-index: 5;
     overflow: hidden;
-
-
 }
 .menuItem{
     width: 100%;
@@ -81,9 +80,7 @@ width: 100%;
     cursor: pointer;
     align-items:center;
     transition: background-color 0.2s ease-in-out;
-}
-.menuItem:hover{
-    background-color:rgba(0, 0, 0, 0.334);
+    z-index: 5;
 }
 .menuItem:hover{
     background-color:rgba(0, 0, 0, 0.334);

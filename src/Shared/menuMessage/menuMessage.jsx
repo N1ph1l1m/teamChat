@@ -22,14 +22,14 @@ export function MessageMenu({
   return (
     <>
       <ul className={styles.moreMenu}>
-        <li>
+        {/* <li>
           <IoArrowRedoSharp
             color="rgb(117, 117, 117)"
             size="20"
             style={{ marginRight: "4px" }}
           />
           <span>Переслать</span>
-        </li>
+        </li> */}
         <li onClick={onSelectMessage}>
           <IoCheckmarkCircleOutline
             color="rgb(117, 117, 117)"

@@ -26,7 +26,7 @@ function ChatArea({
   closeReplyMenu,
   setMessage,
 }) {
-  const messagesRef = useRef(null)
+  const messagesRef = useRef(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
   const autUsr = localStorage.getItem("username");
 
@@ -45,8 +45,6 @@ function ChatArea({
         }
       }
     };
-
-
 
     const messagesElement = messagesRef.current;
     if (messagesElement) {
@@ -83,7 +81,7 @@ function ChatArea({
               type="file"
               id="photo"
               name="photo"
-              accept="image/*"
+              accept="image/*  .heif"
               onChange={images}
               multiple
             />
@@ -99,7 +97,7 @@ function ChatArea({
     }
   }
 
-function mediaReplyMessage(reply, text, textS) {
+  function mediaReplyMessage(reply, text, textS) {
     if (reply.length === 1) {
       return (
         <>
@@ -193,9 +191,7 @@ function mediaReplyMessage(reply, text, textS) {
     <div className={styles.chatAreaWrap}>
       <div className={styles.chatHeader}>
         <div className={styles.chatHeaderItem}>{title}</div>
-        <div className={styles.messages} ref = {messagesRef}
-
-          >
+        <div className={styles.messages} ref={messagesRef}>
           {content}
 
           <div
@@ -213,17 +209,13 @@ function mediaReplyMessage(reply, text, textS) {
         </div>
       </div>
       <div className={styles.messageInput}>
-      {showScrollButton &&  (
-        <button  className={styles.scrollDown}
-            onClick={scrollToBottom}
-          >
+        {showScrollButton && (
+          <button className={styles.scrollDown} onClick={scrollToBottom}>
             <Icon>
-            <IoIosArrowDropdown  size="30" color="#105c9f" />
+              <IoIosArrowDropdown size="30" color="#105c9f" />
             </Icon>
           </button>
-      )
-
-             }
+        )}
         {showSelectTypeFile}
         {showReplyMessage}
         <div className={styles.inputFileWrap} onClick={setSelect}>

@@ -101,10 +101,13 @@
   align-items: center;
   justify-content: space-between;
   flex-direction: row;
-  width: 67px;
-
-
+  width: 67px; 
+  margin-right: 12px;
+  /* border:1px solid red; */
+  background-color:black;
 }
+
+
 .bubbleTimeTextPhoto {
   display: block;
   color: white;
@@ -114,7 +117,7 @@
   padding: 3px;
   font-weight: 600;
   height: 20px;
-  margin-right: 10px;
+  margin-right: 12px;
   z-index: 4;
 }
 
@@ -130,7 +133,8 @@
   height: 20px;
   z-index: 10;
   bottom:10px;
-  right: 10px;
+  right: 14px;
+
 }
 .messageFooterClass {
   width: 20px;
