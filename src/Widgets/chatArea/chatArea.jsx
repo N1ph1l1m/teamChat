@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import { IoSend } from "react-icons/io5";
 import styles from "../../App/Styles/chatArea.module.css";
 import Icon from "../../Shared/icon/icon";
@@ -6,7 +7,7 @@ import { emojiBd } from "../../App/Parameters/DataEmoji";
 import Picker from "@emoji-mart/react";
 import { IoIosClose } from "react-icons/io";
 import { FaFile, FaFileImage, FaPaperclip } from "react-icons/fa";
-
+import { IoIosArrowDropdown } from "react-icons/io";
 
 function ChatArea({
   title,
@@ -25,8 +26,40 @@ function ChatArea({
   closeReplyMenu,
   setMessage,
 }) {
-
+  const messagesRef = useRef(null)
+  const [showScrollButton, setShowScrollButton] = useState(false);
   const autUsr = localStorage.getItem("username");
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (messagesRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = messagesRef.current;
+
+        // Проверяем, находится ли пользователь в самом низу
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5; // -5 для учёта погрешности
+
+        if (isAtBottom) {
+          setShowScrollButton(false); // Скрываем кнопку в самом низу
+        } else {
+          setShowScrollButton(true); // Показываем кнопку при прокрутке вверх
+        }
+      }
+    };
+
+
+
+    const messagesElement = messagesRef.current;
+    if (messagesElement) {
+      messagesElement.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      if (messagesElement) {
+        messagesElement.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, []);
+
   function renderSelectTypeFile() {
     if (selectTypeFile) {
       return (
@@ -64,7 +97,6 @@ function ChatArea({
         </div>
       );
     }
-    // return null;
   }
 
 function mediaReplyMessage(reply, text, textS) {
@@ -148,13 +180,24 @@ function mediaReplyMessage(reply, text, textS) {
     let emoji = String.fromCodePoint(...codeArray);
     setMessage((prevInput) => prevInput + emoji);
   }
+  const scrollToBottom = () => {
+    if (messagesRef.current) {
+      messagesRef.current.scrollTo({
+        top: messagesRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  };
 
   return (
     <div className={styles.chatAreaWrap}>
       <div className={styles.chatHeader}>
         <div className={styles.chatHeaderItem}>{title}</div>
-        <div className={styles.messages}>
+        <div className={styles.messages} ref = {messagesRef}
+
+          >
           {content}
+
           <div
             className={styles.emojiWrap}
             style={isOpenEmoji ? { display: "block" } : { display: "none" }}
@@ -170,6 +213,17 @@ function mediaReplyMessage(reply, text, textS) {
         </div>
       </div>
       <div className={styles.messageInput}>
+      {showScrollButton &&  (
+        <button  className={styles.scrollDown}
+            onClick={scrollToBottom}
+          >
+            <Icon>
+            <IoIosArrowDropdown  size="30" color="#105c9f" />
+            </Icon>
+          </button>
+      )
+
+             }
         {showSelectTypeFile}
         {showReplyMessage}
         <div className={styles.inputFileWrap} onClick={setSelect}>

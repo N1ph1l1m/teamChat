@@ -42,7 +42,7 @@ import ModalMediaChat from "../../Widgets/modalMediaChat/modalMediaChat";
 import UpdateActivity from "../../Entities/api/UpdateActivity";
 import { SendFiles } from "../../Shared/SendFiles/sendFiles";
 function Chats() {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const { id } = useParams();
   const ROOM_PK = id;
   const [authUserId, setAuthUserId] = useState("");
@@ -126,7 +126,6 @@ function Chats() {
       const timeout = setTimeout(() => setIsLoading(false), 500);
       return () => clearTimeout(timeout);
     }
-    console.log(filteredMessages);
 
   }, [messages]);
 

@@ -174,7 +174,7 @@ export function webSocket(
     // console.log("Полученные данные WebSocket:", data);
     switch (data.action) {
       case "create":
-        console.log("create");
+        // console.log("create");
         setMessages((prevMessages) => {
           const messageExists = prevMessages.some(
             (msg) => msg.id === data.data.id

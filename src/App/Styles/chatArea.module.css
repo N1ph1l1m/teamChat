@@ -32,7 +32,9 @@
   overflow: auto;
   height: 100%;
   overflow: scroll y hidden clip;
+  position: relative;
 }
+
 .messages::-webkit-scrollbar {
   width: 12px;
 }
@@ -60,7 +62,15 @@
 .messageInput > i {
   cursor: pointer;
 }
+.scrollDown{
+  background-color:transparent;
+  padding: 0;
 
+  position: absolute;
+  bottom:70px;
+  right: 10px;
+  cursor: pointer;
+  }
 .replyMessageWrap {
   position: absolute;
   width: 100%;
