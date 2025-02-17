@@ -3,7 +3,7 @@ import { IoSend } from "react-icons/io5";
 import styles from "../../App/Styles/chatArea.module.css";
 import Icon from "../../Shared/icon/icon";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
-import { emojiBd } from "../../App/Parameters/DataEmoji";
+import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { IoIosClose } from "react-icons/io";
 import { FaFile, FaFileImage, FaPaperclip } from "react-icons/fa";
@@ -35,13 +35,11 @@ function ChatArea({
       if (messagesRef.current) {
         const { scrollTop, scrollHeight, clientHeight } = messagesRef.current;
 
-        // Проверяем, находится ли пользователь в самом низу
-        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5; // -5 для учёта погрешности
-
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5;
         if (isAtBottom) {
-          setShowScrollButton(false); // Скрываем кнопку в самом низу
+          setShowScrollButton(false);
         } else {
-          setShowScrollButton(true); // Показываем кнопку при прокрутке вверх
+          setShowScrollButton(true);
         }
       }
     };
@@ -193,19 +191,6 @@ function ChatArea({
         <div className={styles.chatHeaderItem}>{title}</div>
         <div className={styles.messages} ref={messagesRef}>
           {content}
-
-          <div
-            className={styles.emojiWrap}
-            style={isOpenEmoji ? { display: "block" } : { display: "none" }}
-          >
-            <Picker
-              data={emojiBd.data}
-              theme={"ligth"}
-              onEmojiSelect={inputEmoji}
-              locale={"ru"}
-              searchPosition={"none"}
-            />
-          </div>
         </div>
       </div>
       <div className={styles.messageInput}>
@@ -224,6 +209,18 @@ function ChatArea({
           </Icon>
         </div>
         <div className={styles.wrapTextInput}>
+          <div
+            className={styles.emojiWrap}
+            style={isOpenEmoji ? { display: "block" } : { display: "none" }}
+          >
+            <Picker
+              data={data}
+              theme={"ligth"}
+              onEmojiSelect={inputEmoji}
+              locale={"ru"}
+              searchPosition={"none"}
+            />
+          </div>
           <textarea
             placeholder="Type your message"
             value={inputValue}
